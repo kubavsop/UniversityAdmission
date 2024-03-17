@@ -648,6 +648,37 @@
             "Bearer": []
           }
         ]
+      },
+      "delete": {
+        "tags": [
+          "DocumentService"
+        ],
+        "summary": "Delete education document",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/api/document/{id}/scan": {
