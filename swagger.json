@@ -514,6 +514,12 @@
         "responses": {
           "200": {
             "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
@@ -528,7 +534,7 @@
         "tags": [
           "DocumentService"
         ],
-        "summary": "Create educational document",
+        "summary": "Create education document",
         "requestBody": {
           "content": {
             "application/json": {
@@ -562,7 +568,7 @@
         "tags": [
           "DocumentService"
         ],
-        "summary": "Get my educational documents",
+        "summary": "Get my education documents",
         "responses": {
           "200": {
             "description": "Success",
@@ -607,7 +613,7 @@
         "tags": [
           "DocumentService"
         ],
-        "summary": "Edit educational document",
+        "summary": "Edit education document",
         "requestBody": {
           "content": {
             "application/json": {
@@ -621,8 +627,14 @@
           "200": {
             "description": "Success"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "404": {
             "description": "Not Found"
@@ -722,6 +734,9 @@
           "200": {
             "description": "Success"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -761,6 +776,9 @@
         "responses": {
           "200": {
             "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -816,10 +834,10 @@
         ]
       }
     },
-    "/api/admission/{admissionId}/program": {
+    "/api/admission/{id}/program": {
       "parameters": [
         {
-          "name": "admissionId",
+          "name": "id",
           "in": "path",
           "required": true,
           "schema": {
@@ -832,7 +850,7 @@
         "tags": [
           "AdmissionService"
         ],
-        "summary": "Get admission programs from selected",
+        "summary": "Get my admission programs",
         "responses": {
           "200": {
             "description": "Success",
@@ -846,6 +864,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -870,7 +891,7 @@
         "tags": [
           "AdmissionService"
         ],
-        "summary": "Add admission program to selected",
+        "summary": "Add program to selected",
         "requestBody": {
           "content": {
             "application/json": {
@@ -910,7 +931,7 @@
         "tags": [
           "AdmissionService"
         ],
-        "summary": "Edit admission programs from selected",
+        "summary": "Edit admission programs",
         "requestBody": {
           "content": {
             "application/json": {
@@ -950,19 +971,10 @@
         ]
       }
     },
-    "/api/admission/{admissionId}/program/{programId}": {
+    "/api/program/{id}": {
       "parameters": [
         {
-          "name": "admissionId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        {
-          "name": "programId",
+          "name": "id",
           "in": "path",
           "required": true,
           "schema": {
@@ -975,7 +987,7 @@
         "tags": [
           "AdmissionService"
         ],
-        "summary": "Delete admission program from selected",
+        "summary": "Delete admission program",
         "responses": {
           "200": {
             "description": "Success"
