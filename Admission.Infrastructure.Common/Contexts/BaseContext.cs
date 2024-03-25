@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Admission.Infrastructure.Common.Contexts;
 
-public class BaseContext: DbContext
+public abstract class BaseContext: DbContext
 {
     protected BaseContext(DbContextOptions options): base(options) {}
     

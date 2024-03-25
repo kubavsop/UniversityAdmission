@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Admission.Infrastructure.Common.Contexts;
 
-public class BaseIdentityContext<TUser,TRole,TKey,TUserClaim,TUserRole,TUserLogin,TRoleClaim,TUserToken>: IdentityDbContext
+public abstract class BaseIdentityContext<TUser,TRole,TKey,TUserClaim,TUserRole,TUserLogin,TRoleClaim,TUserToken>: IdentityDbContext
     <TUser,TRole,TKey,TUserClaim,TUserRole,TUserLogin,TRoleClaim,TUserToken>
     where TUser: IdentityUser<TKey>
     where TRole: IdentityRole<TKey>
