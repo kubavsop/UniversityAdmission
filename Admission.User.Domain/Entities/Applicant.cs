@@ -1,15 +1,14 @@
 ﻿using Admission.Domain.Common.Entities;
-using Admission.Domain.Common.Enums;
+using Admission.User.Domain.Enums;
 
 namespace Admission.User.Domain.Entities;
 
 public sealed class Applicant: BaseEntity
 {
+    public DateTime? BirthDay { get; set; }
+    public string? PhoneNumber { get; set; } 
+    public string? Citizenship { get; set; }
+    public Gender? Gender { get; set; }
     public AdmissionUser? User { get; set; }
-    public AdmissionStatus Status { get; set; }
-    public Guid? FirstPriorityFacultyId { get; set; }
-    public Faculty? FirstPriorityFaculty;
-    
-    public Manager Manager { get; set; }
-    public Guid ManagerId { get; set; }
+    public StudentAdmission? StudentAdmission { get; set; }
 }

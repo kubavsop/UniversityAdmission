@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Admission.Application.Common;
+using Admission.Infrastructure.Common.Interceptors;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,13 +11,19 @@ public static class InfrastructureConfiguration
 {
     public static void AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         AddUserDbContext(services, configuration);
     }
     
     private static void AddUserDbContext(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        services.AddDbContext<UserDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddDbContext<UserDbContext>(
+            (sp, options) =>
+            {
+                options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
+                options.UseNpgsql(connectionString);
+            });
     }
     
     public static void AddAutoMigration(this IServiceProvider services)

@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Admission.User.Infrastructure.DbConfigurations;
+namespace Admission.User.Infrastructure.Configurations;
 
-public class ManagerConfiguration: IEntityTypeConfiguration<Manager>
+internal sealed class ManagerConfiguration: IEntityTypeConfiguration<Manager>
 {
     public void Configure(EntityTypeBuilder<Manager> builder)
     {

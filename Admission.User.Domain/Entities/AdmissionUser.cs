@@ -7,7 +7,8 @@ public sealed class AdmissionUser: IdentityUser<Guid>, IBaseEntity
 {
     public DateTime CreateTime { get; set; }
     public DateTime? DeleteTime { get; set; }
-    
+    public DateTime? ModifiedTime { get; set; }
+
     public required string FullName { get; set; }
     
     public string? RefreshToken { get; set; }
