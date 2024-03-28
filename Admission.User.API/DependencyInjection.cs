@@ -12,5 +12,11 @@ public static class PresentationConfiguration
                 options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
             })
             .AddJsonOptions(config => config.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+        
+        services.Configure<RouteOptions>(options =>
+        {
+            options.LowercaseUrls = true;
+            options.LowercaseQueryStrings = true;
+        });
     }
 }

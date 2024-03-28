@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Admission.User.Domain\Admission.User.Domain.csproj" />
+      <ProjectReference Include="..\Admission.Infrastructure.Common\Admission.Infrastructure.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services\Impl\" />
+      <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
     </ItemGroup>
 
 </Project>

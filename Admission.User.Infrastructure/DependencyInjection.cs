@@ -1,7 +1,5 @@
-﻿using Admission.Application.Common;
-using Admission.Infrastructure.Common.Interceptors;
+﻿using Admission.Infrastructure.Common.Interceptors;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +9,7 @@ public static class InfrastructureConfiguration
 {
     public static void AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+        services.AddSingleton<AuditableEntityInterceptor>();
         AddUserDbContext(services, configuration);
     }
     
@@ -21,7 +19,7 @@ public static class InfrastructureConfiguration
         services.AddDbContext<UserDbContext>(
             (sp, options) =>
             {
-                options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
+                options.AddInterceptors(sp.GetRequiredService<AuditableEntityInterceptor>());
                 options.UseNpgsql(connectionString);
             });
     }

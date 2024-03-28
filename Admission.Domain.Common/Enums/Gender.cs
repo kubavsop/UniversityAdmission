@@ -1,4 +1,4 @@
-﻿namespace Admission.User.Domain.Enums;
+﻿namespace Admission.Domain.Common.Enums;
 
 public enum Gender
 {

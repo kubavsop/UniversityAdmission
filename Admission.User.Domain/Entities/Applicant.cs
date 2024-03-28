@@ -1,5 +1,5 @@
 ﻿using Admission.Domain.Common.Entities;
-using Admission.User.Domain.Enums;
+using Admission.Domain.Common.Enums;
 
 namespace Admission.User.Domain.Entities;
 

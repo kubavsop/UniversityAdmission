@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Admission.User.Infrastructure;
 
 
-public class UserDbContext: IdentityDbContext<AdmissionUser, AdmissionRole, Guid>
+public sealed class UserDbContext: IdentityDbContext<AdmissionUser, AdmissionRole, Guid>
 {
     public DbSet<Applicant> Applicants { get; init; }
     public DbSet<Faculty> Faculties { get; init; }
