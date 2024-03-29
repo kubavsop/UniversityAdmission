@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Admission.User.Infrastructure.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20240326093036_Initial")]
-    partial class Initial
+    [Migration("20240329052747_AddRoles")]
+    partial class AddRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -53,6 +53,36 @@ namespace Admission.User.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("c6c4b1dd-7abb-496d-ab7b-537dd6d32ddd"),
+                            Name = "Applicant",
+                            NormalizedName = "APPLICANT",
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("88fc0436-197e-465a-a71d-645b401941af"),
+                            Name = "Manager",
+                            NormalizedName = "MANAGER",
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("dc7e0f08-14dc-481f-8ca8-fc896ef404a4"),
+                            Name = "SeniorManager",
+                            NormalizedName = "SENIORMANAGER",
+                            Type = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("00e96d45-dce1-4f4d-9891-83d3935f96ac"),
+                            Name = "Admin",
+                            NormalizedName = "ADMIN",
+                            Type = 3
+                        });
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionUser", b =>
@@ -75,6 +105,7 @@ namespace Admission.User.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
@@ -137,6 +168,21 @@ namespace Admission.User.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionUserRole", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.Applicant", b =>
@@ -331,21 +377,6 @@ namespace Admission.User.Infrastructure.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -363,6 +394,25 @@ namespace Admission.User.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionUserRole", b =>
+                {
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionRole", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionUser", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.Applicant", b =>
@@ -447,21 +497,6 @@ namespace Admission.User.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.HasOne("Admission.User.Domain.Entities.AdmissionRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Admission.User.Domain.Entities.AdmissionUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("Admission.User.Domain.Entities.AdmissionUser", null)
@@ -469,6 +504,16 @@ namespace Admission.User.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionRole", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionUser", b =>
+                {
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.Applicant", b =>

@@ -1,12 +1,13 @@
-﻿using Admission.User.Domain.Entities;
-using Admission.User.Infrastructure.Configurations;
+﻿using System.Reflection;
+using Admission.User.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Admission.User.Infrastructure;
 
 
-public sealed class UserDbContext: IdentityDbContext<AdmissionUser, AdmissionRole, Guid>
+public sealed class UserDbContext: IdentityDbContext<AdmissionUser, AdmissionRole, Guid, IdentityUserClaim<Guid>, AdmissionUserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
     public DbSet<Applicant> Applicants { get; init; }
     public DbSet<Faculty> Faculties { get; init; }
@@ -18,8 +19,6 @@ public sealed class UserDbContext: IdentityDbContext<AdmissionUser, AdmissionRol
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.ApplyConfiguration(new ApplicantConfiguration());
-        builder.ApplyConfiguration(new ManagerConfiguration());
-        builder.ApplyConfiguration(new StudentAdmissionConfiguration());
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }
