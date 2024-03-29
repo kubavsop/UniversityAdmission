@@ -16,8 +16,7 @@ public class AuthService: IAuthService
         _userManager = userManager;
         _jwtProvider = jwtProvider;
     }
-
-
+    
     public Task<Result<TokenPairDto>> RegisterApplicant(CreateApplicantDto dto)
     {
         throw new NotImplementedException();
