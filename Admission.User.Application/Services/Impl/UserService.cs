@@ -11,6 +11,4 @@ public sealed class UserService: IUserService
     {
         _userManager = userManager;
     }
-    
-    
 }

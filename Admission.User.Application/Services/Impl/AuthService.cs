@@ -9,7 +9,6 @@ namespace Admission.User.Application.Services.Impl;
 public class AuthService: IAuthService
 {
     private readonly UserManager<AdmissionUser> _userManager;
-    private readonly RoleManager<AdmissionRole> _role;
     private readonly IJwtProvider _jwtProvider;
 
     public AuthService(UserManager<AdmissionUser> userManager, IJwtProvider jwtProvider)
@@ -26,22 +25,7 @@ public class AuthService: IAuthService
 
     public async Task<Result<TokenPairDto>> Login(LoginCredentialsDto dto)
     {
-        var user = new AdmissionUser
-        {
-            Email = "my@gmail.com",
-            FullName = "MyName"
-        };
-        await _userManager.CreateAsync(user, "12345");
-        
-        
-        
-        await _userManager.AddToRoleAsync(user, "Admin");
-        Console.WriteLine(await _userManager.GetRolesAsync(user));
-        
-        
-        
-        
-        return new TokenPairDto {AccessToken = "", RefreshToken = ""};
+        throw new NotImplementedException();
     }
 
     public Task<Result<TokenPairDto>> Refresh(RefreshDto dto)
