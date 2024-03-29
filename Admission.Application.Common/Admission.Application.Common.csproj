@@ -10,8 +10,4 @@
       <ProjectReference Include="..\Admission.Domain.Common\Admission.Domain.Common.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Exceptions\" />
-    </ItemGroup>
-
 </Project>
