@@ -9,10 +9,12 @@ namespace Admission.User.Application.Services.Impl;
 public class AuthService: IAuthService
 {
     private readonly UserManager<AdmissionUser> _userManager;
+    private readonly IJwtProvider _jwtProvider;
 
-    public AuthService(UserManager<AdmissionUser> userManager)
+    public AuthService(UserManager<AdmissionUser> userManager, IJwtProvider jwtProvider)
     {
         _userManager = userManager;
+        _jwtProvider = jwtProvider;
     }
 
 
