@@ -1,12 +1,20 @@
 ﻿using Admission.API.Common;
 using Admission.Application.Common.DTOs.Requests;
 using Admission.Application.Common.DTOs.Responses;
+using Admission.User.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admission.User.API.Controllers;
 
 public sealed class ApplicantController: BaseController
 {
+    private readonly IAuthService _authService;
+
+    public ApplicantController(IAuthService authService)
+    {
+        _authService = authService;
+    }
+
     [Route("register")]
     [HttpPost]
     public Task<ActionResult<TokenPairDto>> Register(CreateApplicantDto applicantDto)
@@ -16,9 +24,10 @@ public sealed class ApplicantController: BaseController
     
     [Route("login")]
     [HttpPost]
-    public Task<ActionResult<TokenPairDto>> Login(LoginCredentialsDto credentialsDto)
+    public async Task<ActionResult<TokenPairDto>> Login(LoginCredentialsDto credentialsDto)
     {
-        throw new NotImplementedException();
+        var result = await _authService.Login(credentialsDto);
+        return result.Match<ActionResult>(dto => Ok(dto), exception => BadRequest(exception));
     }
     
     [Route("refresh")]

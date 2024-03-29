@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Admission.User.Application.Services.Impl;
 
-internal sealed class UserService: IUserService
+public sealed class UserService: IUserService
 {
     private readonly UserManager<AdmissionUser> _userManager;
 

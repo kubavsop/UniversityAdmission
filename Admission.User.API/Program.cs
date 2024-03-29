@@ -1,23 +1,18 @@
-using Admission.Infrastructure.Common;
-using Admission.User.API;
-using Admission.User.Application;
+using System.Reflection;
+using Admission.API.Common.Configuration;
 using Admission.User.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services
-    .AddApplicationLayer()
-    .AddInfrastructureLayer(builder.Configuration)
-    .AddJwtAuthentication()
-    .AddPresentationLayer();
-
+builder.Services.InstallServices(builder.Configuration, Assembly.GetExecutingAssembly(), typeof(IServiceInstaller).Assembly);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.Services.AddAutoMigration();
+await app.Services.AddAutoMigrationAsync();
+await app.Services.EnsureRoleCreatedAsync();
 
 if (app.Environment.IsDevelopment())
 {

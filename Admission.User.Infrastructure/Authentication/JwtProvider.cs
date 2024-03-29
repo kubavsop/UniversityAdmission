@@ -11,7 +11,7 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace Admission.User.Infrastructure.Authentication;
 
-internal sealed class JwtProvider: IJwtProvider
+public sealed class JwtProvider: IJwtProvider
 {
     private readonly JwtOptions _jwtOptions;
 

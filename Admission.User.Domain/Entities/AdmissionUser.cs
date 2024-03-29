@@ -9,7 +9,6 @@ public sealed class AdmissionUser: IdentityUser<Guid>, IBaseEntity
     public DateTime? DeleteTime { get; set; }
     public DateTime? ModifiedTime { get; set; }
     public override required string Email { get; set; }
-
     public required string FullName { get; set; }
     
     public string? RefreshToken { get; set; }

@@ -1,19 +1,18 @@
 ﻿using Admission.Infrastructure.Common.Authentication.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Admission.Infrastructure.Common;
+namespace Admission.API.Common.Configuration;
 
-public static class InfrastructureConfiguration
+public class AuthenticationServiceInstaller: IServiceInstaller
 {
-    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
+    public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services.ConfigureOptions<JwtOptionsSetup>();
         services.ConfigureOptions<JwtBearerOptionsSetup>();
         
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer();
-
-        return services;
     }
 }

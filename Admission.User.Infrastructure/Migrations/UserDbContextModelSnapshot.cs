@@ -50,36 +50,6 @@ namespace Admission.User.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c6c4b1dd-7abb-496d-ab7b-537dd6d32ddd"),
-                            Name = "Applicant",
-                            NormalizedName = "APPLICANT",
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("88fc0436-197e-465a-a71d-645b401941af"),
-                            Name = "Manager",
-                            NormalizedName = "MANAGER",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("dc7e0f08-14dc-481f-8ca8-fc896ef404a4"),
-                            Name = "SeniorManager",
-                            NormalizedName = "SENIORMANAGER",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("00e96d45-dce1-4f4d-9891-83d3935f96ac"),
-                            Name = "Admin",
-                            NormalizedName = "ADMIN",
-                            Type = 3
-                        });
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionUser", b =>
@@ -215,7 +185,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("Applicants");
+                    b.ToTable("Applicants", (string)null);
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.Faculty", b =>
@@ -239,7 +209,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Faculties");
+                    b.ToTable("Faculties", (string)null);
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.Manager", b =>
@@ -263,7 +233,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("Managers");
+                    b.ToTable("Managers", (string)null);
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.StudentAdmission", b =>
@@ -302,7 +272,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("StudentAdmissions");
+                    b.ToTable("StudentAdmissions", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

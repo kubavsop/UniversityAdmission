@@ -1,11 +1,13 @@
 ﻿using System.Text.Json.Serialization;
+using Admission.API.Common;
+using Admission.API.Common.Configuration;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
-namespace Admission.User.API;
+namespace Admission.User.API.Configurations;
 
-public static class PresentationConfiguration
+public class ControllersServiceInstaller: IServiceInstaller
 {
-    public static IServiceCollection AddPresentationLayer(this IServiceCollection services)
+    public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services.AddControllers(options =>
             {
@@ -18,7 +20,5 @@ public static class PresentationConfiguration
             options.LowercaseUrls = true;
             options.LowercaseQueryStrings = true;
         });
-
-        return services;
     }
 }
