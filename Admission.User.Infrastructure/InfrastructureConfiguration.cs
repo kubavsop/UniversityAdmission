@@ -1,4 +1,5 @@
 ﻿using Admission.Infrastructure.Common.Interceptors;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,10 +8,11 @@ namespace Admission.User.Infrastructure;
 
 public static class InfrastructureConfiguration
 {
-    public static void AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<AuditableEntityInterceptor>();
         AddUserDbContext(services, configuration);
+        return services;
     }
     
     private static void AddUserDbContext(IServiceCollection services, IConfiguration configuration)

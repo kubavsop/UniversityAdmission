@@ -1,11 +1,14 @@
+using Admission.Infrastructure.Common;
 using Admission.User.API;
 using Admission.User.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddInfrastructureLayer(builder.Configuration);
-builder.Services.AddPresentationLayer();
+builder.Services
+    .AddInfrastructureLayer(builder.Configuration)
+    .AddJwtAuthentication()
+    .AddPresentationLayer();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

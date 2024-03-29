@@ -5,7 +5,7 @@ namespace Admission.User.API;
 
 public static class PresentationConfiguration
 {
-    public static void AddPresentationLayer(this IServiceCollection services)
+    public static IServiceCollection AddPresentationLayer(this IServiceCollection services)
     {
         services.AddControllers(options =>
             {
@@ -18,5 +18,7 @@ public static class PresentationConfiguration
             options.LowercaseUrls = true;
             options.LowercaseQueryStrings = true;
         });
+
+        return services;
     }
 }
