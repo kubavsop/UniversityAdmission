@@ -24,10 +24,9 @@ public sealed class ApplicantController: BaseController
     
     [Route("login")]
     [HttpPost]
-    public async Task<ActionResult<TokenPairDto>> Login(LoginCredentialsDto credentialsDto)
+    public ActionResult<TokenPairDto> Login(LoginCredentialsDto credentialsDto)
     {
-        var result = await _authService.Login(credentialsDto);
-        return result.Match<ActionResult>(dto => Ok(dto), exception => BadRequest(exception));
+        throw new NotImplementedException();
     }
     
     [Route("refresh")]

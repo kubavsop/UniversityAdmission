@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Admission.API.Common;
-using Admission.API.Common.Configuration;
+using Admission.API.Common.ServiceInstaller;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Admission.User.API.Configurations;

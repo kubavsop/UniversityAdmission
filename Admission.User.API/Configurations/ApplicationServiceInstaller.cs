@@ -1,5 +1,4 @@
-﻿using Admission.API.Common;
-using Admission.API.Common.Configuration;
+﻿using Admission.API.Common.ServiceInstaller;
 using Admission.User.Application.Services;
 using Admission.User.Application.Services.Impl;
 

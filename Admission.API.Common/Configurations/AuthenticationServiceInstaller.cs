@@ -1,9 +1,10 @@
-﻿using Admission.Infrastructure.Common.Authentication.OptionsSetup;
+﻿using Admission.API.Common.ServiceInstaller;
+using Admission.Infrastructure.Common.Authentication.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Admission.API.Common.Configuration;
+namespace Admission.API.Common.Configurations;
 
 public class AuthenticationServiceInstaller: IServiceInstaller
 {
