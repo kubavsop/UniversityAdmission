@@ -1,6 +1,6 @@
 ﻿namespace Admission.Application.Common.Exceptions;
 
-public class ForbiddenException : Exception
+public sealed class ForbiddenException : Exception
 {
     public ForbiddenException() {}
 

@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Admission.Infrastructure.Common.Authentication.OptionsSetup;
 
-public sealed class JwtBearerOptionsSetup: IConfigureOptions<JwtBearerOptions>
+public sealed class JwtBearerOptionsSetup: IConfigureNamedOptions<JwtBearerOptions>
 {
     private readonly JwtOptions _jwtOptions;
 
@@ -28,4 +28,5 @@ public sealed class JwtBearerOptionsSetup: IConfigureOptions<JwtBearerOptions>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey))
         };
     }
+    public void Configure(string? name, JwtBearerOptions options) => Configure(options);
 }

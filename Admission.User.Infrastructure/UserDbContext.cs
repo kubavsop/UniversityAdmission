@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Admission.User.Application.Context;
 using Admission.User.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -7,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Admission.User.Infrastructure;
 
 
-public sealed class UserDbContext: IdentityDbContext<AdmissionUser, AdmissionRole, Guid, IdentityUserClaim<Guid>, AdmissionUserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
+public sealed class UserDbContext: 
+    IdentityDbContext<AdmissionUser, AdmissionRole, Guid, IdentityUserClaim<Guid>, AdmissionUserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>,
+    IUserDbContext
 {
     public DbSet<Applicant> Applicants { get; init; }
     public DbSet<Faculty> Faculties { get; init; }

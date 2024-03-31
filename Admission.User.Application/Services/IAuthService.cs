@@ -6,7 +6,7 @@ namespace Admission.User.Application.Services;
 
 public interface IAuthService
 {
-    public Task<Result<TokenPairDto>> RegisterApplicant(CreateApplicantDto dto);   
-    public Task<Result<TokenPairDto>> Login(LoginCredentialsDto dto);
-    public Task<Result<TokenPairDto>> Refresh(RefreshDto dto);
+    public Task<Result<TokenPairDto>> RegisterApplicantAsync(CreateApplicantDto dto);   
+    public Task<Result<TokenPairDto>> LoginAsync(LoginCredentialsDto dto);
+    public Task<Result<TokenPairDto>> RefreshAsync(RefreshDto dto);
 }

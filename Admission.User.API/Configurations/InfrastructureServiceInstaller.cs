@@ -1,6 +1,6 @@
-﻿using Admission.API.Common;
-using Admission.API.Common.ServiceInstaller;
+﻿using Admission.API.Common.ServiceInstaller;
 using Admission.Infrastructure.Common.Interceptors;
+using Admission.User.Application.Context;
 using Admission.User.Application.Services;
 using Admission.User.Domain.Entities;
 using Admission.User.Infrastructure;
@@ -13,6 +13,8 @@ public class UserDbServiceInstaller: IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<IUserDbContext>(provider => provider.GetRequiredService<UserDbContext>());
+        
         services
             .AddIdentityCore<AdmissionUser>()
             .AddRoles<AdmissionRole>()

@@ -15,6 +15,6 @@ public sealed class AdmissionUser: IdentityUser<Guid>, IBaseEntity
     
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenExpirationTime { get; set; }
-    public bool IsExpired => DateTime.UtcNow > RefreshTokenExpirationTime;
+    public bool RefreshTokenIsExpired => DateTime.UtcNow > RefreshTokenExpirationTime;
     public ICollection<AdmissionUserRole> UserRoles { get; set; }
 }

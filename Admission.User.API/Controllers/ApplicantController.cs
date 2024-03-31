@@ -1,7 +1,8 @@
 ﻿using Admission.API.Common;
+using Admission.API.Common.Extensions;
 using Admission.Application.Common.DTOs.Requests;
-using Admission.Application.Common.DTOs.Responses;
 using Admission.User.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admission.User.API.Controllers;
@@ -14,44 +15,52 @@ public sealed class ApplicantController: BaseController
     {
         _authService = authService;
     }
-
+    
+    [HttpPost]
     [Route("register")]
-    [HttpPost]
-    public Task<ActionResult<TokenPairDto>> Register(CreateApplicantDto applicantDto)
+    public async Task<IActionResult> Register(CreateApplicantDto applicantDto)
     {
-        throw new NotImplementedException();
+        var result = await _authService.RegisterApplicantAsync(applicantDto);
+        return result.ToIActionResult();
     }
     
+
+    [HttpPost]
     [Route("login")]
-    [HttpPost]
-    public ActionResult<TokenPairDto> Login(LoginCredentialsDto credentialsDto)
+    public async Task<IActionResult> Login(LoginCredentialsDto credentialsDto)
     {
-        throw new NotImplementedException();
+        var result = await _authService.LoginAsync(credentialsDto);
+        return result.ToIActionResult();
     }
-    
+
+
+    [HttpPost]
     [Route("refresh")]
-    [HttpPost]
-    public Task<ActionResult<TokenPairDto>> Refresh(RefreshDto refreshDto)
+    public async Task<IActionResult> Refresh(RefreshDto refreshDto)
     {
-        throw new NotImplementedException();
+        var result = await _authService.RefreshAsync(refreshDto);
+        return result.ToIActionResult();
     }
     
-    [Route("profile")]
+    
     [HttpGet]
-    public Task<ActionResult<ApplicantDto>> GetProfile()
+    [Route("profile")]
+    [Authorize]
+    public Task<IActionResult> GetProfile()
     {
         throw new NotImplementedException();
     }
     
-    [Route("profile")]
     [HttpPut]
+    [Route("profile")]
     public Task<IActionResult> EditProfile(EditApplicantDto editApplicantDto)
     {
         throw new NotImplementedException();
     }
     
-    [Route("password")]
+
     [HttpPut]
+    [Route("password")]
     public Task<IActionResult> EditPassword(EditPasswordDto editPasswordDto)
     {
         throw new NotImplementedException();
