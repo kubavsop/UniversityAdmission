@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Admission.User.Infrastructure.Configurations;
 
-public class AdmissionUserConfiguration: IEntityTypeConfiguration<AdmissionUser>
+internal sealed class AdmissionUserConfiguration: IEntityTypeConfiguration<AdmissionUser>
 {
     public void Configure(EntityTypeBuilder<AdmissionUser> builder)
     {

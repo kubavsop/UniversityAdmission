@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Admission.User.Application.Services.Impl;
 
-public class AuthService: IAuthService
+public sealed class AuthService: IAuthService
 {
     private const int RefreshTokenExpirationHours = 1000;
     private const int RefreshTokenBytes = 256;
@@ -30,13 +30,11 @@ public class AuthService: IAuthService
     {
         var defaultRole = RoleType.Applicant.ToString();
         var refreshToken = GenerateRefreshToken();
-
         var user = new AdmissionUser
         {
             Email = dto.Email,
             FullName = dto.FullName
         };
-        
         SetRefreshToken(user, refreshToken);
         
         var result = await _userManager.CreateAsync(user, dto.Password);
@@ -47,7 +45,6 @@ public class AuthService: IAuthService
         }
 
         await _userManager.AddToRoleAsync(user, defaultRole);
-        
         await _context.Applicants.AddAsync(new Applicant
         {
             BirthDay = dto.Birthday,
@@ -69,7 +66,7 @@ public class AuthService: IAuthService
     public async Task<Result<TokenPairDto>> LoginAsync(LoginCredentialsDto dto)
     {
         var user = await _userManager.FindByNameAsync(dto.Email);
-        if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
+        if (user is not { DeleteTime: null } || !await _userManager.CheckPasswordAsync(user, dto.Password))
         {
             return new BadRequestException("Invalid credentials");
         }
@@ -80,15 +77,13 @@ public class AuthService: IAuthService
     public async Task<Result<TokenPairDto>> RefreshAsync(RefreshDto dto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == dto.RefreshToken);
-
-        if (user == null || user.RefreshTokenIsExpired)
+        if (user is not { DeleteTime: null } || user.RefreshTokenIsExpired)
         {
             return new BadRequestException("Invalid Refresh token");
         }
 
         return await RefreshTokens(user);
     }
-
 
     private async Task<TokenPairDto> RefreshTokens(AdmissionUser user)
     {
