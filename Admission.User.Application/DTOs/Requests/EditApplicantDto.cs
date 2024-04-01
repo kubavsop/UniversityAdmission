@@ -2,9 +2,9 @@
 using Admission.Application.Common.ValidationAttributes;
 using Admission.Domain.Common.Enums;
 
-namespace Admission.Application.Common.DTOs.Requests;
+namespace Admission.User.Application.DTOs.Requests;
 
-public sealed class CreateApplicantDto
+public class EditApplicantDto
 {
     [Required]
     [MinLength(1)]
@@ -15,11 +15,6 @@ public sealed class CreateApplicantDto
     [EmailAddress]
     [MaxLength(1000)]
     public required string Email { get; set; }
-
-    [Required]
-    [MinLength(5)]
-    [MaxLength(100)]
-    public required string Password { get; set; }
     
     [Birthday]
     public DateTime? Birthday { get; set; }

@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Admission.Application.Common.Mapping;
 using Admission.Application.Common.ValidationAttributes;
 using Admission.Domain.Common.Enums;
+using Admission.User.Domain.Entities;
+using AutoMapper;
 
-namespace Admission.Application.Common.DTOs.Responses;
+namespace Admission.User.Application.DTOs.Responses;
 
-public sealed class ApplicantDto
+public sealed class ApplicantDto: IMapFrom<Applicant>
 {
     [Required]
     public required Guid Id { get; set; }
@@ -21,14 +24,9 @@ public sealed class ApplicantDto
     [EmailAddress]
     [MaxLength(1000)]
     public required string Email { get; set; }
-
-    [Required]
-    [MinLength(5)]
-    [MaxLength(100)]
-    public required string Password { get; set; }
     
     [Birthday]
-    public DateOnly? Birthday { get; set; }
+    public DateTime? Birthday { get; set; }
 
     public Gender? Gender { get; set; }
     
@@ -38,4 +36,13 @@ public sealed class ApplicantDto
 
     [PhoneNumber]
     public string? PhoneNumber { get; set; }
+
+    public void Mapping(Profile profile)
+    {
+        profile.CreateMap<Applicant, ApplicantDto>()
+            .ForMember(dest => dest.FullName,
+                opt => opt.MapFrom(src => src.User!.FullName))
+            .ForMember(dest => dest.Email,
+            opt => opt.MapFrom(src => src.User!.Email));
+    }
 }

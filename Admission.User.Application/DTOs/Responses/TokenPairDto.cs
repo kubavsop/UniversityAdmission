@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Admission.Application.Common.DTOs.Responses;
+namespace Admission.User.Application.DTOs.Responses;
 
 public sealed class TokenPairDto
 {

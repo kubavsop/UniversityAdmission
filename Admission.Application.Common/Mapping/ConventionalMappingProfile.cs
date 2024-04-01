@@ -9,9 +9,14 @@ public sealed class ConventionalMappingProfile: Profile
     
     public ConventionalMappingProfile()
     {
-        var types = Assembly
-            .GetExecutingAssembly()
-            .GetExportedTypes()
+        var types = AppDomain.CurrentDomain
+            .GetAssemblies()
+            .Where(a =>
+            {
+                var name = a.GetName().Name;
+                return name != null && name.StartsWith("Admission.");
+            })
+            .SelectMany(a => a.GetExportedTypes())
             .Where(t => !t.IsAbstract &&
                         t.GetInterfaces().Any(ImplementsMapFromInterface));
         

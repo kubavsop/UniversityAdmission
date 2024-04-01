@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
-using Admission.Application.Common.DTOs.Responses;
+using Admission.Application.Common.DTOs;
 using Microsoft.AspNetCore.Http;
 
 namespace Admission.API.Common.Middlewares;

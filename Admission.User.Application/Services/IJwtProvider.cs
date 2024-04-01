@@ -4,5 +4,5 @@ namespace Admission.User.Application.Services;
 
 public interface IJwtProvider
 {
-    public string Generate(AdmissionUser user, IEnumerable<string> roles);
+    string Generate(AdmissionUser user, IEnumerable<string> roles);
 }

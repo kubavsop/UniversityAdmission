@@ -17,4 +17,8 @@ public sealed class Result<TValue>: Result
     
     public TResult Match<TResult>(Func<TValue, TResult> onSuccess, Func<Exception, TResult> onFailure) =>
         IsSuccess ? onSuccess(_value) : onFailure(Exception);
+    
+    public TValue Value => IsSuccess
+        ? _value!
+        : throw new InvalidOperationException("The value of a failure result can not be accessed.");
 }

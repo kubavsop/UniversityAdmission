@@ -1,6 +1,6 @@
 ﻿using Admission.API.Common;
 using Admission.API.Common.Extensions;
-using Admission.Application.Common.DTOs.Requests;
+using Admission.User.Application.DTOs.Requests;
 using Admission.User.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +10,12 @@ namespace Admission.User.API.Controllers;
 public sealed class ApplicantController: BaseController
 {
     private readonly IAuthService _authService;
+    private readonly IUserService _userService;
 
-    public ApplicantController(IAuthService authService)
+    public ApplicantController(IAuthService authService, IUserService userService)
     {
         _authService = authService;
+        _userService = userService;
     }
     
     [HttpPost]
@@ -42,27 +44,40 @@ public sealed class ApplicantController: BaseController
         return result.ToIActionResult();
     }
     
+    [HttpPost]
+    [Route("logout")]
+    [Authorize]
+    public async Task<IActionResult> Logout()
+    {
+        var result = await _authService.LogoutAsync(UserId);
+        return result.ToIActionResult();
+    }
     
     [HttpGet]
     [Route("profile")]
     [Authorize]
-    public Task<IActionResult> GetProfile()
+    public async Task<IActionResult> GetProfile()
     {
-        throw new NotImplementedException();
+        var result = await _userService.GetApplicantProfileAsync(UserId);
+        return result.ToIActionResult();
     }
     
     [HttpPut]
     [Route("profile")]
-    public Task<IActionResult> EditProfile(EditApplicantDto editApplicantDto)
+    [Authorize]
+    public async Task<IActionResult> EditProfile(EditApplicantDto editApplicantDto)
     {
-        throw new NotImplementedException();
+        var result = await _userService.EditApplicantProfileAsync(editApplicantDto, UserId);
+        return result.ToIActionResult();
     }
     
 
     [HttpPut]
     [Route("password")]
-    public Task<IActionResult> EditPassword(EditPasswordDto editPasswordDto)
+    [Authorize]
+    public async Task<IActionResult> EditPassword(EditPasswordDto editPasswordDto)
     {
-        throw new NotImplementedException();
+        var result = await _userService.EditPasswordAsync(editPasswordDto , UserId);
+        return result.ToIActionResult();
     }
 }

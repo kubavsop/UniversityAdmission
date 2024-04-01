@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Admission.Application.Common.DTOs.Requests;
+namespace Admission.User.Application.DTOs.Requests;
 
 public sealed class RefreshDto
 {

@@ -1,10 +1,11 @@
 ﻿using System.Security.Cryptography;
-using Admission.Application.Common.DTOs.Requests;
-using Admission.Application.Common.DTOs.Responses;
 using Admission.Application.Common.Exceptions;
+using Admission.Application.Common.Extensions;
 using Admission.Application.Common.Result;
 using Admission.Domain.Common.Enums;
 using Admission.User.Application.Context;
+using Admission.User.Application.DTOs.Requests;
+using Admission.User.Application.DTOs.Responses;
 using Admission.User.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,7 @@ public sealed class AuthService: IAuthService
         await _userManager.AddToRoleAsync(user, defaultRole);
         await _context.Applicants.AddAsync(new Applicant
         {
-            BirthDay = dto.Birthday,
+            Birthday = dto.Birthday,
             PhoneNumber = dto.PhoneNumber,
             Citizenship = dto.Citizenship,
             Gender = dto.Gender,
@@ -76,14 +77,37 @@ public sealed class AuthService: IAuthService
 
     public async Task<Result<TokenPairDto>> RefreshAsync(RefreshDto dto)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == dto.RefreshToken);
-        if (user is not { DeleteTime: null } || user.RefreshTokenIsExpired)
+        var user = await _context.Users
+            .GetUndeleted()
+            .FirstOrDefaultAsync(u => u.RefreshToken == dto.RefreshToken);
+        if (user == null || user.RefreshTokenIsExpired)
         {
             return new BadRequestException("Invalid Refresh token");
         }
 
         return await RefreshTokens(user);
     }
+
+    public async Task<Result> LogoutAsync(Guid userId)
+    {
+        var user = await _context.Users.GetByIdAsync(userId);
+        if (user == null)
+        {
+            return new NotFoundException(nameof(AdmissionUser), userId);
+        }
+
+        if (user.RefreshToken == null)
+        {
+            return new BadRequestException("User has already been logged out");
+        }
+        
+        user.RefreshToken = null;
+        user.RefreshTokenExpirationTime = null;
+        await _context.SaveChangesAsync();
+
+        return Result.Success();
+    }
+
 
     private async Task<TokenPairDto> RefreshTokens(AdmissionUser user)
     {
