@@ -22,7 +22,11 @@ public sealed class CreateApplicantDto
     public required string Password { get; set; }
     
     [Birthday]
-    public DateTime? Birthday { get; set; }
+    public DateTime? Birthday     
+    {
+        get => _birthday;
+        set => _birthday = value.HasValue ? DateTime.SpecifyKind(value.Value, DateTimeKind.Utc) : value;
+    }
 
     public Gender? Gender { get; set; }
     
@@ -32,4 +36,6 @@ public sealed class CreateApplicantDto
 
     [PhoneNumber]
     public string? PhoneNumber { get; set; }
+    
+    private DateTime? _birthday;
 }

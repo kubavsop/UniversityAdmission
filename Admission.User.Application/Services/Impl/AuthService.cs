@@ -19,7 +19,7 @@ public sealed class AuthService: IAuthService
     private readonly UserManager<AdmissionUser> _userManager;
     private readonly IUserDbContext _context;
     private readonly IJwtProvider _jwtProvider;
-
+    
     public AuthService(UserManager<AdmissionUser> userManager, IJwtProvider jwtProvider, IUserDbContext context)
     {
         _userManager = userManager;

@@ -1,4 +1,6 @@
 ﻿using Admission.API.Common.ServiceInstaller;
+using Admission.Infrastructure.Common.BackgroundServices;
+using Admission.Infrastructure.Common.Context;
 using Admission.Infrastructure.Common.Interceptors;
 using Admission.User.Application.Context;
 using Admission.User.Application.Services;
@@ -14,6 +16,7 @@ public class UserDbServiceInstaller: IServiceInstaller
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IUserDbContext>(provider => provider.GetRequiredService<UserDbContext>());
+        services.AddScoped<IOutboxMessageDbContext>(provider => provider.GetRequiredService<UserDbContext>());
         
         services
             .AddIdentityCore<AdmissionUser>()
@@ -21,11 +24,15 @@ public class UserDbServiceInstaller: IServiceInstaller
             .AddEntityFrameworkStores<UserDbContext>();
         services.AddSingleton<IJwtProvider, JwtProvider>();
         services.AddSingleton<AuditableEntityInterceptor>();
+        services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
+        services.AddHostedService<OutboxMessageProcessorService>();
+        services.AddScoped<IProcessOutboxMessageService, ProcessOutboxMessageService>();
         
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<UserDbContext>(
             (sp, options) =>
             {
+                options.AddInterceptors(sp.GetRequiredService<ConvertDomainEventsToOutboxMessagesInterceptor>());
                 options.AddInterceptors(sp.GetRequiredService<AuditableEntityInterceptor>());
                 options.UseNpgsql(connectionString);
             });
