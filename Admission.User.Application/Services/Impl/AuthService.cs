@@ -46,14 +46,13 @@ public sealed class AuthService: IAuthService
         }
 
         await _userManager.AddToRoleAsync(user, defaultRole);
-        await _context.Applicants.AddAsync(new Applicant
-        {
-            Birthday = dto.Birthday,
-            PhoneNumber = dto.PhoneNumber,
-            Citizenship = dto.Citizenship,
-            Gender = dto.Gender,
-            User = user
-        });
+        await _context.Applicants.AddAsync(Applicant.Create(
+            dto.Birthday,
+            dto.PhoneNumber,
+            dto.Citizenship,
+            dto.Gender,
+            user)
+        );
         
         await _context.SaveChangesAsync();
 

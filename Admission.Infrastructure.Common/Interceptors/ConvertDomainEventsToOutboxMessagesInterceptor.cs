@@ -1,8 +1,10 @@
 ﻿using System.Text.Json;
 using Admission.Domain.Common.Entities;
+using Admission.Domain.Common.Events;
 using Admission.Infrastructure.Common.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Newtonsoft.Json;
 
 namespace Admission.Infrastructure.Common.Interceptors;
 
@@ -39,7 +41,11 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor: SaveChangesI
                 Id = Guid.NewGuid(),
                 OccurredTime = DateTime.UtcNow,
                 Type = domainEvent.GetType().Name,
-                Content = JsonSerializer.Serialize(domainEvent)
+                Content = JsonConvert.SerializeObject(domainEvent,
+                    new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.All
+                    })
             })
             .ToList();
         
