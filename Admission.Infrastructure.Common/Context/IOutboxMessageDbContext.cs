@@ -1,10 +1,9 @@
-﻿using Admission.Infrastructure.Common.Outbox;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Admission.Infrastructure.Common.Context;
 
 public interface IOutboxMessageDbContext
 {
-    DbSet<OutboxMessage> OutboxMessages { get; }
+    DbSet<OutboxMessage.OutboxMessage> OutboxMessages { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

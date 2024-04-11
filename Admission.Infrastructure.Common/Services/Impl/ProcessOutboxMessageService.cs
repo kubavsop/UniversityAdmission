@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace Admission.Infrastructure.Common.Outbox.BackgroundServices;
+namespace Admission.Infrastructure.Common.Services.Impl;
 
 public sealed class ProcessOutboxMessageService: IProcessOutboxMessageService
 {

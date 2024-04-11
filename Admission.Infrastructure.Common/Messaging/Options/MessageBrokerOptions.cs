@@ -1,4 +1,4 @@
-﻿namespace Admission.Infrastructure.Common.Messaging.Settings.Options;
+﻿namespace Admission.Infrastructure.Common.Messaging.Options;
 
 public sealed class MessageBrokerOptions
 {

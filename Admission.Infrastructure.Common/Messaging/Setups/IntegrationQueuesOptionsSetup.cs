@@ -1,8 +1,8 @@
-﻿using Admission.Infrastructure.Common.Messaging.Settings.Options;
+﻿using Admission.Infrastructure.Common.Messaging.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace Admission.Infrastructure.Common.Messaging.Settings.Setups;
+namespace Admission.Infrastructure.Common.Messaging.Setups;
 
 public sealed class IntegrationQueuesOptionsSetup: IConfigureOptions<IntegrationQueuesOptions>
 {

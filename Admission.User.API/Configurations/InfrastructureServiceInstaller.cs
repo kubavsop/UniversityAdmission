@@ -1,11 +1,11 @@
 ﻿using Admission.API.Common.ServiceInstaller;
 using Admission.Application.Common.Messaging;
+using Admission.Infrastructure.Common.BackgroundServices;
 using Admission.Infrastructure.Common.Context;
 using Admission.Infrastructure.Common.Interceptors;
-using Admission.Infrastructure.Common.Messaging;
-using Admission.Infrastructure.Common.Messaging.Settings;
-using Admission.Infrastructure.Common.Messaging.Settings.Setups;
-using Admission.Infrastructure.Common.Outbox.BackgroundServices;
+using Admission.Infrastructure.Common.Messaging.Setups;
+using Admission.Infrastructure.Common.Services;
+using Admission.Infrastructure.Common.Services.Impl;
 using Admission.User.Application.Context;
 using Admission.User.Application.Services;
 using Admission.User.Domain.Entities;

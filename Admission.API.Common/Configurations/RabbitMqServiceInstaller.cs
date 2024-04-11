@@ -1,6 +1,6 @@
 ﻿using Admission.API.Common.ServiceInstaller;
-using Admission.Infrastructure.Common.Messaging.Settings.Options;
-using Admission.Infrastructure.Common.Messaging.Settings.Setups;
+using Admission.Infrastructure.Common.Messaging.Options;
+using Admission.Infrastructure.Common.Messaging.Setups;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;

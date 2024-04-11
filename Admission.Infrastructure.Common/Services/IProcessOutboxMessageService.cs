@@ -1,4 +1,4 @@
-﻿namespace Admission.Infrastructure.Common.Outbox.BackgroundServices;
+﻿namespace Admission.Infrastructure.Common.Services;
 
 public interface IProcessOutboxMessageService
 {

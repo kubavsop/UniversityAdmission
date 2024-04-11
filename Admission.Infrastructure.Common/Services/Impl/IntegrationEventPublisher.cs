@@ -1,31 +1,28 @@
 ﻿using System.Text;
 using Admission.Application.Common.Messaging;
-using Admission.Infrastructure.Common.Messaging.Settings;
-using Admission.Infrastructure.Common.Messaging.Settings.Options;
+using Admission.Infrastructure.Common.Messaging.Options;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 
-namespace Admission.Infrastructure.Common.Messaging;
+namespace Admission.Infrastructure.Common.Services.Impl;
 
 public sealed class IntegrationEventPublisher: IIntegrationEventPublisher, IDisposable
 {
     private readonly IntegrationQueuesOptions _queuesOptions;
-    private readonly IConnection _connection;
     private readonly IModel _channel;
 
-    public IntegrationEventPublisher(IOptions<IntegrationQueuesOptions> messageBrokerOptions, IConnection connection)
+    public IntegrationEventPublisher(IOptions<IntegrationQueuesOptions> queuesOptions, IConnection connection)
     {
-        _connection = connection;
-        _queuesOptions = messageBrokerOptions.Value;
+        _queuesOptions = queuesOptions.Value;
         
-        _channel = _connection.CreateModel();
+        _channel = connection.CreateModel();
         
         _channel.ExchangeDeclare(_queuesOptions.ExchangeName, ExchangeType.Fanout, false, false);
         
         foreach (var queueName in _queuesOptions.QueueNames)
         {
-            _channel.QueueDeclare(queueName, false, false, false);
+            _channel.QueueDeclare(queueName, false, false, false, null);
             _channel.QueueBind(
                 queue: queueName,
                 exchange: _queuesOptions.ExchangeName, 
@@ -47,7 +44,6 @@ public sealed class IntegrationEventPublisher: IIntegrationEventPublisher, IDisp
 
     public void Dispose()
     {
-        _connection.Dispose();
         _channel.Dispose();
     }
 }
