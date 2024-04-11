@@ -24,7 +24,6 @@ public sealed class ProcessOutboxMessageService: IProcessOutboxMessageService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            Console.WriteLine("DoWork");
             var messages = await _context
                 .OutboxMessages
                 .Where(m => m.ProcessedTime == null)
@@ -41,9 +40,9 @@ public sealed class ProcessOutboxMessageService: IProcessOutboxMessageService
                 
                 if (domainEvent is null)
                 {
-                    _logger.LogCritical($"The domain event with id={outboxMessage.Id} is null");
+                    _logger.LogCritical($"ERROR:The domain event with id={outboxMessage.Id} is null");
                 }
-
+                
                 try
                 { 
                     await _publisher.Publish(domainEvent);

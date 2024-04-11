@@ -4,6 +4,7 @@ using Admission.Infrastructure.Common.Messaging.Options;
 using Admission.Infrastructure.Common.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -16,14 +17,16 @@ public sealed class IntegrationEventConsumerBackgroundService : BackgroundServic
     private readonly IServiceProvider _provider;
     private readonly IModel _channel;
     private readonly IntegrationConsumerQueueNameOptions _queueName;
+    private readonly ILogger<IntegrationEventConsumerBackgroundService> _logger;
 
 
     public IntegrationEventConsumerBackgroundService(
         IConnection connection, 
         IServiceProvider provider,
-        IOptions<IntegrationConsumerQueueNameOptions> queuesOptions)
+        IOptions<IntegrationConsumerQueueNameOptions> queuesOptions, ILogger<IntegrationEventConsumerBackgroundService> logger)
     {
         _provider = provider;
+        _logger = logger;
         _queueName = queuesOptions.Value;
         
         _channel = connection.CreateModel();
@@ -33,9 +36,18 @@ public sealed class IntegrationEventConsumerBackgroundService : BackgroundServic
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var consumer = new EventingBasicConsumer(_channel);
-        consumer.Received += OnIntegrationEventReceived;
-        _channel.BasicConsume(_queueName.IntegrationConsumerQueueName, false, consumer);
+        try
+        {
+            var consumer = new EventingBasicConsumer(_channel);
+
+            consumer.Received += OnIntegrationEventReceived;
+
+            _channel.BasicConsume(_queueName.IntegrationConsumerQueueName, false, consumer);
+        }
+        catch (Exception e)
+        {
+            _logger.LogCritical($"ERROR: Failed to process the integration events: {e.Message}");
+        }
         
         return Task.CompletedTask;
     }
@@ -46,15 +58,21 @@ public sealed class IntegrationEventConsumerBackgroundService : BackgroundServic
 
         var integrationEvent = JsonConvert.DeserializeObject<IIntegrationEvent>(body, new JsonSerializerSettings
         {
-            TypeNameHandling = TypeNameHandling.Auto
+            TypeNameHandling = TypeNameHandling.All
         });
         
         using var scope = _provider.CreateScope();
 
         var integrationEventConsumer = scope.ServiceProvider.GetRequiredService<IIntegrationEventConsumer>();
 
-        integrationEventConsumer.Consume(integrationEvent ?? throw new ArgumentNullException("Bad integration event"));
+        integrationEventConsumer.Consume(integrationEvent!);
 
         _channel.BasicAck(eventArgs.DeliveryTag, false);
+    }
+
+    public override void Dispose()
+    {
+        _channel.Dispose();
+        base.Dispose();
     }
 }
