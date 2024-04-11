@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Admission.Infrastructure.Common.BackgroundServices;
+namespace Admission.Infrastructure.Common.Outbox.BackgroundServices;
 
 public sealed class OutboxMessageProcessorService: BackgroundService
 {

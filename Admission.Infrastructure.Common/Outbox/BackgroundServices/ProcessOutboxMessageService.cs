@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace Admission.Infrastructure.Common.BackgroundServices;
+namespace Admission.Infrastructure.Common.Outbox.BackgroundServices;
 
 public sealed class ProcessOutboxMessageService: IProcessOutboxMessageService
 {
@@ -44,7 +44,7 @@ public sealed class ProcessOutboxMessageService: IProcessOutboxMessageService
 
                 try
                 { 
-                    await _publisher.Publish(domainEvent, stoppingToken);
+                    await _publisher.Publish(domainEvent);
                 }
                 catch (Exception e)
                 {

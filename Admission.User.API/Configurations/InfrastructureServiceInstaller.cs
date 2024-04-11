@@ -1,7 +1,11 @@
 ﻿using Admission.API.Common.ServiceInstaller;
-using Admission.Infrastructure.Common.BackgroundServices;
+using Admission.Application.Common.Messaging;
 using Admission.Infrastructure.Common.Context;
 using Admission.Infrastructure.Common.Interceptors;
+using Admission.Infrastructure.Common.Messaging;
+using Admission.Infrastructure.Common.Messaging.Settings;
+using Admission.Infrastructure.Common.Messaging.Settings.Setups;
+using Admission.Infrastructure.Common.Outbox.BackgroundServices;
 using Admission.User.Application.Context;
 using Admission.User.Application.Services;
 using Admission.User.Domain.Entities;
@@ -15,6 +19,8 @@ public class UserDbServiceInstaller: IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
+        services.ConfigureOptions<IntegrationQueuesOptionsSetup>();
+        services.AddSingleton<IIntegrationEventPublisher, IntegrationEventPublisher>();
         services.AddScoped<IUserDbContext>(provider => provider.GetRequiredService<UserDbContext>());
         services.AddScoped<IOutboxMessageDbContext>(provider => provider.GetRequiredService<UserDbContext>());
         
@@ -25,7 +31,9 @@ public class UserDbServiceInstaller: IServiceInstaller
         services.AddSingleton<IJwtProvider, JwtProvider>();
         services.AddSingleton<AuditableEntityInterceptor>();
         services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
+        
         services.AddHostedService<OutboxMessageProcessorService>();
+        
         services.AddScoped<IProcessOutboxMessageService, ProcessOutboxMessageService>();
         
         var connectionString = configuration.GetConnectionString("DefaultConnection");

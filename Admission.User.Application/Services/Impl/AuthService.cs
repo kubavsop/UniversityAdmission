@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using Admission.Application.Common.Exceptions;
 using Admission.Application.Common.Extensions;
+using Admission.Application.Common.Messaging;
 using Admission.Application.Common.Result;
 using Admission.Domain.Common.Enums;
 using Admission.User.Application.Context;
@@ -19,7 +20,6 @@ public sealed class AuthService: IAuthService
     private readonly UserManager<AdmissionUser> _userManager;
     private readonly IUserDbContext _context;
     private readonly IJwtProvider _jwtProvider;
-    
     public AuthService(UserManager<AdmissionUser> userManager, IJwtProvider jwtProvider, IUserDbContext context)
     {
         _userManager = userManager;
