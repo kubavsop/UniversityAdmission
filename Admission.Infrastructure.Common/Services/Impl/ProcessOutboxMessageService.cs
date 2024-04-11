@@ -2,19 +2,22 @@
 using Admission.Infrastructure.Common.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Admission.Infrastructure.Common.Services.Impl;
 
 public sealed class ProcessOutboxMessageService: IProcessOutboxMessageService
 {
+    private readonly ILogger<ProcessOutboxMessageService> _logger;
     private readonly IOutboxMessageDbContext _context;
     private readonly IPublisher _publisher;
 
-    public ProcessOutboxMessageService(IOutboxMessageDbContext context, IPublisher publisher)
+    public ProcessOutboxMessageService(IOutboxMessageDbContext context, IPublisher publisher, ILogger<ProcessOutboxMessageService> logger)
     {
         _context = context;
         _publisher = publisher;
+        _logger = logger;
     }
 
     public async Task DoWork(CancellationToken stoppingToken)
@@ -38,8 +41,7 @@ public sealed class ProcessOutboxMessageService: IProcessOutboxMessageService
                 
                 if (domainEvent is null)
                 {
-                    //TODO
-                    continue;
+                    _logger.LogCritical($"The domain event with id={outboxMessage.Id} is null");
                 }
 
                 try
@@ -48,7 +50,7 @@ public sealed class ProcessOutboxMessageService: IProcessOutboxMessageService
                 }
                 catch (Exception e)
                 {
-                    //TODO
+                    _logger.LogError($"The domain event with id={outboxMessage.Id} didn't publish");
                     continue;
                 }
                 

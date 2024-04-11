@@ -16,8 +16,6 @@ public sealed class ApplicantCreatedEventHandler: IDomainEventHandler<ApplicantC
 
     public Task Handle(ApplicantCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"PUBLISH notification with id={notification.Id}");
-        
         _publisher.Publish(new ApplicantCreatedIntegrationEvent
         {
             Id = notification.Id,

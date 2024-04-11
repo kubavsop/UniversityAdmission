@@ -1,5 +1,4 @@
 using System.Reflection;
-using Admission.API.Common.Middlewares;
 using Admission.API.Common.ServiceInstaller;
 using Admission.User.Infrastructure;
 
@@ -13,8 +12,6 @@ var app = builder.Build();
 
 await app.Services.AddAutoMigrationAsync();
 await app.Services.EnsureRoleCreatedAsync();
-
-
 
 if (app.Environment.IsDevelopment())
 {
