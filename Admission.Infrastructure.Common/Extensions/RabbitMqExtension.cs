@@ -1,15 +1,14 @@
-﻿using Admission.API.Common.ServiceInstaller;
-using Admission.Infrastructure.Common.Messaging.Options;
+﻿using Admission.Infrastructure.Common.Messaging.Options;
 using Admission.Infrastructure.Common.Messaging.Setups;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 
-namespace Admission.API.Common.Configurations;
+namespace Admission.Infrastructure.Common.Extensions;
 
-public sealed class RabbitMqServiceInstaller: IServiceInstaller
+public static class RabbitMqExtension
 {
-    public void Install(IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddRabbitMqConnection(this IServiceCollection services, IConfiguration configuration)
     {
         var messageBrokerSettings = configuration.GetSection("MessageBroker").Get<MessageBrokerOptions>()!;
         var connectionFactory = new ConnectionFactory
@@ -22,5 +21,6 @@ public sealed class RabbitMqServiceInstaller: IServiceInstaller
 
         services.ConfigureOptions<MessageBrokerOptionsSetup>();
         services.AddSingleton(connectionFactory.CreateConnection());
+        return services;
     }
 }

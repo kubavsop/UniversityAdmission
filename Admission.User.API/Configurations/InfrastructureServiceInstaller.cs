@@ -1,8 +1,10 @@
 ﻿using Admission.API.Common.ServiceInstaller;
+using Admission.Application.Common.Mapping;
 using Admission.Application.Common.Messaging;
 using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Infrastructure.Common.BackgroundServices;
 using Admission.Infrastructure.Common.Context;
+using Admission.Infrastructure.Common.Extensions;
 using Admission.Infrastructure.Common.Interceptors;
 using Admission.Infrastructure.Common.Messaging.Setups;
 using Admission.Infrastructure.Common.Services;
@@ -20,7 +22,12 @@ public class UserDbServiceInstaller: IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
+        services
+            .AddJwtAuthentication()
+            .AddRabbitMqConnection(configuration);
+        
         services.ConfigureOptions<IntegrationQueuesOptionsSetup>();
+        
         services.AddSingleton<IIntegrationEventPublisher, IntegrationEventPublisher>();
         services.AddScoped<IUserDbContext>(provider => provider.GetRequiredService<UserDbContext>());
         services.AddScoped<IOutboxMessageDbContext>(provider => provider.GetRequiredService<UserDbContext>());
@@ -29,6 +36,7 @@ public class UserDbServiceInstaller: IServiceInstaller
             .AddIdentityCore<AdmissionUser>()
             .AddRoles<AdmissionRole>()
             .AddEntityFrameworkStores<UserDbContext>();
+        
         services.AddSingleton<IJwtProvider, JwtProvider>();
         services.AddSingleton<AuditableEntityInterceptor>();
         services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
