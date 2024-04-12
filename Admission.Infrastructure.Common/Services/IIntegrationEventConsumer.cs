@@ -1,4 +1,5 @@
-﻿using Admission.Application.Common.Messaging;
+﻿using Admission.Application.Common.Messaging.IntegrationEvent;
+
 
 namespace Admission.Infrastructure.Common.Services;
 

@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Admission.Application.Common.Messaging;
+using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Infrastructure.Common.Messaging.Options;
 using Admission.Infrastructure.Common.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +18,7 @@ public sealed class IntegrationEventConsumerBackgroundService : BackgroundServic
     private readonly IModel _channel;
     private readonly IntegrationConsumerQueueNameOptions _queueName;
     private readonly ILogger<IntegrationEventConsumerBackgroundService> _logger;
-
-
+    
     public IntegrationEventConsumerBackgroundService(
         IConnection connection, 
         IServiceProvider provider,

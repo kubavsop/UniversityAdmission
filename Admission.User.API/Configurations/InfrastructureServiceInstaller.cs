@@ -1,5 +1,6 @@
 ﻿using Admission.API.Common.ServiceInstaller;
 using Admission.Application.Common.Messaging;
+using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Infrastructure.Common.BackgroundServices;
 using Admission.Infrastructure.Common.Context;
 using Admission.Infrastructure.Common.Interceptors;

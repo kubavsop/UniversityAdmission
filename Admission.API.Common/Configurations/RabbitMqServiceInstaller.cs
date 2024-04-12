@@ -11,7 +11,6 @@ public sealed class RabbitMqServiceInstaller: IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
-        
         var messageBrokerSettings = configuration.GetSection("MessageBroker").Get<MessageBrokerOptions>()!;
         var connectionFactory = new ConnectionFactory
         {

@@ -1,5 +1,5 @@
-﻿using Admission.Application.Common.Messaging;
-using Admission.Application.Common.Messaging.Events;
+﻿using Admission.Application.Common.Messaging.IntegrationEvent;
+using Admission.Application.Common.Messaging.IntegrationEvent.Events;
 using Admission.Domain.Common.Events;
 using Admission.User.Domain.Events;
 

@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Admission.Application.Common.Messaging;
+using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Infrastructure.Common.Messaging.Options;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;

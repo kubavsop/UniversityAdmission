@@ -1,4 +1,4 @@
-﻿using Admission.Application.Common.Messaging;
+﻿using Admission.Application.Common.Messaging.IntegrationEvent;
 using MediatR;
 
 namespace Admission.Infrastructure.Common.Services.Impl;
