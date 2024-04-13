@@ -53,10 +53,10 @@ public sealed class DictionaryController: BaseController
         return result.ToIActionResult();
     }
     
-    [HttpGet]
+    [HttpPost]
     [Route("Test")]
-    public async Task<ProgramPagedListDto> GetTest()
+    public async Task TestUpdate()
     {
-        return await _importerService.GetTest();
+        await _importerService.TestUpdate();
     }
 }

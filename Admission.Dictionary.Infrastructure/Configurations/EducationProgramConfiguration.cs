@@ -13,6 +13,8 @@ public sealed class EducationProgramConfiguration: IEntityTypeConfiguration<Educ
         builder
             .HasOne(p => p.EducationLevel)
             .WithMany()
-            .HasForeignKey(p => p.EducationLevelId);
+            .HasPrincipalKey(l => l.ExternalId)
+            .IsRequired();
+        
     }
 }

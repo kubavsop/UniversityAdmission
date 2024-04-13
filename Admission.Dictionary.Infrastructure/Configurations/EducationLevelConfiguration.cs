@@ -8,6 +8,6 @@ public sealed class EducationLevelConfiguration: IEntityTypeConfiguration<Educat
 {
     public void Configure(EntityTypeBuilder<EducationLevel> builder)
     {
-        builder.HasKey(l => l.Id);
+        builder.HasAlternateKey(l => l.ExternalId);
     }
 }

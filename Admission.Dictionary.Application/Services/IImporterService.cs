@@ -5,5 +5,9 @@ namespace Admission.Dictionary.Application.Services;
 
 public interface IImporterService
 {
-    Task<ProgramPagedListDto> GetTest();
+    Task TestUpdate();
+    Task UpdateFaculties();
+    Task UpdatePrograms();
+    Task UpdateEducationLevels();
+    Task UpdateDocumentTypes();
 }

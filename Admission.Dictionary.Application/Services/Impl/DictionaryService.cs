@@ -1,4 +1,5 @@
-﻿using Admission.Application.Common.Result;
+﻿using Admission.Application.Common.Extensions;
+using Admission.Application.Common.Result;
 using Admission.Dictionary.Application.Context;
 using Admission.Dictionary.Application.DTOs;
 using Admission.Dictionary.Application.DTOs.Requests;
@@ -24,6 +25,7 @@ public class DictionaryService: IDictionaryService
     { 
         var result = await _context.Faculties
             .AsNoTracking()
+            .GetUndeleted()
             .ToListAsync();
         
         return _mapper.Map<List<FacultyDto>>(result);
@@ -33,6 +35,7 @@ public class DictionaryService: IDictionaryService
     {
         var result = await _context.EducationLevels
             .AsNoTracking()
+            .GetUndeleted()
             .ToListAsync();
         
         return _mapper.Map<List<EducationLevelDto>>(result);
@@ -42,6 +45,7 @@ public class DictionaryService: IDictionaryService
     {
         var result = await _context.DocumentTypes
             .AsNoTracking()
+            .GetUndeleted()
             .Include(t => t.EducationLevel)
             .Include(t => t.NextEducationLevels)
             .ToListAsync();

@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -16,13 +15,17 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                 name: "EducationLevels",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ExternalId = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DeleteTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EducationLevels", x => x.Id);
+                    table.UniqueConstraint("AK_EducationLevels_ExternalId", x => x.ExternalId);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,7 +61,7 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                         name: "FK_DocumentTypes_EducationLevels_EducationLevelId",
                         column: x => x.EducationLevelId,
                         principalTable: "EducationLevels",
-                        principalColumn: "Id",
+                        principalColumn: "ExternalId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -84,7 +87,7 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                         name: "FK_Programs_EducationLevels_EducationLevelId",
                         column: x => x.EducationLevelId,
                         principalTable: "EducationLevels",
-                        principalColumn: "Id",
+                        principalColumn: "ExternalId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Programs_Faculties_FacultyId",
@@ -99,7 +102,7 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                 columns: table => new
                 {
                     DocumentTypesId = table.Column<Guid>(type: "uuid", nullable: false),
-                    NextEducationLevelsId = table.Column<int>(type: "integer", nullable: false)
+                    NextEducationLevelsId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {

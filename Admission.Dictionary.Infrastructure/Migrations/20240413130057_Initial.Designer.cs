@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Admission.Dictionary.Infrastructure.Migrations
 {
     [DbContext(typeof(DictionaryDbContext))]
-    [Migration("20240413050832_Initial")]
+    [Migration("20240413130057_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -56,11 +56,21 @@ namespace Admission.Dictionary.Infrastructure.Migrations
 
             modelBuilder.Entity("Admission.Dictionary.Domain.Entities.EducationLevel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeleteTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ExternalId")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -146,8 +156,8 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                     b.Property<Guid>("DocumentTypesId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("NextEducationLevelsId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("NextEducationLevelsId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("DocumentTypesId", "NextEducationLevelsId");
 
@@ -161,6 +171,7 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                     b.HasOne("Admission.Dictionary.Domain.Entities.EducationLevel", "EducationLevel")
                         .WithMany()
                         .HasForeignKey("EducationLevelId")
+                        .HasPrincipalKey("ExternalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -172,6 +183,7 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                     b.HasOne("Admission.Dictionary.Domain.Entities.EducationLevel", "EducationLevel")
                         .WithMany()
                         .HasForeignKey("EducationLevelId")
+                        .HasPrincipalKey("ExternalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

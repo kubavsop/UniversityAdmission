@@ -13,4 +13,11 @@ public sealed class EducationLevelDto: IMapFrom<EducationLevel>
     [Required]
     [MinLength(1)]
     public string Name { get; set; }
+
+    public void Mapping(Profile profile)
+    {
+        profile.CreateMap<EducationLevel, EducationLevelDto>()
+            .ForMember(dest => dest.Id,
+                opt => opt.MapFrom(src => src.ExternalId));
+    }
 }
