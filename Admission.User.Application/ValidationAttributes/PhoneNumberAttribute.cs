@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace Admission.Application.Common.ValidationAttributes;
+namespace Admission.User.Application.ValidationAttributes;
 
 public sealed partial class PhoneNumberAttribute: ValidationAttribute
 {

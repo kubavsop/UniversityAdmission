@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Admission.Domain.Common.Entities;
 using Admission.Domain.Common.Events;
+using Admission.Infrastructure.Common.OutboxMessages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
@@ -35,7 +36,7 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor: SaveChangesI
                 a.ClearDomainEvents();
                 return events;
             })
-            .Select(domainEvent => new OutboxMessage.OutboxMessage
+            .Select(domainEvent => new OutboxMessage
             {
                 Id = Guid.NewGuid(),
                 OccurredTime = DateTime.UtcNow,
@@ -48,6 +49,6 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor: SaveChangesI
             })
             .ToList();
         
-        dbContext.Set<OutboxMessage.OutboxMessage>().AddRange(outboxMessages);
+        dbContext.Set<OutboxMessage>().AddRange(outboxMessages);
     }
 }

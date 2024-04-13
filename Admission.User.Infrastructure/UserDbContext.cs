@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Admission.Infrastructure.Common.Context;
-using Admission.Infrastructure.Common.OutboxMessage;
+using Admission.Infrastructure.Common.OutboxMessages;
 using Admission.User.Application.Context;
 using Admission.User.Domain.Entities;
 using Microsoft.AspNetCore.Identity;

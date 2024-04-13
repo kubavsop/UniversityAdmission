@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Admission.Dictionary.Application.DTOs;
+namespace Admission.Dictionary.Application.DTOs.Requests;
 
 public abstract class ProgramSearchParameters
 {

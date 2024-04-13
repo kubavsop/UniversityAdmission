@@ -34,8 +34,8 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                     b.Property<DateTime?>("DeleteTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("EducationLevelId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("EducationLevelId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("timestamp with time zone");
@@ -53,18 +53,11 @@ namespace Admission.Dictionary.Infrastructure.Migrations
 
             modelBuilder.Entity("Admission.Dictionary.Domain.Entities.EducationLevel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeleteTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("timestamp with time zone");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -95,8 +88,8 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("EducationLevelId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("EducationLevelId")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("FacultyId")
                         .HasColumnType("uuid");
@@ -150,12 +143,12 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                     b.Property<Guid>("DocumentTypesId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("EducationLevelsId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("NextEducationLevelsId")
+                        .HasColumnType("integer");
 
-                    b.HasKey("DocumentTypesId", "EducationLevelsId");
+                    b.HasKey("DocumentTypesId", "NextEducationLevelsId");
 
-                    b.HasIndex("EducationLevelsId");
+                    b.HasIndex("NextEducationLevelsId");
 
                     b.ToTable("EducationDocumentTypeEducationLevel");
                 });
@@ -200,7 +193,7 @@ namespace Admission.Dictionary.Infrastructure.Migrations
 
                     b.HasOne("Admission.Dictionary.Domain.Entities.EducationLevel", null)
                         .WithMany()
-                        .HasForeignKey("EducationLevelsId")
+                        .HasForeignKey("NextEducationLevelsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

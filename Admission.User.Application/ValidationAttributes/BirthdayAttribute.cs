@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Admission.Application.Common.ValidationAttributes;
+namespace Admission.User.Application.ValidationAttributes;
 
 public class BirthdayAttribute : ValidationAttribute
 {

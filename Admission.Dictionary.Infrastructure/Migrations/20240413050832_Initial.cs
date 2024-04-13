@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,11 +16,9 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                 name: "EducationLevels",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    CreateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeleteTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,7 +46,7 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    EducationLevelId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EducationLevelId = table.Column<int>(type: "integer", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DeleteTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
@@ -73,7 +72,7 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                     Language = table.Column<string>(type: "text", nullable: false),
                     EducationForm = table.Column<string>(type: "text", nullable: false),
                     FacultyId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EducationLevelId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EducationLevelId = table.Column<int>(type: "integer", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DeleteTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
@@ -100,11 +99,11 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                 columns: table => new
                 {
                     DocumentTypesId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EducationLevelsId = table.Column<Guid>(type: "uuid", nullable: false)
+                    NextEducationLevelsId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EducationDocumentTypeEducationLevel", x => new { x.DocumentTypesId, x.EducationLevelsId });
+                    table.PrimaryKey("PK_EducationDocumentTypeEducationLevel", x => new { x.DocumentTypesId, x.NextEducationLevelsId });
                     table.ForeignKey(
                         name: "FK_EducationDocumentTypeEducationLevel_DocumentTypes_DocumentT~",
                         column: x => x.DocumentTypesId,
@@ -112,8 +111,8 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EducationDocumentTypeEducationLevel_EducationLevels_Educati~",
-                        column: x => x.EducationLevelsId,
+                        name: "FK_EducationDocumentTypeEducationLevel_EducationLevels_NextEdu~",
+                        column: x => x.NextEducationLevelsId,
                         principalTable: "EducationLevels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -125,9 +124,9 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                 column: "EducationLevelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EducationDocumentTypeEducationLevel_EducationLevelsId",
+                name: "IX_EducationDocumentTypeEducationLevel_NextEducationLevelsId",
                 table: "EducationDocumentTypeEducationLevel",
-                column: "EducationLevelsId");
+                column: "NextEducationLevelsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Programs_EducationLevelId",

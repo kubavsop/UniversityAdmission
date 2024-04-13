@@ -1,4 +1,4 @@
-﻿namespace Admission.Infrastructure.Common.OutboxMessage;
+﻿namespace Admission.Infrastructure.Common.OutboxMessages;
 
 public sealed class OutboxMessage
 {

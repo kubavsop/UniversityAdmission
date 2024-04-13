@@ -6,7 +6,7 @@ public sealed class EducationDocumentType: BaseEntity
 {
     public required string Name { get; set; }
     
-    public Guid EducationLevelId { get; set; }
+    public int EducationLevelId { get; set; }
     
     public EducationLevel? EducationLevel { get; set; }
 

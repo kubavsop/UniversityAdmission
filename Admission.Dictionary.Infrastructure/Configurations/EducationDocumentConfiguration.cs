@@ -15,6 +15,7 @@ internal sealed class EducationDocumentConfiguration: IEntityTypeConfiguration<E
         builder
             .HasOne(t => t.EducationLevel)
             .WithMany()
+            .HasForeignKey(t => t.EducationLevelId)
             .IsRequired();
     }
 }

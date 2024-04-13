@@ -2,9 +2,10 @@
 
 namespace Admission.Dictionary.Domain.Entities;
 
-public sealed class EducationLevel: BaseEntity
+public sealed class EducationLevel
 {
-    public required string Name { get; set; }
+    public int Id { get; set; }
     
+    public required string Name { get; set; }
     public ICollection<EducationDocumentType> DocumentTypes { get; set; } = new List<EducationDocumentType>();
 }

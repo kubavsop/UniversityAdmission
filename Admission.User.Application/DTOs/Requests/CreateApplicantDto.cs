@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Admission.Application.Common.ValidationAttributes;
 using Admission.Domain.Common.Enums;
+using Admission.User.Application.ValidationAttributes;
 
 namespace Admission.User.Application.DTOs.Requests;
 
@@ -34,7 +34,7 @@ public sealed class CreateApplicantDto
     [MaxLength(1000)]
     public string? Citizenship { get; set; }
 
-    [PhoneNumber]
+    [ValidationAttributes.PhoneNumber]
     public string? PhoneNumber { get; set; }
     
     private DateTime? _birthday;
