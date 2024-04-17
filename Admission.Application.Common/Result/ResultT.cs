@@ -15,7 +15,7 @@ public sealed class Result<TValue>: Result
     public static implicit operator Result<TValue>(Exception exception) => new (exception);
     
     public TResult Match<TResult>(Func<TValue, TResult> onSuccess, Func<Exception, TResult> onFailure) =>
-        IsSuccess ? onSuccess(_value) : onFailure(Exception);
+        IsSuccess ? onSuccess(_value) : onFailure(_exception);
     
     public TValue Value => IsSuccess
         ? _value!

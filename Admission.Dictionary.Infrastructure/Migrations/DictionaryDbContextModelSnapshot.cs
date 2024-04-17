@@ -148,19 +148,34 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                     b.ToTable("Faculties");
                 });
 
-            modelBuilder.Entity("EducationDocumentTypeEducationLevel", b =>
+            modelBuilder.Entity("Admission.Dictionary.Domain.Entities.NextEducationLevel", b =>
                 {
-                    b.Property<Guid>("DocumentTypesId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("NextEducationLevelsId")
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeleteTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EducationDocumentTypeId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("DocumentTypesId", "NextEducationLevelsId");
+                    b.Property<int>("EducationLevelId")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("NextEducationLevelsId");
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.ToTable("EducationDocumentTypeEducationLevel");
+                    b.HasKey("Id");
+
+                    b.HasIndex("EducationDocumentTypeId");
+
+                    b.HasIndex("EducationLevelId");
+
+                    b.ToTable("NextEducationLevels");
                 });
 
             modelBuilder.Entity("Admission.Dictionary.Domain.Entities.EducationDocumentType", b =>
@@ -195,19 +210,34 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                     b.Navigation("Faculty");
                 });
 
-            modelBuilder.Entity("EducationDocumentTypeEducationLevel", b =>
+            modelBuilder.Entity("Admission.Dictionary.Domain.Entities.NextEducationLevel", b =>
                 {
-                    b.HasOne("Admission.Dictionary.Domain.Entities.EducationDocumentType", null)
-                        .WithMany()
-                        .HasForeignKey("DocumentTypesId")
+                    b.HasOne("Admission.Dictionary.Domain.Entities.EducationDocumentType", "EducationDocumentType")
+                        .WithMany("NextEducationLevels")
+                        .HasForeignKey("EducationDocumentTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Admission.Dictionary.Domain.Entities.EducationLevel", null)
-                        .WithMany()
-                        .HasForeignKey("NextEducationLevelsId")
+                    b.HasOne("Admission.Dictionary.Domain.Entities.EducationLevel", "EducationLevel")
+                        .WithMany("NextEducationLevels")
+                        .HasForeignKey("EducationLevelId")
+                        .HasPrincipalKey("ExternalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("EducationDocumentType");
+
+                    b.Navigation("EducationLevel");
+                });
+
+            modelBuilder.Entity("Admission.Dictionary.Domain.Entities.EducationDocumentType", b =>
+                {
+                    b.Navigation("NextEducationLevels");
+                });
+
+            modelBuilder.Entity("Admission.Dictionary.Domain.Entities.EducationLevel", b =>
+                {
+                    b.Navigation("NextEducationLevels");
                 });
 #pragma warning restore 612, 618
         }

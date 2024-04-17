@@ -1,10 +1,10 @@
-﻿using Admission.Application.Common.Extensions;
+﻿using Admission.Application.Common.Exceptions;
+using Admission.Application.Common.Extensions;
 using Admission.Application.Common.Result;
 using Admission.Dictionary.Application.Context;
-using Admission.Dictionary.Application.DTOs;
 using Admission.Dictionary.Application.DTOs.Requests;
 using Admission.Dictionary.Application.DTOs.Responses;
-using Admission.Dictionary.Domain.Entities;
+using Admission.Domain.Common.Entities;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,14 +47,45 @@ public class DictionaryService: IDictionaryService
             .AsNoTracking()
             .GetUndeleted()
             .Include(t => t.EducationLevel)
-            .Include(t => t.NextEducationLevels)
+            .Include(t => t.EducationLevels)
             .ToListAsync();
         
         return _mapper.Map<List<EducationDocumentTypeDto>>(result);
     }
 
-    public Task<Result<IEnumerable<EducationProgramDto>>> GetEducationProgramsAsync(ProgramSearchParameters parameters)
+    public async Task<Result<IEnumerable<EducationProgramDto>>> GetEducationProgramsAsync(ProgramSearchParameters parameters)
     {
+        var facultiesResult = await CheckEntitiesExistenceAsync(
+            parameters.Faculties,
+            id => _context.Faculties.AnyAsync(f => f.Id == id)
+        );
+        if (facultiesResult.IsFailure)
+        {
+            return facultiesResult.Exception;
+        }
+
+        var levelsResult = await CheckEntitiesExistenceAsync(
+            parameters.EducationLevels,
+            id => _context.EducationLevels.AnyAsync(l => l.Id == id));
+        if (levelsResult.IsFailure)
+        {
+            return levelsResult.Exception;
+        }
+
         throw new NotImplementedException();
+    }
+
+    private async Task<Result> CheckEntitiesExistenceAsync(
+        IEnumerable<Guid> ids,
+        Func<Guid, Task<bool>> checkExistence
+        ) {
+        foreach (var id in ids)
+        {
+            if (!await checkExistence(id))
+            {
+                return new NotFoundException("Entity", id);
+            } 
+        }
+        return Result.Success();
     }
 }

@@ -11,5 +11,5 @@ public class StudentAdmission: BaseEntity
     public Guid? FirstPriorityFacultyId { get; set; }
     public Faculty? FirstPriorityFaculty;
     public Guid ApplicantId { get; set; }
-    public Applicant? Applicant { get; set; }
+    public Applicant Applicant { get; set; } = null!;
 }

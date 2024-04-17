@@ -8,7 +8,8 @@ public sealed class EducationDocumentType: BaseEntity
     
     public int EducationLevelId { get; set; }
     
-    public EducationLevel? EducationLevel { get; set; }
+    public EducationLevel EducationLevel { get; set; } = null!;
 
-    public ICollection<EducationLevel> NextEducationLevels { get; set; } = new List<EducationLevel>();
+    public ICollection<EducationLevel> EducationLevels { get; } = new List<EducationLevel>();
+    public ICollection<NextEducationLevel> NextEducationLevels { get; } = new List<NextEducationLevel>();
 }

@@ -17,6 +17,5 @@ public sealed class EducationProgram: BaseEntity
     public int EducationLevelId { get; set; }
     
     public Faculty? Faculty { get; set; }
-
     public EducationLevel? EducationLevel { get; set; }
 }

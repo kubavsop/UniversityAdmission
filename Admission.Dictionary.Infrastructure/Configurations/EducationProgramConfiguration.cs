@@ -15,6 +15,5 @@ public sealed class EducationProgramConfiguration: IEntityTypeConfiguration<Educ
             .WithMany()
             .HasPrincipalKey(l => l.ExternalId)
             .IsRequired();
-        
     }
 }

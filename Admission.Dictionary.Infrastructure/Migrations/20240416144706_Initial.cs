@@ -98,26 +98,30 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EducationDocumentTypeEducationLevel",
+                name: "NextEducationLevels",
                 columns: table => new
                 {
-                    DocumentTypesId = table.Column<Guid>(type: "uuid", nullable: false),
-                    NextEducationLevelsId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EducationDocumentTypeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EducationLevelId = table.Column<int>(type: "integer", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DeleteTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EducationDocumentTypeEducationLevel", x => new { x.DocumentTypesId, x.NextEducationLevelsId });
+                    table.PrimaryKey("PK_NextEducationLevels", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EducationDocumentTypeEducationLevel_DocumentTypes_DocumentT~",
-                        column: x => x.DocumentTypesId,
+                        name: "FK_NextEducationLevels_DocumentTypes_EducationDocumentTypeId",
+                        column: x => x.EducationDocumentTypeId,
                         principalTable: "DocumentTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EducationDocumentTypeEducationLevel_EducationLevels_NextEdu~",
-                        column: x => x.NextEducationLevelsId,
+                        name: "FK_NextEducationLevels_EducationLevels_EducationLevelId",
+                        column: x => x.EducationLevelId,
                         principalTable: "EducationLevels",
-                        principalColumn: "Id",
+                        principalColumn: "ExternalId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -127,9 +131,14 @@ namespace Admission.Dictionary.Infrastructure.Migrations
                 column: "EducationLevelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EducationDocumentTypeEducationLevel_NextEducationLevelsId",
-                table: "EducationDocumentTypeEducationLevel",
-                column: "NextEducationLevelsId");
+                name: "IX_NextEducationLevels_EducationDocumentTypeId",
+                table: "NextEducationLevels",
+                column: "EducationDocumentTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NextEducationLevels_EducationLevelId",
+                table: "NextEducationLevels",
+                column: "EducationLevelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Programs_EducationLevelId",
@@ -146,7 +155,7 @@ namespace Admission.Dictionary.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "EducationDocumentTypeEducationLevel");
+                name: "NextEducationLevels");
 
             migrationBuilder.DropTable(
                 name: "Programs");

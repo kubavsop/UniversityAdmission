@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.Design;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
-using Admission.Dictionary.Application.DTOs;
 using Admission.Dictionary.Application.DTOs.Responses;
 using Admission.Dictionary.Application.Services;
 using Admission.Dictionary.Infrastructure.Options;
@@ -27,14 +25,14 @@ public class ExternalDictionaryService: IExternalDictionaryService
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64Credentials);
     }
 
-    public async Task<IEnumerable<FacultyDto>> GetFacultiesAsync() =>
-        (await _httpClient.GetFromJsonAsync<IEnumerable<FacultyDto>>("faculties"))!;
+    public async Task<ICollection<FacultyDto>> GetFacultiesAsync() =>
+        (await _httpClient.GetFromJsonAsync<ICollection<FacultyDto>>("faculties"))!;
     
-    public async Task<IEnumerable<EducationLevelDto>> GetEducationLevelsAsync() =>
-        (await _httpClient.GetFromJsonAsync<IEnumerable<EducationLevelDto>>("education_levels"))!;
+    public async Task<ICollection<EducationLevelDto>> GetEducationLevelsAsync() =>
+        (await _httpClient.GetFromJsonAsync<ICollection<EducationLevelDto>>("education_levels"))!;
     
-    public async Task<IEnumerable<EducationDocumentTypeDto>> GetDocumentTypesAsync() =>
-        (await _httpClient.GetFromJsonAsync<IEnumerable<EducationDocumentTypeDto>>("document_types"))!;
+    public async Task<ICollection<EducationDocumentTypeDto>> GetDocumentTypesAsync() =>
+        (await _httpClient.GetFromJsonAsync<ICollection<EducationDocumentTypeDto>>("document_types"))!;
     public async Task<ProgramPagedListDto> GetProgramsAsync(int page = 1, int size = 10) =>
         (await _httpClient.GetFromJsonAsync<ProgramPagedListDto>($"programs?page={page}&size={size}"))!;
 }

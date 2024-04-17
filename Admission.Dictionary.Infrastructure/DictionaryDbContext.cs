@@ -11,6 +11,8 @@ public sealed class DictionaryDbContext: DbContext, IDictionaryDbContext
     public DbSet<EducationLevel> EducationLevels { get; init; }
     public DbSet<EducationProgram> Programs { get; init; }
     public DbSet<Faculty> Faculties { get; init; }
+
+    public DbSet<NextEducationLevel> NextEducationLevels { get; init; }
     
     public DictionaryDbContext(DbContextOptions options) : base(options) { }
     

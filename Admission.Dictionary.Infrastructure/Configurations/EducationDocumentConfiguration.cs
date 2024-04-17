@@ -9,8 +9,10 @@ internal sealed class EducationDocumentConfiguration: IEntityTypeConfiguration<E
     public void Configure(EntityTypeBuilder<EducationDocumentType> builder)
     {
         builder
-            .HasMany(t => t.NextEducationLevels)
-            .WithMany(l => l.DocumentTypes);
+            .HasMany(t => t.EducationLevels)
+            .WithMany(l => l.DocumentTypes)
+            .UsingEntity<NextEducationLevel>(
+                l => l.HasOne<EducationLevel>(e => e.EducationLevel).WithMany(e => e.NextEducationLevels).HasPrincipalKey(e => e.ExternalId));
 
         builder
             .HasOne(t => t.EducationLevel)
