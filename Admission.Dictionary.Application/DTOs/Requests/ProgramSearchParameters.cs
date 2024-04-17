@@ -15,7 +15,7 @@ public abstract class ProgramSearchParameters
     
     public ICollection<Guid> Faculties { get; set; } = new List<Guid>();
     
-    public ICollection<Guid> EducationLevels { get; set; } = new List<Guid>();
+    public ICollection<int> EducationLevels { get; set; } = new List<int>();
     
     public string? EducationForm { get; set; }
     public string? Language { get; set; }

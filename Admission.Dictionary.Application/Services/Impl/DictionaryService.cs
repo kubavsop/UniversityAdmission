@@ -4,7 +4,6 @@ using Admission.Application.Common.Result;
 using Admission.Dictionary.Application.Context;
 using Admission.Dictionary.Application.DTOs.Requests;
 using Admission.Dictionary.Application.DTOs.Responses;
-using Admission.Domain.Common.Entities;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,7 +46,10 @@ public class DictionaryService: IDictionaryService
             .AsNoTracking()
             .GetUndeleted()
             .Include(t => t.EducationLevel)
-            .Include(t => t.EducationLevels)
+            .Where(d => !d.EducationLevel.DeleteTime.HasValue)
+            .Include(t => t.NextEducationLevels
+                .Where(nel => !nel.DeleteTime.HasValue))
+            .ThenInclude(nel => nel.EducationLevel)
             .ToListAsync();
         
         return _mapper.Map<List<EducationDocumentTypeDto>>(result);
@@ -57,8 +59,7 @@ public class DictionaryService: IDictionaryService
     {
         var facultiesResult = await CheckEntitiesExistenceAsync(
             parameters.Faculties,
-            id => _context.Faculties.AnyAsync(f => f.Id == id)
-        );
+            id => _context.Faculties.AnyAsync(f => f.Id == id));
         if (facultiesResult.IsFailure)
         {
             return facultiesResult.Exception;
@@ -66,24 +67,29 @@ public class DictionaryService: IDictionaryService
 
         var levelsResult = await CheckEntitiesExistenceAsync(
             parameters.EducationLevels,
-            id => _context.EducationLevels.AnyAsync(l => l.Id == id));
+            id => _context.EducationLevels.AnyAsync(l => l.ExternalId == id));
         if (levelsResult.IsFailure)
         {
             return levelsResult.Exception;
         }
 
+        var queryable = _context.Programs
+            .Where(p => parameters.Faculties.Count == 0 || parameters.Faculties.Any(id => id == p.FacultyId))
+            .Where(p => parameters.EducationLevels.Count == 0 ||
+                        parameters.EducationLevels.Any(id => id == p.EducationLevelId));
+
         throw new NotImplementedException();
     }
 
-    private async Task<Result> CheckEntitiesExistenceAsync(
-        IEnumerable<Guid> ids,
-        Func<Guid, Task<bool>> checkExistence
+    private async Task<Result> CheckEntitiesExistenceAsync<TId>(
+        IEnumerable<TId> ids,
+        Func<TId, Task<bool>> checkExistence
         ) {
         foreach (var id in ids)
         {
             if (!await checkExistence(id))
             {
-                return new NotFoundException("Entity", id);
+                return new NotFoundException($"Entity with id={id} was not found.");
             } 
         }
         return Result.Success();

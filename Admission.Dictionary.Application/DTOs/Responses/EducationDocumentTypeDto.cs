@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Admission.Application.Common.Extensions;
 using Admission.Application.Common.Mapping;
 using Admission.Dictionary.Domain.Entities;
 using AutoMapper;
@@ -26,6 +27,8 @@ public class EducationDocumentTypeDto: IMapFrom<EducationDocumentType>
     {
         profile.CreateMap<EducationDocumentType, EducationDocumentTypeDto>()
             .ForMember(dest => dest.NextEducationLevels,
-                opt => opt.MapFrom(src => src.EducationLevels));
+                opt => opt.MapFrom(src => src.NextEducationLevels
+                    .Where(nel => !nel.EducationLevel.DeleteTime.HasValue)
+                    .Select(nel => nel.EducationLevel)));
     }
 }

@@ -13,7 +13,7 @@ var app = builder.Build();
 
 await app.Services.AddAutoMigrationAsync();
 
-
+app.UseExceptionHandlingMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
