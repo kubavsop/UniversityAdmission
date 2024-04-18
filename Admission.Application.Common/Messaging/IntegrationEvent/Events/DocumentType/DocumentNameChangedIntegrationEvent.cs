@@ -2,4 +2,4 @@
 
 namespace Admission.Application.Common.Messaging.IntegrationEvent.Events.DocumentType;
 
-public sealed class DocumentNameChangedIntegrationEvent: NameChangedIntegrationEvent;
+public sealed class DocumentNameChangedIntegrationEvent: NameChangedIntegrationEvent<Guid>;

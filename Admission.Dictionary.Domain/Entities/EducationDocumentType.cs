@@ -7,9 +7,9 @@ public sealed class EducationDocumentType: AggregateRoot
 {
     public string Name { get; private set; }
     
-    public int EducationLevelId { get; set; }
+    public int EducationLevelId { get; private set; }
     
-    public EducationLevel EducationLevel { get; set; } = null!;
+    public EducationLevel EducationLevel { get; private set; } = null!;
 
     public ICollection<EducationLevel> EducationLevels { get; } = new List<EducationLevel>();
     public ICollection<NextEducationLevel> NextEducationLevels { get; } = new List<NextEducationLevel>();

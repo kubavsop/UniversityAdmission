@@ -104,7 +104,7 @@ public class ImporterService : IImporterService
             entities.Select(e => e.ExternalId).Except(dtos.Select(d => d.Id)),
             (level, dto) =>
             {
-                level.Name = dto.Name;
+                level.ChangeName(dto.Name);
                 level.ChangeDeleteTime(null);
             },
             dto => new EducationLevel { Id = Guid.NewGuid(), ExternalId = dto.Id, Name = dto.Name },

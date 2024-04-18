@@ -16,4 +16,11 @@ public sealed class EducationLevel: AggregateRoot
         DeleteTime = deleteTime;
         AddDomainEvent(new EducationLevelDeleteTimeChangedDomainEvent(this));
     }
+
+    public void ChangeName(string name)
+    {
+        if (Name == name) return;
+        Name = name;
+        AddDomainEvent(new LevelNameChangedDomainEvent(this));
+    }
 }
