@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Admission.Infrastructure.Common.Messaging.Options;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace Admission.Infrastructure.Common.Messaging.Setups;
 
-public sealed class IntegrationConsumerQueueNameOptionsSetup: IConfigureOptions<IntegrationConsumerQueueNameOptionsSetup>
+public sealed class IntegrationConsumerQueueNameOptionsSetup: IConfigureOptions<IntegrationConsumerQueueNameOptions>
 {
     private const string SectionName = "IntegrationConsumerQueueName";
     private readonly IConfiguration _configuration;
@@ -13,7 +14,7 @@ public sealed class IntegrationConsumerQueueNameOptionsSetup: IConfigureOptions<
         _configuration = configuration;
     }
     
-    public void Configure(IntegrationConsumerQueueNameOptionsSetup options)
+    public void Configure(IntegrationConsumerQueueNameOptions options)
     {
         _configuration.GetSection(SectionName).Bind(options);
     }
