@@ -177,7 +177,7 @@ public class ImporterService : IImporterService
     {
         type.ChangeName(dto.Name);
         type.ChangeDeleteTime(null);
-        type.EducationLevelId = dto.EducationLevel.Id;
+        type.ChangedEducationLevel(new EducationLevel { ExternalId = dto.EducationLevel.Id, Name = dto.EducationLevel.Name });
     }
 
     private void UpdateProgram(EducationProgram program, EducationProgramDto dto)

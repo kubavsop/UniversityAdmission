@@ -34,4 +34,12 @@ public sealed class EducationDocumentType: AggregateRoot
         DeleteTime = deleteTime;
         AddDomainEvent(new DocumentDeleteTimeChangedDomainEvent(this));
     }
+
+    public void ChangedEducationLevel(EducationLevel level)
+    {
+        if (EducationLevelId == level.ExternalId) return;
+
+        EducationLevelId = level.ExternalId;
+        AddDomainEvent(new DocumentEducationLevelChangedDomainEvent(this, level));
+    }
 }
