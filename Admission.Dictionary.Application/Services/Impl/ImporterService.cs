@@ -156,8 +156,7 @@ public class ImporterService : IImporterService
             UpdateDocumentType,
             dto => new EducationDocumentType (dto.Id, dto.Name, dto.EducationLevel.Id ),
             dto => dto.Id);
-
-
+        
         var nextEducationLevelsEntities = entities.SelectMany(e => e.NextEducationLevels).ToList();
         var nextEducationLevelsDtos = dtos.SelectMany(e => e.NextEducationLevels
             .Select(nel => new NextEducationLevel { EducationDocumentTypeId = e.Id, EducationLevelId = nel.Id })
