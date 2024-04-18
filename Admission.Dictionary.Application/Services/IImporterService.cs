@@ -6,8 +6,9 @@ namespace Admission.Dictionary.Application.Services;
 public interface IImporterService
 {
     Task TestUpdate();
-    Task UpdateFaculties();
-    Task UpdatePrograms();
-    Task UpdateEducationLevels();
-    Task UpdateDocumentTypes();
+    Task UpdateFacultiesAsync();
+    Task UpdateProgramsAsync();
+    Task UpdateEducationLevelsAsync();
+    Task UpdateDocumentTypesAsync();
+    Task UpdateAllAsync();
 }

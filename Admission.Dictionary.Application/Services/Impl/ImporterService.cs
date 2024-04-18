@@ -23,13 +23,42 @@ public class ImporterService : IImporterService
 
     public async Task TestUpdate()
     {
+        await UpdateAllAsync();
+    }
+
+    public async Task UpdateFacultiesAsync()
+    {
+        await UpdateFaculties();
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateProgramsAsync()
+    {
+        await UpdatePrograms();
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateEducationLevelsAsync()
+    {
+        await UpdateEducationLevels();
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateDocumentTypesAsync()
+    {
+        await UpdateDocumentTypes();
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAllAsync()
+    {
         await UpdateFaculties();
         await UpdateDocumentTypes();
         await UpdatePrograms();
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateFaculties()
+    private async Task UpdateFaculties()
     {
         var dtos = await _externalDictionaryService.GetFacultiesAsync();
         var entities = await _context.Faculties.ToListAsync();
@@ -49,7 +78,7 @@ public class ImporterService : IImporterService
             dto => dto.Id);
     }
 
-    public async Task UpdatePrograms()
+    private async Task UpdatePrograms()
     {
         _educationLevels ??= await _context.EducationLevels
             .AsNoTracking()
@@ -67,8 +96,10 @@ public class ImporterService : IImporterService
         var entities = await _context.Programs.ToListAsync();
         var dictionary = entities.ToDictionary(e => e.Id);
         var entitiesId = entities.Select(e => e.Id).ToList();
+        
         IEnumerable<Guid> toDeleteIds = entitiesId; 
         ProgramPagedListDto pageInfoDto;
+        
         do
         {
             pageInfoDto = await _externalDictionaryService.GetProgramsAsync(currentPage, currentSize);
@@ -91,7 +122,7 @@ public class ImporterService : IImporterService
         }
     }
 
-    public async Task UpdateEducationLevels()
+    private async Task UpdateEducationLevels()
     {
         var dtos = await _externalDictionaryService.GetEducationLevelsAsync();
         var entities = await _context.EducationLevels.ToListAsync();
@@ -111,7 +142,7 @@ public class ImporterService : IImporterService
             dto => dto.Id);
     }
 
-    public async Task UpdateDocumentTypes()
+    private async Task UpdateDocumentTypes()
     {
         await UpdateEducationLevels();
 
