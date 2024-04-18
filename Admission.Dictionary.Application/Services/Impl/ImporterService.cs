@@ -177,26 +177,25 @@ public class ImporterService : IImporterService
     {
         type.ChangeName(dto.Name);
         type.ChangeDeleteTime(null);
-        type.ChangedEducationLevel(new EducationLevel { ExternalId = dto.EducationLevel.Id, Name = dto.EducationLevel.Name });
+        type.ChangeEducationLevel(new EducationLevel { ExternalId = dto.EducationLevel.Id, Name = dto.EducationLevel.Name });
     }
 
     private void UpdateProgram(EducationProgram program, EducationProgramDto dto)
     {
-        program.Name = dto.Name;
-        program.Code = dto.Code;
-        program.Language = dto.Language;
-        program.EducationForm = dto.EducationForm;
-
+        program.ChangeName(dto.Name);
+        program.ChangeCode(dto.Code);
+        program.ChangeLanguage(dto.Language);
+        program.ChangeEducationForm(dto.EducationForm);
         program.ChangeDeleteTime(null);
 
         if (program.FacultyId != dto.Faculty.Id && _faculties.Any(f => f.Id == dto.Faculty.Id))
         {
-            program.FacultyId = dto.Faculty.Id;
+            program.ChangeFaculty(new Faculty {Id = dto.Faculty.Id, Name = dto.Faculty.Name});
         }
         
         if (program.EducationLevelId != dto.EducationLevel.Id && _educationLevels.Any(l => l.ExternalId == dto.EducationLevel.Id))
         {
-            program.EducationLevelId = dto.EducationLevel.Id;
+            program.ChangeEducationLevel(new EducationLevel { ExternalId = dto.EducationLevel.Id, Name = dto.EducationLevel.Name });
         }
     }
 
