@@ -1,8 +1,9 @@
-﻿using Admission.Domain.Common.Entities;
+﻿using Admission.Dictionary.Domain.Events.NextEducationLevel;
+using Admission.Domain.Common.Entities;
 
 namespace Admission.Dictionary.Domain.Entities;
 
-public sealed class NextEducationLevel: BaseEntity
+public sealed class NextEducationLevel: AggregateRoot
 {
     public Guid EducationDocumentTypeId { get; set; }
     public int EducationLevelId { get; set; }
@@ -30,5 +31,12 @@ public sealed class NextEducationLevel: BaseEntity
     public override int GetHashCode()
     {
         return HashCode.Combine(EducationDocumentTypeId, EducationLevelId);
+    }
+    
+    public override void ChangeDeleteTime(DateTime? deleteTime)
+    {
+        if ((deleteTime == null && DeleteTime == null) || (deleteTime != null && DeleteTime != null)) return;
+        DeleteTime = deleteTime;
+        AddDomainEvent(new NextLevelDeleteTimeChangedDomainEvent(this));
     }
 }

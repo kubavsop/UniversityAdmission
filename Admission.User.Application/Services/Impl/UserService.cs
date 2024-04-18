@@ -29,6 +29,7 @@ public sealed class UserService: IUserService
         var applicant = await _context.Applicants
             .AsNoTracking()
             .Include(a => a.User)
+            .Where(a => !a.User.DeleteTime.HasValue)
             .GetByIdAsync(userId);
         
         if (applicant == null)
@@ -100,6 +101,7 @@ public sealed class UserService: IUserService
     {
         var applicant = await _context.Applicants
             .Include(a => a.User)
+            .Where(a => !a.User.DeleteTime.HasValue)
             .GetByIdAsync(userId);
         
         if (applicant == null)

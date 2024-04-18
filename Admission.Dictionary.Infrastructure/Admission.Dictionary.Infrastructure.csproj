@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Admission.Dictionary.Application\Admission.Dictionary.Application.csproj" />
+      <ProjectReference Include="..\Admission.Infrastructure.Common\Admission.Infrastructure.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>

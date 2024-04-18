@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Admission.Dictionary.Application.DTOs.Requests;
 
-public abstract class ProgramSearchParameters
+public sealed class ProgramSearchParameters
 {
     [DefaultValue(DefaultPage)]
     [Range(1, int.MaxValue)]

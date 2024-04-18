@@ -34,7 +34,7 @@ public sealed class IntegrationEventPublisher: IIntegrationEventPublisher, IDisp
     {  
         var payload = JsonConvert.SerializeObject(integrationEvent, new JsonSerializerSettings
         {
-            TypeNameHandling = TypeNameHandling.Auto
+            TypeNameHandling = TypeNameHandling.All
         });
 
         var body = Encoding.UTF8.GetBytes(payload);

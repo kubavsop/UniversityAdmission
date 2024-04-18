@@ -55,7 +55,7 @@ public class DictionaryService: IDictionaryService
         return _mapper.Map<List<EducationDocumentTypeDto>>(result);
     }
 
-    public async Task<Result<IEnumerable<EducationProgramDto>>> GetEducationProgramsAsync(ProgramSearchParameters parameters)
+    public async Task<Result<ProgramPagedListDto>> GetEducationProgramsAsync(ProgramSearchParameters parameters)
     {
         var facultiesResult = await CheckEntitiesExistenceAsync(
             parameters.Faculties,
@@ -73,18 +73,51 @@ public class DictionaryService: IDictionaryService
             return levelsResult.Exception;
         }
 
+        var normalizedEducationForm = parameters.EducationForm?.ToUpper();
+        var normalizedLanguage = parameters.Language?.ToUpper();
+        var normalizedName = parameters.Name?.ToUpper();
+        var normalizedCode = parameters.Code?.ToUpper();
+        
         var queryable = _context.Programs
+            .AsNoTracking()
+            .GetUndeleted()
+            .Include(p => p.EducationLevel)
+            .Include(p => p.Faculty)
+            .Where(p => !p.EducationLevel.DeleteTime.HasValue && !p.Faculty.DeleteTime.HasValue)
             .Where(p => parameters.Faculties.Count == 0 || parameters.Faculties.Any(id => id == p.FacultyId))
-            .Where(p => parameters.EducationLevels.Count == 0 ||
-                        parameters.EducationLevels.Any(id => id == p.EducationLevelId));
+            .Where(p => parameters.EducationLevels.Count == 0 || parameters.EducationLevels.Any(id => id == p.EducationLevelId))
+            .Where(p => normalizedEducationForm == null || p.EducationForm.ToUpper().Contains(normalizedEducationForm))
+            .Where(p => normalizedLanguage == null || p.Language.ToUpper().Contains(normalizedLanguage))
+            .Where(p => normalizedName == null || p.Name.ToUpper().Contains(normalizedName))
+            .Where(p => normalizedCode == null || p.Code.ToUpper().Contains(normalizedCode));
 
-        throw new NotImplementedException();
+        var result = await queryable
+            .Skip((parameters.Page - 1) * parameters.Size)
+            .Take(parameters.Size)
+            .ToListAsync();
+        
+        if (result.Count == 0 && parameters.Page != 1)
+        {
+            return new BadRequestException("Invalid value for attribute page");
+        }
+        
+        var count = await queryable.CountAsync();
+
+        return new ProgramPagedListDto
+        {
+            Programs = _mapper.Map<IEnumerable<EducationProgramDto>>(result),
+            Pagination = new PageInfoDto
+            {
+                Count = (int)Math.Ceiling((double)count / parameters.Size),
+                Current = parameters.Page,
+                Size = parameters.Size
+            }
+        };
     }
 
     private async Task<Result> CheckEntitiesExistenceAsync<TId>(
         IEnumerable<TId> ids,
-        Func<TId, Task<bool>> checkExistence
-        ) {
+        Func<TId, Task<bool>> checkExistence) {
         foreach (var id in ids)
         {
             if (!await checkExistence(id))

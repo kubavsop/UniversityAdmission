@@ -10,7 +10,7 @@ public sealed class Applicant: AggregateRoot
     public string? PhoneNumber { get; set; } 
     public string? Citizenship { get; set; }
     public Gender? Gender { get; set; }
-    public AdmissionUser? User { get; set; }
+    public AdmissionUser User { get; set; } = null!;
     public StudentAdmission? StudentAdmission { get; set; }
 
     private Applicant()

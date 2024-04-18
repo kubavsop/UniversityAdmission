@@ -1,4 +1,4 @@
-﻿namespace Admission.Application.Common.Messaging.IntegrationEvent.Events;
+﻿namespace Admission.Application.Common.Messaging.IntegrationEvent.Events.Applicant;
 
 public sealed class ApplicantCreatedIntegrationEvent: IIntegrationEvent
 {

@@ -8,4 +8,9 @@ public abstract class AggregateRoot: BaseEntity
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.ToList();
     public void ClearDomainEvents() => _domainEvents.Clear();
     protected void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+
+    public virtual void ChangeDeleteTime(DateTime? deleteTime)
+    {
+        DeleteTime = deleteTime;
+    }
 }

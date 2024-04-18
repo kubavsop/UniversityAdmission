@@ -1,8 +1,9 @@
-﻿using Admission.Domain.Common.Entities;
+﻿using Admission.Dictionary.Domain.Events.EducationProgram;
+using Admission.Domain.Common.Entities;
 
 namespace Admission.Dictionary.Domain.Entities;
 
-public sealed class EducationProgram: BaseEntity
+public sealed class EducationProgram: AggregateRoot
 {
     public required string Name { get; set; }
 
@@ -15,7 +16,14 @@ public sealed class EducationProgram: BaseEntity
     public Guid FacultyId { get; set; }
     
     public int EducationLevelId { get; set; }
+
+    public Faculty Faculty { get; set; } = null!;
+    public EducationLevel EducationLevel { get; set; } = null!;
     
-    public Faculty? Faculty { get; set; }
-    public EducationLevel? EducationLevel { get; set; }
+    public override void ChangeDeleteTime(DateTime? deleteTime)
+    {
+        if ((deleteTime == null && DeleteTime == null) || (deleteTime != null && DeleteTime != null)) return;
+        DeleteTime = deleteTime;
+        AddDomainEvent(new ProgramDeleteTimeChangedDomainEvent(this));
+    }
 }

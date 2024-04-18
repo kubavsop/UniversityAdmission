@@ -10,5 +10,5 @@ public interface IDictionaryService
     Task<Result<IEnumerable<FacultyDto>>> GetFacultiesAsync();
     Task<Result<IEnumerable<EducationLevelDto>>> GetEducationLevelsAsync();
     Task<Result<IEnumerable<EducationDocumentTypeDto>>> GetDocumentTypesAsync();
-    Task<Result<IEnumerable<EducationProgramDto>>> GetEducationProgramsAsync(ProgramSearchParameters parameters);
+    Task<Result<ProgramPagedListDto>> GetEducationProgramsAsync(ProgramSearchParameters parameters);
 }

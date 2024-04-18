@@ -22,7 +22,8 @@ public sealed class IntegrationEventConsumerBackgroundService : BackgroundServic
     public IntegrationEventConsumerBackgroundService(
         IConnection connection, 
         IServiceProvider provider,
-        IOptions<IntegrationConsumerQueueNameOptions> queuesOptions, ILogger<IntegrationEventConsumerBackgroundService> logger)
+        IOptions<IntegrationConsumerQueueNameOptions> queuesOptions,
+        ILogger<IntegrationEventConsumerBackgroundService> logger)
     {
         _provider = provider;
         _logger = logger;

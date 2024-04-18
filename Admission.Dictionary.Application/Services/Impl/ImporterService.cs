@@ -23,6 +23,8 @@ public class ImporterService : IImporterService
 
     public async Task TestUpdate()
     {
+        await UpdateFaculties();
+        await UpdateDocumentTypes();
         await UpdatePrograms();
         await _context.SaveChangesAsync();
     }
@@ -41,7 +43,7 @@ public class ImporterService : IImporterService
             (faculty, dto) =>
             {
                 faculty.Name = dto.Name;
-                faculty.DeleteTime = null;
+                faculty.ChangeDeleteTime(null);
             },
             dto => new Faculty { Id = dto.Id, Name = dto.Name },
             dto => dto.Id);
@@ -65,15 +67,16 @@ public class ImporterService : IImporterService
         var entities = await _context.Programs.ToListAsync();
         var dictionary = entities.ToDictionary(e => e.Id);
         var entitiesId = entities.Select(e => e.Id).ToList();
-        
+        IEnumerable<Guid> toDeleteIds = entitiesId; 
         ProgramPagedListDto pageInfoDto;
         do
         {
             pageInfoDto = await _externalDictionaryService.GetProgramsAsync(currentPage, currentSize);
+            toDeleteIds = toDeleteIds.Except(pageInfoDto.Programs.Select(p => p.Id));
             await UpdateEntitiesAsync(
                 dictionary,
                 pageInfoDto.Programs,
-                entitiesId.Except(pageInfoDto.Programs.Select(p => p.Id)),
+                [],
                 UpdateProgram,
                 CreateProgram,
                 dto => dto.Id,
@@ -81,6 +84,11 @@ public class ImporterService : IImporterService
             );
             currentPage++;
         } while (pageInfoDto.Pagination.Count >= currentPage);
+
+        foreach (var id in toDeleteIds)
+        {
+            dictionary[id].ChangeDeleteTime(DateTime.UtcNow);
+        }
     }
 
     public async Task UpdateEducationLevels()
@@ -97,7 +105,7 @@ public class ImporterService : IImporterService
             (level, dto) =>
             {
                 level.Name = dto.Name;
-                level.DeleteTime = null;
+                level.ChangeDeleteTime(null);
             },
             dto => new EducationLevel { Id = Guid.NewGuid(), ExternalId = dto.Id, Name = dto.Name },
             dto => dto.Id);
@@ -115,7 +123,7 @@ public class ImporterService : IImporterService
             dtos,
             entities.Select(e => e.Id).Except(dtos.Select(d => d.Id)),
             UpdateDocumentType,
-            dto => new EducationDocumentType { Id = dto.Id, Name = dto.Name, EducationLevelId = dto.EducationLevel.Id },
+            dto => new EducationDocumentType (dto.Id, dto.Name, dto.EducationLevel.Id ),
             dto => dto.Id);
 
 
@@ -128,7 +136,10 @@ public class ImporterService : IImporterService
             nextEducationLevelsEntities.ToDictionary(e => e),
             nextEducationLevelsDtos,
             nextEducationLevelsEntities.Except(nextEducationLevelsDtos),
-            (entity, dto) => entity.DeleteTime = null,
+            (entity, dto) =>
+            {
+                entity.ChangeDeleteTime(null);
+            },
             dto => dto,
             dto => dto);
     }
@@ -141,7 +152,7 @@ public class ImporterService : IImporterService
         Action<TEntity, TDto> updateEntityAsync,
         Func<TDto, TEntity> createEntity,
         Func<TDto, TKey> getDtoId,
-        Predicate<TDto>? isEntityAddable = null) where TKey : notnull where TEntity : BaseEntity
+        Predicate<TDto>? isEntityAddable = null) where TKey : notnull where TEntity : AggregateRoot
     {
         foreach (var dto in dtos)
         {
@@ -158,14 +169,14 @@ public class ImporterService : IImporterService
 
         foreach (var entity in deleteEntities)
         {
-            dict[entity].DeleteTime = DateTime.UtcNow;
+            dict[entity].ChangeDeleteTime(DateTime.UtcNow);
         }
     }
 
     private static void UpdateDocumentType(EducationDocumentType type, EducationDocumentTypeDto dto)
     {
-        type.Name = dto.Name;
-        type.DeleteTime = null;
+        type.ChangeName(dto.Name);
+        type.ChangeDeleteTime(null);
         type.EducationLevelId = dto.EducationLevel.Id;
     }
 
@@ -175,7 +186,8 @@ public class ImporterService : IImporterService
         program.Code = dto.Code;
         program.Language = dto.Language;
         program.EducationForm = dto.EducationForm;
-        program.DeleteTime = null;
+
+        program.ChangeDeleteTime(null);
 
         if (program.FacultyId != dto.Faculty.Id && _faculties.Any(f => f.Id == dto.Faculty.Id))
         {
