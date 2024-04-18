@@ -1,23 +1,19 @@
-﻿using Admission.Application.Common.Messaging.IntegrationEvent;
+﻿using Admission.Application.Common;
+using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Application.Common.Messaging.IntegrationEvent.Events.DocumentType;
 using Admission.Dictionary.Domain.Events.DocumentType;
-using Admission.Domain.Common.Events;
 
 namespace Admission.Dictionary.Application.Events.DocumentType;
 
-public sealed class DocumentEducationLevelChangedEventHandler: IDomainEventHandler<DocumentEducationLevelChangedDomainEvent>
+public sealed class DocumentEducationLevelChangedEventHandler: BaseDomainEventHandler<DocumentEducationLevelChangedDomainEvent>
 {
-    private readonly IIntegrationEventPublisher _publisher;
-
-    public DocumentEducationLevelChangedEventHandler(IIntegrationEventPublisher publisher)
+    public DocumentEducationLevelChangedEventHandler(IIntegrationEventPublisher publisher) : base(publisher)
     {
-        _publisher = publisher;
     }
-
-
-    public Task Handle(DocumentEducationLevelChangedDomainEvent notification, CancellationToken cancellationToken)
+    
+    public override Task Handle(DocumentEducationLevelChangedDomainEvent notification, CancellationToken cancellationToken)
     {
-        _publisher.Publish(new DocumentEducationLevelChangedIntegrationEvent
+        Publisher.Publish(new DocumentEducationLevelChangedIntegrationEvent
         {
             Id = notification.Id,
             EducationLevelId = notification.EducationLevelId,

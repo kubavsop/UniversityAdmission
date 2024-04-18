@@ -13,4 +13,11 @@ public sealed class Faculty: AggregateRoot
         DeleteTime = deleteTime;
         AddDomainEvent(new FacultyDeleteTimeChangedDomainEvent(this));
     }
+    
+    public void ChangeName(string name)
+    {
+        if (Name == name) return;
+        Name = name;
+        AddDomainEvent(new FacultyNameChangedDomainEvent(this));
+    }
 }

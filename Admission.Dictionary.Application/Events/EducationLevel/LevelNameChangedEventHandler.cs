@@ -1,23 +1,19 @@
-﻿using Admission.Application.Common.Messaging.IntegrationEvent;
+﻿using Admission.Application.Common;
+using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Application.Common.Messaging.IntegrationEvent.Events.EducationLevel;
 using Admission.Dictionary.Domain.Events.EducationLevel;
-using Admission.Domain.Common.Events;
 
 namespace Admission.Dictionary.Application.Events.EducationLevel;
 
-public class LevelNameChangedEventHandler: IDomainEventHandler<LevelNameChangedDomainEvent>
+public class LevelNameChangedEventHandler: BaseDomainEventHandler<LevelNameChangedDomainEvent>
 {
-    private readonly IIntegrationEventPublisher _publisher;
-
-    public LevelNameChangedEventHandler(IIntegrationEventPublisher publisher)
+    public LevelNameChangedEventHandler(IIntegrationEventPublisher publisher) : base(publisher)
     {
-        _publisher = publisher;
     }
 
-
-    public Task Handle(LevelNameChangedDomainEvent notification, CancellationToken cancellationToken)
+    public override Task Handle(LevelNameChangedDomainEvent notification, CancellationToken cancellationToken)
     {
-        _publisher.Publish(new LevelNameChangedIntegrationEvent
+        Publisher.Publish(new LevelNameChangedIntegrationEvent
         {
             Id = notification.Id,
             Name = notification.Name

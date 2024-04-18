@@ -42,7 +42,7 @@ public class ImporterService : IImporterService
             entities.Select(e => e.Id).Except(dtos.Select(d => d.Id)),
             (faculty, dto) =>
             {
-                faculty.Name = dto.Name;
+                faculty.ChangeName(dto.Name);
                 faculty.ChangeDeleteTime(null);
             },
             dto => new Faculty { Id = dto.Id, Name = dto.Name },

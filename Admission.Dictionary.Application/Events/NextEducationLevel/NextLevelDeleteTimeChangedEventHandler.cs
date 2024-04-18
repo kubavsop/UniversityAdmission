@@ -1,23 +1,20 @@
-﻿using Admission.Application.Common.Messaging.IntegrationEvent;
+﻿using Admission.Application.Common;
+using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Application.Common.Messaging.IntegrationEvent.Events.NextEducationLevel;
 using Admission.Dictionary.Domain.Events.NextEducationLevel;
 using Admission.Domain.Common.Events;
 
 namespace Admission.Dictionary.Application.Events.NextEducationLevel;
 
-public sealed class NextLevelDeleteTimeChangedEventHandler: IDomainEventHandler<NextLevelDeleteTimeChangedDomainEvent>
+public sealed class NextLevelDeleteTimeChangedEventHandler: BaseDomainEventHandler<NextLevelDeleteTimeChangedDomainEvent>
 {
-    private readonly IIntegrationEventPublisher _publisher;
-
-    public NextLevelDeleteTimeChangedEventHandler(IIntegrationEventPublisher publisher)
+    public NextLevelDeleteTimeChangedEventHandler(IIntegrationEventPublisher publisher) : base(publisher)
     {
-        _publisher = publisher;
     }
-
-
-    public Task Handle(NextLevelDeleteTimeChangedDomainEvent notification, CancellationToken cancellationToken)
+    
+    public override Task Handle(NextLevelDeleteTimeChangedDomainEvent notification, CancellationToken cancellationToken)
     {
-        _publisher.Publish(new NextLevelDeleteTimeChangedIntegrationEvent
+        Publisher.Publish(new NextLevelDeleteTimeChangedIntegrationEvent
         {
             Id = notification.Id,
             DeleteTime = notification.DeleteTime
