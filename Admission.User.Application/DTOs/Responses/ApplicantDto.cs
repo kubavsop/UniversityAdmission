@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Admission.Application.Common.Mapping;
-using Admission.Application.Common.ValidationAttributes;
 using Admission.Domain.Common.Enums;
+using Admission.User.Application.ValidationAttributes;
 using Admission.User.Domain.Entities;
 using AutoMapper;
 
@@ -34,7 +34,7 @@ public sealed class ApplicantDto: IMapFrom<Applicant>
     [MaxLength(1000)]
     public string? Citizenship { get; set; }
 
-    [PhoneNumber]
+    [ValidationAttributes.PhoneNumber]
     public string? PhoneNumber { get; set; }
 
     public void Mapping(Profile profile)

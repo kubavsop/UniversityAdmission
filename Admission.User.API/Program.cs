@@ -5,7 +5,7 @@ using Admission.User.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.InstallServices(builder.Configuration, Assembly.GetExecutingAssembly(), typeof(IServiceInstaller).Assembly);
+builder.Services.InstallServices(builder.Configuration, Assembly.GetExecutingAssembly());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

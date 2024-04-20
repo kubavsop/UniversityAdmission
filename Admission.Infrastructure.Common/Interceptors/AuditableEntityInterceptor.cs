@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Admission.Infrastructure.Common.Interceptors;
 
-public class AuditableEntityInterceptor: SaveChangesInterceptor
+public sealed class AuditableEntityInterceptor: SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {

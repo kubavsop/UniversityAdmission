@@ -8,5 +8,5 @@ public sealed class Manager: BaseEntity
     public Guid? FacultyId { get; set; }
     public Faculty? Faculty { get; set; }
     
-    public ICollection<Applicant> Applicants { get; set; } = new List<Applicant>();
+    public ICollection<Applicant> Applicants { get; } = new List<Applicant>();
 }
