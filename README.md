@@ -24,3 +24,10 @@
     <image src="Images/DocumentService.png"></image>
     <image src="Images/NotificationsService.png"></image>
 </p>
+
+### State diagram
+
+<p>
+    <image src="Images/StateDiagram.png"></image>
+</p>
+
