@@ -1,6 +1,7 @@
 ﻿using Admission.Application.Common;
 using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Application.Common.Messaging.IntegrationEvent.Events.DocumentType;
+using Admission.Dictionary.Application.Constants;
 using Admission.Dictionary.Domain.Events.DocumentType;
 using Admission.Domain.Common.Events;
 
@@ -17,7 +18,7 @@ public sealed class DocumentDeleteTimeChangedEventHandler: BaseDomainEventHandle
         {
             Id = notification.Id,
             DeleteTime = notification.DeleteTime
-        });
+        }, RoutingKeys.DocumentChangedRoutingKey);
 
         return Task.CompletedTask;
     }

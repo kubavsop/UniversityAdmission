@@ -1,6 +1,7 @@
 ﻿using Admission.Application.Common;
 using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Application.Common.Messaging.IntegrationEvent.Events.EducationProgram;
+using Admission.Dictionary.Application.Constants;
 using Admission.Dictionary.Domain.Events.EducationProgram;
 
 namespace Admission.Dictionary.Application.Events.EducationProgram;
@@ -18,7 +19,7 @@ public sealed class ProgramEducationLevelChangedEventHandler: BaseDomainEventHan
             Id = notification.Id,
             EducationLevelId = notification.EducationLevelId,
             EducationLevelName = notification.EducationLevelName
-        });
+        }, RoutingKeys.ProgramChangedRoutingKey);
 
         return Task.CompletedTask;
     }

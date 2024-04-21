@@ -31,7 +31,7 @@ public sealed class IntegrationEventConsumerBackgroundService : BackgroundServic
         
         _channel = connection.CreateModel();
         
-        _channel.QueueDeclare(_queueName.IntegrationConsumerQueueName, false, false, false, null);
+        _channel.QueueDeclare(_queueName.Name, false, false, false, null);
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -42,7 +42,7 @@ public sealed class IntegrationEventConsumerBackgroundService : BackgroundServic
 
             consumer.Received += OnIntegrationEventReceived;
 
-            _channel.BasicConsume(_queueName.IntegrationConsumerQueueName, false, consumer);
+            _channel.BasicConsume(_queueName.Name, false, consumer);
         }
         catch (Exception e)
         {

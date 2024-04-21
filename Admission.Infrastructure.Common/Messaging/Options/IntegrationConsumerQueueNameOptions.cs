@@ -2,5 +2,5 @@
 
 public sealed class IntegrationConsumerQueueNameOptions
 {
-    public required string IntegrationConsumerQueueName { get; init; }
+    public required string Name { get; init; }
 }

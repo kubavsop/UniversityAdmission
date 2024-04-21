@@ -1,6 +1,7 @@
 ﻿using Admission.Application.Common;
 using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Application.Common.Messaging.IntegrationEvent.Events.EducationLevel;
+using Admission.Dictionary.Application.Constants;
 using Admission.Dictionary.Domain.Events.EducationLevel;
 
 namespace Admission.Dictionary.Application.Events.EducationLevel;
@@ -17,7 +18,7 @@ public class LevelNameChangedEventHandler: BaseDomainEventHandler<LevelNameChang
         {
             Id = notification.Id,
             Name = notification.Name
-        });
+        }, RoutingKeys.LevelChangedRoutingKey);
 
         return Task.CompletedTask;
     }

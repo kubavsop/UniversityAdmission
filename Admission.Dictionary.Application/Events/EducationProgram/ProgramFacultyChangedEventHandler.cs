@@ -1,6 +1,7 @@
 ﻿using Admission.Application.Common;
 using Admission.Application.Common.Messaging.IntegrationEvent;
 using Admission.Application.Common.Messaging.IntegrationEvent.Events.EducationProgram;
+using Admission.Dictionary.Application.Constants;
 using Admission.Dictionary.Domain.Events.EducationProgram;
 
 namespace Admission.Dictionary.Application.Events.EducationProgram;
@@ -18,7 +19,7 @@ public sealed class ProgramFacultyChangedEventHandler: BaseDomainEventHandler<Pr
             Id = notification.Id,
             FacultyName = notification.FacultyName,
             FacultyId = notification.FacultyId
-        });
+        }, RoutingKeys.ProgramChangedRoutingKey);
 
         return Task.CompletedTask;
     }

@@ -18,19 +18,19 @@ public sealed class IntegrationEventPublisher: IIntegrationEventPublisher, IDisp
         
         _channel = connection.CreateModel();
         
-        _channel.ExchangeDeclare(_queuesOptions.ExchangeName, ExchangeType.Fanout, false, false);
+        _channel.ExchangeDeclare(_queuesOptions.ExchangeName, ExchangeType.Topic, false, false);
         
-        foreach (var queueName in _queuesOptions.QueueNames)
+        foreach (var topicQueue in _queuesOptions.Queues)
         {
-            _channel.QueueDeclare(queueName, false, false, false, null);
+            _channel.QueueDeclare(topicQueue.Name, false, false, false, null);
             _channel.QueueBind(
-                queue: queueName,
+                queue: topicQueue.Name,
                 exchange: _queuesOptions.ExchangeName, 
-                "");
+                topicQueue.RoutingKey);
         }
     }
 
-    public void Publish(IIntegrationEvent integrationEvent)
+    public void Publish(IIntegrationEvent integrationEvent, string routingKey = "default")
     {  
         var payload = JsonConvert.SerializeObject(integrationEvent, new JsonSerializerSettings
         {
@@ -39,7 +39,7 @@ public sealed class IntegrationEventPublisher: IIntegrationEventPublisher, IDisp
 
         var body = Encoding.UTF8.GetBytes(payload);
         
-        _channel.BasicPublish(exchange:_queuesOptions.ExchangeName, routingKey: "", body: body);
+        _channel.BasicPublish(exchange:_queuesOptions.ExchangeName, routingKey: routingKey, body: body);
     }
 
     public void Dispose()
