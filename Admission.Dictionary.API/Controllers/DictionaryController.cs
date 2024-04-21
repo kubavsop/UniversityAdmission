@@ -1,10 +1,7 @@
 ﻿using Admission.API.Common;
 using Admission.API.Common.Extensions;
-using Admission.Dictionary.Application.DTOs;
 using Admission.Dictionary.Application.DTOs.Requests;
-using Admission.Dictionary.Application.DTOs.Responses;
 using Admission.Dictionary.Application.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admission.Dictionary.API.Controllers;

@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Admission.Dictionary.Application.Context;
 using Admission.Dictionary.Domain.Entities;
-using Admission.Infrastructure.Common.Context;
-using Admission.Infrastructure.Common.OutboxMessages;
+using Admission.OutboxMessages.Context;
+using Admission.OutboxMessages.OutboxMessages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Admission.Dictionary.Infrastructure;

@@ -17,6 +17,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Admission.API.Common\Admission.API.Common.csproj" />
+      <ProjectReference Include="..\Admission.RabbitMQ\Admission.RabbitMQ.csproj" />
       <ProjectReference Include="..\Admission.User.Infrastructure\Admission.User.Infrastructure.csproj" />
     </ItemGroup>
 

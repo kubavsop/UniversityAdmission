@@ -1,5 +1,4 @@
 ﻿using Admission.API.Common.ServiceInstaller;
-using Admission.Application.Common.Messaging.IntegrationEvent.Events.Email;
 using Admission.Notification.Application.Events;
 
 namespace Admission.Notification.API.Configurations;

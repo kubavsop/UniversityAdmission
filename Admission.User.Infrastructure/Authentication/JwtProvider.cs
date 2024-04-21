@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Admission.Infrastructure.Common.Authentication;
+using Admission.JWT.Options;
 using Admission.User.Application.Services;
 using Admission.User.Domain.Entities;
 using Microsoft.Extensions.Options;

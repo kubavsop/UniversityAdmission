@@ -8,6 +8,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Admission.Infrastructure.Common\Admission.Infrastructure.Common.csproj" />
+      <ProjectReference Include="..\Admission.JWT\Admission.JWT.csproj" />
+      <ProjectReference Include="..\Admission.OutboxMessages\Admission.OutboxMessages.csproj" />
       <ProjectReference Include="..\Admission.User.Application\Admission.User.Application.csproj" />
     </ItemGroup>
 

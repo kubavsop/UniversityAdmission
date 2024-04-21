@@ -18,6 +18,8 @@
     <ItemGroup>
       <ProjectReference Include="..\Admission.API.Common\Admission.API.Common.csproj" />
       <ProjectReference Include="..\Admission.Dictionary.Infrastructure\Admission.Dictionary.Infrastructure.csproj" />
+      <ProjectReference Include="..\Admission.JWT\Admission.JWT.csproj" />
+      <ProjectReference Include="..\Admission.RabbitMQ\Admission.RabbitMQ.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,9 +1,7 @@
-﻿using Admission.Application.Common;
-using Admission.Application.Common.Messaging.IntegrationEvent;
-using Admission.Application.Common.Messaging.IntegrationEvent.Events.DocumentType;
-using Admission.Dictionary.Application.Constants;
+﻿using Admission.Dictionary.Application.Constants;
 using Admission.Dictionary.Domain.Events.DocumentType;
-using Admission.Domain.Common.Events;
+using Admission.IntegrationEvents.Events.DocumentType;
+using IntegrationEvents;
 
 namespace Admission.Dictionary.Application.Events.DocumentType;
 

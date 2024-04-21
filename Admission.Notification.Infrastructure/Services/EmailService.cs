@@ -1,5 +1,5 @@
 ﻿using System.Net.Mail;
-using Admission.Application.Common.Messaging.IntegrationEvent.Events.Email;
+using Admission.IntegrationEvents.Events.Email;
 using Admission.Notification.Application.Services;
 using Admission.Notification.Infrastructure.Options;
 using Microsoft.Extensions.Options;

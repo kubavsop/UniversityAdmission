@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Admission.Application.Common\Admission.Application.Common.csproj" />
+      <ProjectReference Include="..\Admission.IntegrationEvents\Admission.IntegrationEvents.csproj" />
       <ProjectReference Include="..\Admission.User.Domain\Admission.User.Domain.csproj" />
     </ItemGroup>
 

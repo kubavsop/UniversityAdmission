@@ -1,8 +1,7 @@
-﻿using Admission.Application.Common;
-using Admission.Application.Common.Messaging.IntegrationEvent;
-using Admission.Application.Common.Messaging.IntegrationEvent.Events.EducationLevel;
-using Admission.Dictionary.Application.Constants;
+﻿using Admission.Dictionary.Application.Constants;
 using Admission.Dictionary.Domain.Events.EducationLevel;
+using Admission.IntegrationEvents.Events.EducationLevel;
+using IntegrationEvents;
 
 namespace Admission.Dictionary.Application.Events.EducationLevel;
 
