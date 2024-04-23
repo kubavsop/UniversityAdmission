@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Admission.Dictionary.Application\Admission.Dictionary.Application.csproj" />
       <ProjectReference Include="..\Admission.Infrastructure.Common\Admission.Infrastructure.Common.csproj" />
+      <ProjectReference Include="..\Admission.OutboxMessages\Admission.OutboxMessages.csproj" />
     </ItemGroup>
 
     <ItemGroup>

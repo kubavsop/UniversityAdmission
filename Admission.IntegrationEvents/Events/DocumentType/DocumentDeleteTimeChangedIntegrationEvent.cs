@@ -1,0 +1,5 @@
+﻿using Admission.IntegrationEvents.BaseEvents;
+
+namespace Admission.IntegrationEvents.Events.DocumentType;
+
+public sealed class DocumentDeleteTimeChangedIntegrationEvent: DeleteTimeChangedIntegrationEvent;

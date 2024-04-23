@@ -1,7 +1,6 @@
-﻿using Admission.Application.Common;
-using Admission.Application.Common.Messaging.IntegrationEvent;
-using Admission.Application.Common.Messaging.IntegrationEvent.Events.Applicant;
+﻿using Admission.IntegrationEvents.Events.Applicant;
 using Admission.User.Domain.Events;
+using IntegrationEvents;
 
 namespace Admission.User.Application.Events.ApplicantCreated;
 

@@ -1,14 +1,10 @@
 ﻿using Admission.API.Common.ServiceInstaller;
-using Admission.Application.Common.Mapping;
-using Admission.Application.Common.Messaging;
-using Admission.Application.Common.Messaging.IntegrationEvent;
-using Admission.Infrastructure.Common.BackgroundServices;
-using Admission.Infrastructure.Common.Context;
-using Admission.Infrastructure.Common.Extensions;
 using Admission.Infrastructure.Common.Interceptors;
-using Admission.Infrastructure.Common.Messaging.Setups;
-using Admission.Infrastructure.Common.Services;
-using Admission.Infrastructure.Common.Services.Impl;
+using Admission.JWT;
+using Admission.OutboxMessages.Context;
+using Admission.OutboxMessages.Extensions;
+using Admission.OutboxMessages.Interceptors;
+using Admission.RabbitMQ.Extensions;
 using Admission.User.Application.Context;
 using Admission.User.Application.Services;
 using Admission.User.Domain.Entities;
@@ -24,11 +20,10 @@ public class UserDbServiceInstaller: IServiceInstaller
     {
         services
             .AddJwtAuthentication()
-            .AddRabbitMqConnection(configuration);
+            .AddRabbitMqConnection(configuration)
+            .AddProducer()
+            .AddOutboxMessages();
         
-        services.ConfigureOptions<IntegrationQueuesOptionsSetup>();
-        
-        services.AddSingleton<IIntegrationEventPublisher, IntegrationEventPublisher>();
         services.AddScoped<IUserDbContext>(provider => provider.GetRequiredService<UserDbContext>());
         services.AddScoped<IOutboxMessageDbContext>(provider => provider.GetRequiredService<UserDbContext>());
         
@@ -39,11 +34,6 @@ public class UserDbServiceInstaller: IServiceInstaller
         
         services.AddSingleton<IJwtProvider, JwtProvider>();
         services.AddSingleton<AuditableEntityInterceptor>();
-        services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
-        
-        services.AddHostedService<OutboxMessageProcessorService>();
-        
-        services.AddScoped<IProcessOutboxMessageService, ProcessOutboxMessageService>();
         
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<UserDbContext>(
