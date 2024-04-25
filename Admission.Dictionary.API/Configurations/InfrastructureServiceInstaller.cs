@@ -22,6 +22,7 @@ public sealed class InfrastructureServiceInstaller: IServiceInstaller
             .AddJwtAuthentication()
             .AddRabbitMqConnection(configuration)
             .AddProducer()
+            .AddRpcConsumer(configuration)
             .AddOutboxMessages();
         
         services.Configure<ApiOptions>(configuration.GetSection("Api"));

@@ -14,5 +14,5 @@ public sealed class FacultyDto: IMapFrom<Faculty>
 
     [Required]
     [MinLength(1)]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 }

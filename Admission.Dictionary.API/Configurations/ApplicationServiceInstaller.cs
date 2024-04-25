@@ -1,6 +1,5 @@
 ﻿using Admission.API.Common.ServiceInstaller;
 using Admission.Application.Common.Mapping;
-using Admission.Dictionary.Application.Events;
 using Admission.Dictionary.Application.Events.DocumentType;
 using Admission.Dictionary.Application.Services;
 using Admission.Dictionary.Application.Services.Impl;

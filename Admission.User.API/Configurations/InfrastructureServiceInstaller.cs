@@ -22,6 +22,7 @@ public class UserDbServiceInstaller: IServiceInstaller
             .AddJwtAuthentication()
             .AddRabbitMqConnection(configuration)
             .AddProducer()
+            .AddRpcDictionaryClient(configuration)
             .AddOutboxMessages();
         
         services.AddScoped<IUserDbContext>(provider => provider.GetRequiredService<UserDbContext>());

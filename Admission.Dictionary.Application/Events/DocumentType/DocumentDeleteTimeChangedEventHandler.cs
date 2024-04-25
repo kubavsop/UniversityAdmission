@@ -1,7 +1,7 @@
 ﻿using Admission.Dictionary.Application.Constants;
 using Admission.Dictionary.Domain.Events.DocumentType;
-using Admission.IntegrationEvents.Events.DocumentType;
-using IntegrationEvents;
+using Admission.DTOs.IntegrationEvents;
+using Admission.DTOs.IntegrationEvents.Events.DocumentType;
 
 namespace Admission.Dictionary.Application.Events.DocumentType;
 

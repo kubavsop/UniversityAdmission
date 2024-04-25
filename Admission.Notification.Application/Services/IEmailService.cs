@@ -1,5 +1,5 @@
 ﻿
-using Admission.IntegrationEvents.Events.Email;
+using Admission.DTOs.IntegrationEvents.Events.Email;
 
 namespace Admission.Notification.Application.Services;
 

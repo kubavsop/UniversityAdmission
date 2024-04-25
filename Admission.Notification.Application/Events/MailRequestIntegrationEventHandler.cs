@@ -1,6 +1,6 @@
-﻿using Admission.IntegrationEvents.Events.Email;
+﻿using Admission.DTOs.IntegrationEvents;
+using Admission.DTOs.IntegrationEvents.Events.Email;
 using Admission.Notification.Application.Services;
-using IntegrationEvents;
 
 namespace Admission.Notification.Application.Events;
 

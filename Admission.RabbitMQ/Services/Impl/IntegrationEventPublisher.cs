@@ -1,6 +1,6 @@
 ﻿using System.Text;
+using Admission.DTOs.IntegrationEvents;
 using Admission.RabbitMQ.Options;
-using IntegrationEvents;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
