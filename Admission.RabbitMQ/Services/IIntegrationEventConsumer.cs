@@ -1,4 +1,4 @@
-﻿using IntegrationEvents;
+﻿using Admission.DTOs.IntegrationEvents;
 
 namespace Admission.RabbitMQ.Services;
 

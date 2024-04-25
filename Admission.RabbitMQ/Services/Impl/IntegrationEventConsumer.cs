@@ -1,4 +1,4 @@
-﻿using IntegrationEvents;
+﻿using Admission.DTOs.IntegrationEvents;
 using MediatR;
 
 namespace Admission.RabbitMQ.Services.Impl;

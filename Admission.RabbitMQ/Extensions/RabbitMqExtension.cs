@@ -1,9 +1,9 @@
-﻿using Admission.RabbitMQ.BackgroundService;
+﻿using Admission.DTOs.IntegrationEvents;
+using Admission.RabbitMQ.BackgroundServices;
 using Admission.RabbitMQ.Options;
 using Admission.RabbitMQ.Services;
 using Admission.RabbitMQ.Services.Impl;
 using Admission.RabbitMQ.Setups;
-using IntegrationEvents;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
@@ -12,7 +12,8 @@ namespace Admission.RabbitMQ.Extensions;
 
 public static class RabbitMqExtension
 {
-    public static IServiceCollection AddRabbitMqConnection(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddRabbitMqConnection(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var messageBrokerSettings = configuration.GetSection("MessageBroker").Get<MessageBrokerOptions>()!;
         var connectionFactory = new ConnectionFactory
@@ -43,4 +44,21 @@ public static class RabbitMqExtension
         services.AddSingleton<IIntegrationEventPublisher, IntegrationEventPublisher>();
         return services;
     }
+
+    public static IServiceCollection AddRpcConsumer(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<RpcConsumerQueueNameOptions>(configuration.GetSection("RpcConsumerQueueName"));
+        services.AddScoped<IRpcConsumer, RpcConsumer>();
+        services.AddHostedService<RpcConsumerBackgroundService>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddRpcDictionaryClient(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<RpcClientQueueNameOptions>(configuration.GetSection("RpcClientQueueName"));
+        services.AddSingleton<IRpcDictionaryClient, RpcClient>();
+        return services;
+    }
+
 }

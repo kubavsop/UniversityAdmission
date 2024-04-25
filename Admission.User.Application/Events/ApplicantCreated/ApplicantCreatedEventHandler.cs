@@ -1,6 +1,6 @@
-﻿using Admission.IntegrationEvents.Events.Applicant;
+﻿using Admission.DTOs.IntegrationEvents;
+using Admission.DTOs.IntegrationEvents.Events.Applicant;
 using Admission.User.Domain.Events;
-using IntegrationEvents;
 
 namespace Admission.User.Application.Events.ApplicantCreated;
 

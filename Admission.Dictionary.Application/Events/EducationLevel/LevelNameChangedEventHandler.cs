@@ -1,7 +1,7 @@
 ﻿using Admission.Dictionary.Application.Constants;
 using Admission.Dictionary.Domain.Events.EducationLevel;
-using Admission.IntegrationEvents.Events.EducationLevel;
-using IntegrationEvents;
+using Admission.DTOs.IntegrationEvents;
+using Admission.DTOs.IntegrationEvents.Events.EducationLevel;
 
 namespace Admission.Dictionary.Application.Events.EducationLevel;
 

@@ -1,0 +1,5 @@
+﻿using Admission.DTOs.IntegrationEvents.BaseEvents;
+
+namespace Admission.DTOs.IntegrationEvents.Events.NextEducationLevel;
+
+public sealed class NextLevelDeleteTimeChangedIntegrationEvent: DeleteTimeChangedIntegrationEvent;
