@@ -16,6 +16,7 @@ public class LevelNameChangedEventHandler: BaseDomainEventHandler<LevelNameChang
         Publisher.Publish(new LevelNameChangedIntegrationEvent
         {
             Id = notification.Id,
+            ExternalId = notification.ExternalId,
             Name = notification.Name
         }, RoutingKeys.LevelChangedRoutingKey);
 

@@ -10,10 +10,13 @@ public class LevelNameChangedDomainEvent: IDomainEvent
 
     internal LevelNameChangedDomainEvent(Entities.EducationLevel educationLevel)
     {
-        Id = educationLevel.ExternalId;
+        Id = educationLevel.Id;
+        ExternalId = educationLevel.ExternalId;
         Name = educationLevel.Name;
     }
     
-    public int Id { get; init; }
+    public Guid Id { get; init; }
+    public int ExternalId { get; init; }
     public string Name { get; init; }
+    
 }

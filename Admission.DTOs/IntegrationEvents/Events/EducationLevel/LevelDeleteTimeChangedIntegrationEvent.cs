@@ -2,4 +2,7 @@
 
 namespace Admission.DTOs.IntegrationEvents.Events.EducationLevel;
 
-public sealed class LevelDeleteTimeChangedIntegrationEvent: DeleteTimeChangedIntegrationEvent;
+public sealed class LevelDeleteTimeChangedIntegrationEvent : DeleteTimeChangedIntegrationEvent
+{
+    public int ExternalId { get; init; }
+};
