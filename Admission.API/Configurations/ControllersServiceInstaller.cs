@@ -1,7 +1,7 @@
 ﻿using Admission.API.Common.Extensions;
 using Admission.API.Common.ServiceInstaller;
 
-namespace Admission.User.API.Configurations;
+namespace Admission.API.Configurations;
 
 public class ControllersServiceInstaller: IServiceInstaller
 {

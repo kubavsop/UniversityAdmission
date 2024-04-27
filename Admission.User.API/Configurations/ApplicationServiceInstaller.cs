@@ -3,7 +3,6 @@ using Admission.Application.Common.Mapping;
 using Admission.User.Application.Events.ApplicantCreated;
 using Admission.User.Application.Services;
 using Admission.User.Application.Services.Impl;
-using Admission.User.Domain.Events;
 
 namespace Admission.User.API.Configurations;
 

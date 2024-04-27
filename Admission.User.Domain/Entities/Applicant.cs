@@ -11,7 +11,7 @@ public sealed class Applicant: AggregateRoot
     public string? Citizenship { get; set; }
     public Gender? Gender { get; set; }
     public AdmissionUser User { get; set; } = null!;
-    public StudentAdmission? StudentAdmission { get; set; }
+    public ICollection<StudentAdmission> Admissions { get; } = new List<StudentAdmission>();
 
     private Applicant()
     {
