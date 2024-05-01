@@ -49,7 +49,7 @@ public sealed class ApplicantController: BaseController
     [Authorize]
     public async Task<IActionResult> Logout()
     {
-        var result = await _authService.LogoutAsync(UserId);
+        var result = await _authService.LogoutAsync(UserId, TokenId);
         return result.ToIActionResult();
     }
     

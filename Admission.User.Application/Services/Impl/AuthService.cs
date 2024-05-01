@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Security.Claims;
+using System.Security.Cryptography;
 using Admission.Application.Common.Exceptions;
 using Admission.Application.Common.Extensions;
 using Admission.Application.Common.Result;
@@ -6,39 +7,41 @@ using Admission.Domain.Common.Enums;
 using Admission.User.Application.Context;
 using Admission.User.Application.DTOs.Requests;
 using Admission.User.Application.DTOs.Responses;
+using Admission.User.Application.Options;
 using Admission.User.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Admission.User.Application.Services.Impl;
 
-public sealed class AuthService: IAuthService
+public sealed class AuthService : IAuthService
 {
-    private const int RefreshTokenExpirationHours = 1000;
-    private const int RefreshTokenBytes = 256;
+    private readonly RefreshTokenOptions _refreshTokenOptions;
     private readonly UserManager<AdmissionUser> _userManager;
     private readonly IUserDbContext _context;
-    private readonly IJwtProvider _jwtProvider;
-    public AuthService(UserManager<AdmissionUser> userManager, IJwtProvider jwtProvider, IUserDbContext context)
+    private readonly IJwtService _jwtService;
+
+    public AuthService(UserManager<AdmissionUser> userManager, IJwtService jwtService, IUserDbContext context,
+        IOptions<RefreshTokenOptions> refreshTokenOptions)
     {
         _userManager = userManager;
-        _jwtProvider = jwtProvider;
+        _jwtService = jwtService;
         _context = context;
+        _refreshTokenOptions = refreshTokenOptions.Value;
     }
 
     public async Task<Result<TokenPairDto>> RegisterApplicantAsync(CreateApplicantDto dto)
     {
         var defaultRole = RoleType.Applicant.ToString();
-        var refreshToken = GenerateRefreshToken();
         var user = new AdmissionUser
         {
             Email = dto.Email,
             FullName = dto.FullName
         };
-        SetRefreshToken(user, refreshToken);
-        
+
         var result = await _userManager.CreateAsync(user, dto.Password);
-        
+
         if (!result.Succeeded)
         {
             return new IdentityException(result.Errors.ToList());
@@ -52,12 +55,18 @@ public sealed class AuthService: IAuthService
             dto.Gender,
             user)
         );
-        
+
+        var tokenId = Guid.NewGuid();
+        var refreshToken = GenerateRefreshToken();
+        var accessToken = _jwtService.Generate(user, [defaultRole], tokenId);
+        await SetRefreshToken(user, tokenId, refreshToken);
+
+
         await _context.SaveChangesAsync();
 
         return new TokenPairDto
         {
-            AccessToken = _jwtProvider.Generate(user, [defaultRole]),
+            AccessToken = accessToken,
             RefreshToken = refreshToken
         };
     }
@@ -75,58 +84,86 @@ public sealed class AuthService: IAuthService
 
     public async Task<Result<TokenPairDto>> RefreshAsync(RefreshDto dto)
     {
-        var user = await _context.Users
+        var tokenIdentifiersResult = _jwtService.GetIdentifiersFromToken(dto.AccessToken);
+        if (tokenIdentifiersResult.IsFailure)
+        {
+            return tokenIdentifiersResult.Exception;
+        }
+
+        var tokenIdentifiers = tokenIdentifiersResult.Value;
+
+        var refreshToken = await _context.RefreshTokens
             .GetUndeleted()
-            .FirstOrDefaultAsync(u => u.RefreshToken == dto.RefreshToken);
-        if (user == null || user.RefreshTokenIsExpired)
+            .Include(rt => rt.User)
+            .FirstOrDefaultAsync(rt => rt.Token == dto.RefreshToken);
+
+        if (refreshToken == null)
+        {
+            return new NotFoundException("Refresh token was not found");
+        }
+
+        if (refreshToken.RefreshTokenIsExpired)
         {
             return new BadRequestException("Invalid Refresh token");
         }
 
-        return await RefreshTokens(user);
-    }
-
-    public async Task<Result> LogoutAsync(Guid userId)
-    {
-        var user = await _context.Users.GetByIdAsync(userId);
-        if (user == null)
+        if (refreshToken.UserId != tokenIdentifiers.UserId ||
+            refreshToken.AccessTokenId != tokenIdentifiers.TokenId)
         {
-            return new NotFoundException(nameof(AdmissionUser), userId);
+            return new BadRequestException("Invalid access token");
         }
 
-        if (user.RefreshToken == null)
+        return await RefreshTokens(refreshToken.User);
+    }
+
+    public async Task<Result> LogoutAsync(Guid userId, Guid tokenId)
+    {
+        var refreshToken = await _context.RefreshTokens
+            .FirstOrDefaultAsync(rt => rt.AccessTokenId == tokenId);
+
+        if (refreshToken == null)
+        {
+            return new NotFoundException("Refresh token was not found");
+        }
+
+        if (refreshToken.DeleteTime.HasValue)
         {
             return new BadRequestException("User has already been logged out");
         }
-        
-        user.RefreshToken = null;
-        user.RefreshTokenExpirationTime = null;
+
+        refreshToken.DeleteTime = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
         return Result.Success();
     }
 
-
     private async Task<TokenPairDto> RefreshTokens(AdmissionUser user)
     {
+        var tokenId = Guid.NewGuid();
+        var accessToken = _jwtService.Generate(user, await _userManager.GetRolesAsync(user), tokenId);
         var refreshToken = GenerateRefreshToken();
-        SetRefreshToken(user, refreshToken);
+        await SetRefreshToken(user, tokenId, refreshToken);
         await _context.SaveChangesAsync();
-        
+
         return new TokenPairDto
         {
-            AccessToken = _jwtProvider.Generate(user, await _userManager.GetRolesAsync(user)),
+            AccessToken = accessToken,
             RefreshToken = refreshToken
         };
     }
 
-    private static void SetRefreshToken(AdmissionUser user, string refreshToken)
+    private async Task SetRefreshToken(AdmissionUser user, Guid tokenId, string refreshToken)
     {
-        user.RefreshToken = refreshToken;
-        user.RefreshTokenExpirationTime = DateTime.UtcNow.AddHours(RefreshTokenExpirationHours);
+        await _context.RefreshTokens.AddAsync(new RefreshToken
+        {
+            User = user,
+            Token = refreshToken,
+            RefreshTokenExpirationTime = DateTime.UtcNow.AddHours(_refreshTokenOptions.RefreshTokenExpirationHours)
+        });
     }
-    private static string GenerateRefreshToken()
+
+    private string GenerateRefreshToken()
     {
-        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(RefreshTokenBytes));
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(_refreshTokenOptions.RefreshTokenBytes));
     }
 }

@@ -12,9 +12,7 @@ public sealed class AdmissionUser: IdentityUser<Guid>, IBaseEntity
     public override required string Email { get; set; }
     public override string? UserName => Email;
     public required string FullName { get; set; }
+    public ICollection<AdmissionUserRole> UserRoles { get; }
     
-    public string? RefreshToken { get; set; }
-    public DateTime? RefreshTokenExpirationTime { get; set; }
-    public bool RefreshTokenIsExpired => DateTime.UtcNow > RefreshTokenExpirationTime;
-    public ICollection<AdmissionUserRole> UserRoles { get; set; }
+    public ICollection<RefreshToken> RefreshTokens { get; }
 }

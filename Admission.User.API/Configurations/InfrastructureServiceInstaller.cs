@@ -33,7 +33,7 @@ public class UserDbServiceInstaller: IServiceInstaller
             .AddRoles<AdmissionRole>()
             .AddEntityFrameworkStores<UserDbContext>();
         
-        services.AddSingleton<IJwtProvider, JwtProvider>();
+        services.AddSingleton<IJwtService, JwtService>();
         services.AddSingleton<AuditableEntityInterceptor>();
         
         var connectionString = configuration.GetConnectionString("DefaultConnection");

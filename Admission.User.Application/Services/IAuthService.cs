@@ -9,5 +9,5 @@ public interface IAuthService
     Task<Result<TokenPairDto>> RegisterApplicantAsync(CreateApplicantDto dto);   
     Task<Result<TokenPairDto>> LoginAsync(LoginCredentialsDto dto);
     Task<Result<TokenPairDto>> RefreshAsync(RefreshDto dto);
-    Task<Result> LogoutAsync(Guid userId);
+    Task<Result> LogoutAsync(Guid userId, Guid tokenId);
 }

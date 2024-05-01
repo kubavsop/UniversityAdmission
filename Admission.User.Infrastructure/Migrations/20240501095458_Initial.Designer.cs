@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Admission.User.Infrastructure.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20240427030326_FixApplicant")]
-    partial class FixApplicant
+    [Migration("20240501095458_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Admission.User.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Admission.API.OutboxMessages.OutboxMessages.OutboxMessage", b =>
+            modelBuilder.Entity("Admission.OutboxMessages.OutboxMessages.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,7 +50,7 @@ namespace Admission.User.Infrastructure.Migrations
                     b.ToTable("OutboxMessages");
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.AdmissionRole", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,7 +80,7 @@ namespace Admission.User.Infrastructure.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.AdmissionUser", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,12 +137,6 @@ namespace Admission.User.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("RefreshTokenExpirationTime")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -162,13 +156,10 @@ namespace Admission.User.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("RefreshToken")
-                        .IsUnique();
-
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.AdmissionUserRole", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionUserRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -183,7 +174,7 @@ namespace Admission.User.Infrastructure.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.Applicant", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.Applicant", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -214,7 +205,7 @@ namespace Admission.User.Infrastructure.Migrations
                     b.ToTable("Applicants");
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.Faculty", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.Faculty", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -238,7 +229,7 @@ namespace Admission.User.Infrastructure.Migrations
                     b.ToTable("Faculties");
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.Manager", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.Manager", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -262,7 +253,48 @@ namespace Admission.User.Infrastructure.Migrations
                     b.ToTable("Managers");
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.StudentAdmission", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccessTokenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeleteTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("RefreshTokenExpirationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccessTokenId")
+                        .IsUnique();
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("Admission.User.Domain.Entities.StudentAdmission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -388,15 +420,15 @@ namespace Admission.User.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.AdmissionUserRole", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionUserRole", b =>
                 {
-                    b.HasOne("Admission.API.User.Domain.Entities.AdmissionRole", "Role")
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionRole", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Admission.API.User.Domain.Entities.AdmissionUser", "User")
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionUser", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -407,26 +439,26 @@ namespace Admission.User.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.Applicant", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.Applicant", b =>
                 {
-                    b.HasOne("Admission.API.User.Domain.Entities.AdmissionUser", "User")
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionUser", "User")
                         .WithOne()
-                        .HasForeignKey("Admission.API.User.Domain.Entities.Applicant", "Id")
+                        .HasForeignKey("Admission.User.Domain.Entities.Applicant", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.Manager", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.Manager", b =>
                 {
-                    b.HasOne("Admission.API.User.Domain.Entities.Faculty", "Faculty")
+                    b.HasOne("Admission.User.Domain.Entities.Faculty", "Faculty")
                         .WithMany()
                         .HasForeignKey("FacultyId");
 
-                    b.HasOne("Admission.API.User.Domain.Entities.AdmissionUser", "User")
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionUser", "User")
                         .WithOne()
-                        .HasForeignKey("Admission.API.User.Domain.Entities.Manager", "Id")
+                        .HasForeignKey("Admission.User.Domain.Entities.Manager", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -435,19 +467,30 @@ namespace Admission.User.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.StudentAdmission", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("Admission.API.User.Domain.Entities.Applicant", "Applicant")
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionUser", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Admission.User.Domain.Entities.StudentAdmission", b =>
+                {
+                    b.HasOne("Admission.User.Domain.Entities.Applicant", "Applicant")
                         .WithMany("Admissions")
                         .HasForeignKey("ApplicantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Admission.API.User.Domain.Entities.Faculty", "FirstPriorityFaculty")
+                    b.HasOne("Admission.User.Domain.Entities.Faculty", "FirstPriorityFaculty")
                         .WithMany()
                         .HasForeignKey("FirstPriorityFacultyId");
 
-                    b.HasOne("Admission.API.User.Domain.Entities.Manager", "Manager")
+                    b.HasOne("Admission.User.Domain.Entities.Manager", "Manager")
                         .WithMany("Admissions")
                         .HasForeignKey("ManagerId");
 
@@ -460,7 +503,7 @@ namespace Admission.User.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Admission.API.User.Domain.Entities.AdmissionRole", null)
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -469,7 +512,7 @@ namespace Admission.User.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Admission.API.User.Domain.Entities.AdmissionUser", null)
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -478,7 +521,7 @@ namespace Admission.User.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Admission.API.User.Domain.Entities.AdmissionUser", null)
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -487,29 +530,31 @@ namespace Admission.User.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Admission.API.User.Domain.Entities.AdmissionUser", null)
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.AdmissionRole", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionRole", b =>
                 {
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.AdmissionUser", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionUser", b =>
                 {
+                    b.Navigation("RefreshTokens");
+
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.Applicant", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.Applicant", b =>
                 {
                     b.Navigation("Admissions");
                 });
 
-            modelBuilder.Entity("Admission.API.User.Domain.Entities.Manager", b =>
+            modelBuilder.Entity("Admission.User.Domain.Entities.Manager", b =>
                 {
                     b.Navigation("Admissions");
                 });
