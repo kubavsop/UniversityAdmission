@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Admission.Application.Common.Exceptions;
 using Admission.Application.Common.Result;
 using Admission.JWT.Options;
 using Admission.User.Application.Models;
@@ -86,7 +87,7 @@ public sealed class JwtService : IJwtService
         }
         catch (Exception e)
         {
-            return e;
+            return new BadRequestException("Invalid access token");
         }
         
         return principal;

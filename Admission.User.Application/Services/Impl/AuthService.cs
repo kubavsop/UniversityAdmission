@@ -113,6 +113,8 @@ public sealed class AuthService : IAuthService
             return new BadRequestException("Invalid access token");
         }
 
+        refreshToken.DeleteTime = DateTime.UtcNow;
+
         return await RefreshTokens(refreshToken.User);
     }
 
