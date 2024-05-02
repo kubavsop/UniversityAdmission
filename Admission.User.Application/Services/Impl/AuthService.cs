@@ -158,6 +158,7 @@ public sealed class AuthService : IAuthService
         {
             User = user,
             Token = refreshToken,
+            AccessTokenId = tokenId,
             RefreshTokenExpirationTime = DateTime.UtcNow.AddHours(_refreshTokenOptions.RefreshTokenExpirationHours)
         });
     }
