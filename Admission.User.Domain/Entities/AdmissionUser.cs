@@ -11,7 +11,7 @@ public sealed class AdmissionUser: IdentityUser<Guid>, IBaseEntity
     public DateTime? ModifiedTime { get; set; }
     public override required string Email { get; set; }
     public override string? UserName => Email;
-    public required string FullName { get; set; }
+    public required string FullName { get;  set; }
     public ICollection<AdmissionUserRole> UserRoles { get; }
     
     public ICollection<RefreshToken> RefreshTokens { get; }

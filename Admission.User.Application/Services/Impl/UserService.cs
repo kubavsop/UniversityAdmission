@@ -64,12 +64,16 @@ public sealed class UserService: IUserService
            return new BadRequestException("User with this email already exists");
        }
        
-       applicant.User.FullName = dto.FullName;
-       applicant.User.Email = dto.Email;
-       applicant.Birthday = dto.Birthday;
-       applicant.Gender = dto.Gender;
-       applicant.Citizenship = dto.Citizenship;
-       applicant.PhoneNumber = dto.PhoneNumber;
+       applicant.ChangeEmail(dto.Email);
+       await ChangeManagerEmail(dto.Email, userId);
+       
+       applicant.ChangeFullname(dto.FullName);
+       await ChangeManagerFullName(dto.FullName, userId);
+       
+       applicant.ChangeBirthday(dto.Birthday); 
+       applicant.ChangeGender(dto.Gender);
+       applicant.ChangeCitizenship(dto.Citizenship);
+       applicant.ChangePhoneNumber(dto.PhoneNumber);
 
        await _context.SaveChangesAsync();
 
@@ -95,7 +99,24 @@ public sealed class UserService: IUserService
         
         return identityResult.Succeeded ? Result.Success() : new IdentityException(identityResult.Errors.ToList());
     }
+    
+    private async Task ChangeManagerFullName(string fullName, Guid userId)
+    {
+        var manager = await _context.Managers
+            .Include(m => m.User)
+            .FirstOrDefaultAsync(m => m.Id == userId);
 
+        manager?.ChangeFullname(fullName);
+    }
+    
+    private async Task ChangeManagerEmail(string email, Guid userId)
+    {
+        var manager = await _context.Managers
+            .Include(m => m.User)
+            .FirstOrDefaultAsync(m => m.Id == userId);
+
+        manager?.ChangeEmail(email);
+    }
 
     private async Task<Result<Applicant>> GetApplicantByIdAsync(Guid userId)
     {

@@ -1,7 +1,7 @@
 ﻿using Admission.Domain.Common.Events;
 using Admission.User.Domain.Entities;
 
-namespace Admission.User.Domain.Events;
+namespace Admission.User.Domain.Events.Applicant;
 
 public sealed class ApplicantCreatedDomainEvent: IDomainEvent
 {

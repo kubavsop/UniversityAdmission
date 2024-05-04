@@ -1,6 +1,8 @@
 ﻿using Admission.DTOs.IntegrationEvents;
 using Admission.DTOs.IntegrationEvents.Events.Applicant;
+using Admission.User.Application.Constants;
 using Admission.User.Domain.Events;
+using Admission.User.Domain.Events.Applicant;
 
 namespace Admission.User.Application.Events.ApplicantCreated;
 
@@ -16,7 +18,7 @@ public sealed class ApplicantCreatedEventHandler: BaseDomainEventHandler<Applica
             Id = notification.Id,
             FullName = notification.FullName,
             Email = notification.Email
-        });
+        }, RoutingKeys.ApplicantCreatedRoutingKey);
         
         return Task.CompletedTask;
     }
