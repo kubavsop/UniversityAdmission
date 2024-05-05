@@ -4,7 +4,7 @@ namespace Admission.Document.Domain.Entities;
 
 public sealed class EducationDocumentType: BaseEntity
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
     
     public int EducationLevelId { get; set; }
     

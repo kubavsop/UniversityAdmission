@@ -15,4 +15,5 @@ public interface IDocumentDbContext
     public DbSet<NextEducationLevel> NextEducationLevels { get; }
     public DbSet<Passport> Passports { get; }
     public DbSet<StudentAdmission> StudentAdmissions { get; }
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
