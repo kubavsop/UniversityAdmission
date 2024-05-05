@@ -15,6 +15,7 @@ public sealed class LevelDeleteTimeChangedEventHandler: BaseDomainEventHandler<E
         Publisher.Publish(new LevelDeleteTimeChangedIntegrationEvent
         {
             Id = notification.Id,
+            ExternalId = notification.ExternalId,
             DeleteTime = notification.DeleteTime
         }, RoutingKeys.LevelChangedRoutingKey);
 

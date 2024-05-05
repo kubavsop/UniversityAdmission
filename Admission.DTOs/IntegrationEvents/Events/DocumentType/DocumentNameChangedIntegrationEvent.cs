@@ -2,4 +2,4 @@
 
 namespace Admission.DTOs.IntegrationEvents.Events.DocumentType;
 
-public sealed class DocumentNameChangedIntegrationEvent: NameChangedIntegrationEvent<Guid>;
+public sealed class DocumentNameChangedIntegrationEvent: NameChangedIntegrationEvent;

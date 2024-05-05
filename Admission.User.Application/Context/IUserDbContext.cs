@@ -10,5 +10,6 @@ public interface IUserDbContext
     DbSet<Faculty> Faculties { get;  }
     DbSet<Manager> Managers { get; }
     DbSet<StudentAdmission> StudentAdmissions { get; }
+    DbSet<RefreshToken> RefreshTokens { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

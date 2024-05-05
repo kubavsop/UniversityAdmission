@@ -12,9 +12,10 @@ internal sealed class ApplicantConfiguration: IEntityTypeConfiguration<Applicant
             .WithOne()
             .HasForeignKey<Applicant>(a => a.Id);
         
-        builder.HasOne(a => a.StudentAdmission)
+        builder
+            .HasMany(a => a.Admissions)
             .WithOne(sa => sa.Applicant)
-            .HasForeignKey<StudentAdmission>(sa => sa.ApplicantId)
+            .HasForeignKey(sa => sa.ApplicantId)
             .IsRequired();
     }
 }

@@ -10,5 +10,8 @@ public sealed class EducationLevelDeleteTimeChangedDomainEvent: DeleteTimeChange
 
     public EducationLevelDeleteTimeChangedDomainEvent(Entities.EducationLevel educationLevel) : base(educationLevel)
     {
+        ExternalId = educationLevel.ExternalId;
     }
+    
+    public int ExternalId { get; init; }
 }

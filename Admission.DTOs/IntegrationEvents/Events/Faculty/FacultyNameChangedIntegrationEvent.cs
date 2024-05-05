@@ -2,4 +2,4 @@
 
 namespace Admission.DTOs.IntegrationEvents.Events.Faculty;
 
-public sealed class FacultyNameChangedIntegrationEvent: NameChangedIntegrationEvent<Guid>;
+public sealed class FacultyNameChangedIntegrationEvent: NameChangedIntegrationEvent;

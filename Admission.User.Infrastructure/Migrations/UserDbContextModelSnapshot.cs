@@ -22,7 +22,7 @@ namespace Admission.User.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Admission.Infrastructure.Common.Outbox.OutboxMessage", b =>
+            modelBuilder.Entity("Admission.OutboxMessages.OutboxMessages.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,12 +134,6 @@ namespace Admission.User.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("RefreshTokenExpirationTime")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -158,9 +152,6 @@ namespace Admission.User.Infrastructure.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("RefreshToken")
-                        .IsUnique();
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -200,9 +191,6 @@ namespace Admission.User.Infrastructure.Migrations
                     b.Property<int?>("Gender")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("ManagerId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -210,8 +198,6 @@ namespace Admission.User.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ManagerId");
 
                     b.ToTable("Applicants");
                 });
@@ -264,6 +250,47 @@ namespace Admission.User.Infrastructure.Migrations
                     b.ToTable("Managers");
                 });
 
+            modelBuilder.Entity("Admission.User.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccessTokenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeleteTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("RefreshTokenExpirationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccessTokenId")
+                        .IsUnique();
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("Admission.User.Domain.Entities.StudentAdmission", b =>
                 {
                     b.Property<Guid>("Id")
@@ -293,8 +320,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicantId")
-                        .IsUnique();
+                    b.HasIndex("ApplicantId");
 
                     b.HasIndex("FirstPriorityFacultyId");
 
@@ -418,10 +444,6 @@ namespace Admission.User.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Admission.User.Domain.Entities.Manager", null)
-                        .WithMany("Applicants")
-                        .HasForeignKey("ManagerId");
-
                     b.Navigation("User");
                 });
 
@@ -442,11 +464,22 @@ namespace Admission.User.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Admission.User.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Admission.User.Domain.Entities.AdmissionUser", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Admission.User.Domain.Entities.StudentAdmission", b =>
                 {
                     b.HasOne("Admission.User.Domain.Entities.Applicant", "Applicant")
-                        .WithOne("StudentAdmission")
-                        .HasForeignKey("Admission.User.Domain.Entities.StudentAdmission", "ApplicantId")
+                        .WithMany("Admissions")
+                        .HasForeignKey("ApplicantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -455,7 +488,7 @@ namespace Admission.User.Infrastructure.Migrations
                         .HasForeignKey("FirstPriorityFacultyId");
 
                     b.HasOne("Admission.User.Domain.Entities.Manager", "Manager")
-                        .WithMany()
+                        .WithMany("Admissions")
                         .HasForeignKey("ManagerId");
 
                     b.Navigation("Applicant");
@@ -508,17 +541,19 @@ namespace Admission.User.Infrastructure.Migrations
 
             modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionUser", b =>
                 {
+                    b.Navigation("RefreshTokens");
+
                     b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.Applicant", b =>
                 {
-                    b.Navigation("StudentAdmission");
+                    b.Navigation("Admissions");
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.Manager", b =>
                 {
-                    b.Navigation("Applicants");
+                    b.Navigation("Admissions");
                 });
 #pragma warning restore 612, 618
         }

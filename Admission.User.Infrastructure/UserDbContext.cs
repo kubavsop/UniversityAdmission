@@ -18,6 +18,7 @@ public sealed class UserDbContext:
     public DbSet<Faculty> Faculties { get; init; }
     public DbSet<Manager> Managers { get; init; }
     public DbSet<StudentAdmission> StudentAdmissions { get; init; }
+    public DbSet<RefreshToken> RefreshTokens { get; init; }
     public DbSet<OutboxMessage> OutboxMessages { get; init; }
     
     public UserDbContext(DbContextOptions options) : base(options) { }

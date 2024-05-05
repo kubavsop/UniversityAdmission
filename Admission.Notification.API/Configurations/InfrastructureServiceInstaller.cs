@@ -3,9 +3,6 @@ using Admission.Notification.Application.Services;
 using Admission.Notification.Infrastructure.Options;
 using Admission.Notification.Infrastructure.Services;
 using Admission.RabbitMQ.Extensions;
-using Admission.RabbitMQ.Services;
-using Admission.RabbitMQ.Services.Impl;
-using Admission.RabbitMQ.Setups;
 
 namespace Admission.Notification.API.Configurations;
 
