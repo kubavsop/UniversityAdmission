@@ -1,6 +1,7 @@
 ﻿using Admission.Application.Common.Exceptions;
 using Admission.Application.Common.Extensions;
 using Admission.Application.Common.Result;
+using Admission.Domain.Common.Enums;
 using Admission.User.Application.Context;
 using Admission.User.Application.DTOs.Requests;
 using Admission.User.Application.DTOs.Responses;
@@ -11,12 +12,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Admission.User.Application.Services.Impl;
 
-public sealed class UserService: IUserService
+public sealed class UserService : IUserService
 {
     private readonly UserManager<AdmissionUser> _userManager;
     private readonly IUserDbContext _context;
     private readonly IMapper _mapper;
-    
+
     public UserService(UserManager<AdmissionUser> userManager, IUserDbContext context, IMapper mapper)
     {
         _userManager = userManager;
@@ -31,7 +32,7 @@ public sealed class UserService: IUserService
             .Include(a => a.User)
             .Where(a => !a.User.DeleteTime.HasValue)
             .GetByIdAsync(userId);
-        
+
         if (applicant == null)
         {
             return new NotFoundException(nameof(Applicant), userId);
@@ -42,53 +43,59 @@ public sealed class UserService: IUserService
 
     public async Task<Result> EditApplicantProfileAsync(EditApplicantDto dto, Guid userId)
     {
-       var result = await GetApplicantByIdAsync(userId);
-       
-       if (result.IsFailure)
-       {
-           return result;
-       }
+        if (await IsStudentAdmissionClosed(userId))
+        {
+            return new BadRequestException("Admission is closed");
+        }
 
-       var applicant = result.Value;
-       
-       if (applicant.User == null)
-       {
-           throw new InvalidOperationException("User cannot be null");
-       }
-       
-       var modifiedNormalizedEmail = dto.Email.ToUpper();
-       
-       if (modifiedNormalizedEmail != applicant.User.NormalizedEmail && 
-           _context.Users.Any(u => applicant.Id != u.Id && u.NormalizedEmail == modifiedNormalizedEmail))
-       {
-           return new BadRequestException("User with this email already exists");
-       }
-       
-       applicant.ChangeEmail(dto.Email);
-       await ChangeManagerEmail(dto.Email, userId);
-       
-       applicant.ChangeFullname(dto.FullName);
-       await ChangeManagerFullName(dto.FullName, userId);
-       
-       applicant.ChangeBirthday(dto.Birthday); 
-       applicant.ChangeGender(dto.Gender);
-       applicant.ChangeCitizenship(dto.Citizenship);
-       applicant.ChangePhoneNumber(dto.PhoneNumber);
+        var result = await GetApplicantByIdAsync(userId);
 
-       await _context.SaveChangesAsync();
+        if (result.IsFailure)
+        {
+            return result;
+        }
 
-       return Result.Success();
+        var applicant = result.Value;
+
+        if (applicant.User == null)
+        {
+            throw new InvalidOperationException("User cannot be null");
+        }
+
+        var modifiedNormalizedEmail = dto.Email.ToUpper();
+
+        if (modifiedNormalizedEmail != applicant.User.NormalizedEmail &&
+            _context.Users.Any(u => applicant.Id != u.Id && u.NormalizedEmail == modifiedNormalizedEmail))
+        {
+            return new BadRequestException("User with this email already exists");
+        }
+
+        applicant.ChangeEmail(dto.Email);
+        await ChangeManagerEmail(dto.Email, userId);
+
+        applicant.ChangeFullname(dto.FullName);
+        await ChangeManagerFullName(dto.FullName, userId);
+
+        applicant.ChangeBirthday(dto.Birthday);
+        applicant.ChangeGender(dto.Gender);
+        applicant.ChangeCitizenship(dto.Citizenship);
+        applicant.ChangePhoneNumber(dto.PhoneNumber);
+
+        await _context.SaveChangesAsync();
+
+        return Result.Success();
     }
 
     public async Task<Result> EditPasswordAsync(EditPasswordDto dto, Guid userId)
     {
+        
         if (dto.NewPassword == dto.OldPassword)
         {
             return new BadRequestException("Passwords must be different");
         }
-        
+
         var result = await GetUserByIdAsync(userId);
-        
+
         if (result.IsFailure)
         {
             return result;
@@ -96,10 +103,10 @@ public sealed class UserService: IUserService
 
         var user = result.Value;
         var identityResult = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
-        
+
         return identityResult.Succeeded ? Result.Success() : new IdentityException(identityResult.Errors.ToList());
     }
-    
+
     private async Task ChangeManagerFullName(string fullName, Guid userId)
     {
         var manager = await _context.Managers
@@ -108,7 +115,7 @@ public sealed class UserService: IUserService
 
         manager?.ChangeFullname(fullName);
     }
-    
+
     private async Task ChangeManagerEmail(string email, Guid userId)
     {
         var manager = await _context.Managers
@@ -124,7 +131,7 @@ public sealed class UserService: IUserService
             .Include(a => a.User)
             .Where(a => !a.User.DeleteTime.HasValue)
             .GetByIdAsync(userId);
-        
+
         if (applicant == null)
         {
             return new NotFoundException(nameof(Applicant), userId);
@@ -144,5 +151,16 @@ public sealed class UserService: IUserService
         }
 
         return user;
+    }
+
+    private async Task<bool> IsStudentAdmissionClosed(Guid userId)
+    {
+        var admissions = await _context.StudentAdmissions
+            .GetUndeleted()
+            .Where(sa => sa.ApplicantId == userId)
+            .ToListAsync();
+        
+        return admissions.Count != 0 && !admissions.Any(
+            sa => sa.ApplicantId == userId && sa.Status != AdmissionStatus.Closed);
     }
 }

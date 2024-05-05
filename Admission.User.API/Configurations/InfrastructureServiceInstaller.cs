@@ -22,6 +22,7 @@ public class UserDbServiceInstaller: IServiceInstaller
             .AddJwtAuthentication()
             .AddRabbitMqConnection(configuration)
             .AddProducer()
+            .AddConsumer()
             .AddRpcDictionaryClient(configuration)
             .AddOutboxMessages();
         
