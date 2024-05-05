@@ -1,5 +1,5 @@
-using Admission.Domain.Common.Events;
 using Admission.DTOs.IntegrationEvents;
+using Admission.DTOs.IntegrationEvents.Events.Email;
 using Admission.DTOs.IntegrationEvents.Events.Manager;
 using Admission.User.Application.Constants;
 using Admission.User.Domain.Events.Manager;
@@ -19,7 +19,14 @@ public sealed class ManagerCreatedEventHandler: BaseDomainEventHandler<ManagerCr
             Id = notification.Id,
             FullName = notification.FullName,
             Email = notification.Email
-        }, RoutingKeys.ManagerCreatedRoutingKey);
+        }, RoutingKeys.NotificationRoutingKey);
+        
+        Publisher.Publish(new MailRequestIntegrationEvent
+        {
+            EmailTo = notification.Email,
+            Subject = "Creating a manager",
+            Body = "Congratulations! You became a manager"
+        });
 
         return Task.CompletedTask;
     }

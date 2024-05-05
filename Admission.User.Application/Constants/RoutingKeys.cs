@@ -6,4 +6,5 @@ internal static class RoutingKeys
     internal const string ApplicantCreatedRoutingKey = "document.admission";
     internal const string ManagerCreatedRoutingKey = "document.admission";
     internal const string ManagerChangedRoutingKey = ".admission";
+    internal const string NotificationRoutingKey = "notification";
 }

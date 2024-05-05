@@ -104,7 +104,7 @@ public sealed class UserService: IUserService
     {
         var manager = await _context.Managers
             .Include(m => m.User)
-            .FirstOrDefaultAsync(m => m.Id == userId);
+            .GetByIdAsync(userId);
 
         manager?.ChangeFullname(fullName);
     }
@@ -113,7 +113,7 @@ public sealed class UserService: IUserService
     {
         var manager = await _context.Managers
             .Include(m => m.User)
-            .FirstOrDefaultAsync(m => m.Id == userId);
+            .GetByIdAsync(userId);
 
         manager?.ChangeEmail(email);
     }
