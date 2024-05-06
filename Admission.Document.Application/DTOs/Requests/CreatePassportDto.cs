@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Admission.Document.Application.ValidationAttributes;
 
 namespace Admission.Document.Application.DTOs.Requests;
 
@@ -23,7 +24,12 @@ public sealed class CreatePassportDto
     public required string IssuedBy { get; set; }
     
     [Required]
-    [MinLength(1)]
-    [MaxLength(400)]
-    public required DateTime DateIssued { get; set; }
+    [DateIssued]
+    public required DateTime DateIssued
+    {
+        get => _dateIssued;
+        set => _dateIssued = DateTime.SpecifyKind(value, DateTimeKind.Utc);
+    }
+
+    private DateTime _dateIssued;
 }
