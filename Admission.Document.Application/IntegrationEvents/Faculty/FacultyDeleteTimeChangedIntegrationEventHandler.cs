@@ -1,16 +1,17 @@
 using Admission.Application.Common.Extensions;
+using Admission.Document.Application.Context;
 using Admission.DTOs.IntegrationEvents;
 using Admission.DTOs.IntegrationEvents.Events.Faculty;
-using Admission.User.Application.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Admission.User.Application.IntegrationEvents.Faculty;
+namespace Admission.Document.Application.IntegrationEvents.Faculty;
 
-public sealed class FacultyDeleteTimeChangedIntegrationEventHandler: IIntegrationEventHandler<FacultyDeleteTimeChangedIntegrationEvent>
+public sealed class
+    FacultyDeleteTimeChangedIntegrationEventHandler : IIntegrationEventHandler<FacultyDeleteTimeChangedIntegrationEvent>
 {
-    private readonly IUserDbContext _context;
+    private readonly IDocumentDbContext _context;
 
-    public FacultyDeleteTimeChangedIntegrationEventHandler(IUserDbContext context)
+    public FacultyDeleteTimeChangedIntegrationEventHandler(IDocumentDbContext context)
     {
         _context = context;
     }
@@ -18,7 +19,7 @@ public sealed class FacultyDeleteTimeChangedIntegrationEventHandler: IIntegratio
     public async Task Handle(FacultyDeleteTimeChangedIntegrationEvent notification, CancellationToken cancellationToken)
     {
         var faculty = await _context.Faculties.FirstOrDefaultAsync(f => f.Id == notification.Id,
-                cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken);
         if (faculty == null) return;
 
         faculty.DeleteTime = notification.DeleteTime;

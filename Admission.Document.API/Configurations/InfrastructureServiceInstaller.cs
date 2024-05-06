@@ -7,6 +7,7 @@ using Admission.JWT;
 using Admission.OutboxMessages.Context;
 using Admission.OutboxMessages.Extensions;
 using Admission.OutboxMessages.Interceptors;
+using Admission.RabbitMQ.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Admission.Document.API.Configurations;
@@ -16,6 +17,8 @@ public class InfrastructureServiceInstaller: IServiceInstaller
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services
+            .AddRabbitMqConnection(configuration)
+            .AddConsumer()
             .AddJwtAuthentication()
             .AddOutboxMessages();
         

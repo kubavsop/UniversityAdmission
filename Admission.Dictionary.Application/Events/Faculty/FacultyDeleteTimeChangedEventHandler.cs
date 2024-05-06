@@ -16,7 +16,7 @@ public sealed class FacultyDeleteTimeChangedEventHandler: BaseDomainEventHandler
         {
             Id = notification.Id,
             DeleteTime = notification.DeleteTime
-        }, RoutingKeys.FacultyChangedRoutingKey);
+        }, RoutingKeys.FacultyDeleteTimeChangedRoutingKey);
 
         return Task.CompletedTask;
     }

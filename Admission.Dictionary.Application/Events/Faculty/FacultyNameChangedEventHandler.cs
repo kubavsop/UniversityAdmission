@@ -17,7 +17,7 @@ public sealed class FacultyNameChangedEventHandler: BaseDomainEventHandler<Facul
         {
             Id = notification.Id,
             Name = notification.Name
-        }, RoutingKeys.FacultyChangedRoutingKey);
+        }, RoutingKeys.FacultyNameChangedRoutingKey);
         
         return Task.CompletedTask;
     }
