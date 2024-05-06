@@ -12,11 +12,11 @@ namespace Admission.Document.API.Controllers;
 
 public sealed class DocumentController: BaseController
 {
-    private readonly IPassportService _passportService;
+    private readonly IDocumentService _documentService;
 
-    public DocumentController(IPassportService passportService)
+    public DocumentController(IDocumentService documentService)
     {
-        _passportService = passportService;
+        _documentService = documentService;
     }
 
     [HttpPost]
@@ -24,7 +24,7 @@ public sealed class DocumentController: BaseController
     [Route("passport")]
     public async Task<IActionResult> CreatePassport(CreatePassportDto passportDto)
     {
-        var result = await _passportService.CreatePassportAsync(passportDto, UserId);
+        var result = await _documentService.CreatePassportAsync(passportDto, UserId);
         return result.ToIActionResult();
     }
 
@@ -33,7 +33,7 @@ public sealed class DocumentController: BaseController
     [Route("passport")]
     public async Task<IActionResult> GetPassport()
     {
-        var result = await _passportService.GetPassportAsync(UserId);
+        var result = await _documentService.GetPassportAsync(UserId);
         return result.ToIActionResult();
     }
 
@@ -42,7 +42,7 @@ public sealed class DocumentController: BaseController
     [Route("passport")]
     public async Task<IActionResult> EditPassport(EditPassportDto passportDto)
     {
-        var result = await _passportService.EditPassportAsync(passportDto, UserId);
+        var result = await _documentService.EditPassportAsync(passportDto, UserId);
         return result.ToIActionResult();
     }
     

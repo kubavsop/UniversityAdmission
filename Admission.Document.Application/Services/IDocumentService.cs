@@ -4,7 +4,7 @@ using Admission.Document.Application.DTOs.Responses;
 
 namespace Admission.Document.Application.Services;
 
-public interface IPassportService
+public interface IDocumentService
 {
     Task<Result> CreatePassportAsync(CreatePassportDto passportDto, Guid userId);
     Task<Result<PassportDto>> GetPassportAsync(Guid userId);

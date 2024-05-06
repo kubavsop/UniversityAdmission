@@ -11,7 +11,7 @@ public sealed class ApplicationServiceInstaller: IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IPassportService, PassportService>();
+        services.AddScoped<IDocumentService, DocumentService>();
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(AdmissionCreatedIntegrationEventHandler).Assembly));
         services.AddMapping();
     }
