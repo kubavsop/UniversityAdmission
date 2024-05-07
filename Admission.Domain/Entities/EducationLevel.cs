@@ -8,6 +8,6 @@ public sealed class EducationLevel: BaseEntity
     
     public required string Name { get; set; }
     
-    public ICollection<Applicant> Applicants { get; } = new List<Applicant>();
+    public ICollection<EducationDocumentType> Applicants { get; } = new List<EducationDocumentType>();
     public ICollection<NextEducationLevel> NextEducationLevels { get; } = new List<NextEducationLevel>();
 }

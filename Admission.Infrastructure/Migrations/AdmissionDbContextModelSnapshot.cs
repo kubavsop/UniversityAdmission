@@ -106,6 +106,31 @@ namespace Admission.Infrastructure.Migrations
                     b.ToTable("Applicants");
                 });
 
+            modelBuilder.Entity("Admission.Domain.Entities.EducationDocumentType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeleteTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("EducationLevelId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EducationLevelId");
+
+                    b.ToTable("EducationDocumentTypes");
+                });
+
             modelBuilder.Entity("Admission.Domain.Entities.EducationLevel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -238,14 +263,14 @@ namespace Admission.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ApplicantId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteTime")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EducationDocumentTypeId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("EducationLevelId")
                         .HasColumnType("integer");
@@ -255,7 +280,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicantId");
+                    b.HasIndex("EducationDocumentTypeId");
 
                     b.HasIndex("EducationLevelId");
 
@@ -344,6 +369,18 @@ namespace Admission.Infrastructure.Migrations
                     b.Navigation("StudentAdmission");
                 });
 
+            modelBuilder.Entity("Admission.Domain.Entities.EducationDocumentType", b =>
+                {
+                    b.HasOne("Admission.Domain.Entities.EducationLevel", "EducationLevel")
+                        .WithMany()
+                        .HasForeignKey("EducationLevelId")
+                        .HasPrincipalKey("ExternalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EducationLevel");
+                });
+
             modelBuilder.Entity("Admission.Domain.Entities.EducationProgram", b =>
                 {
                     b.HasOne("Admission.Domain.Entities.EducationLevel", "EducationLevel")
@@ -375,9 +412,9 @@ namespace Admission.Infrastructure.Migrations
 
             modelBuilder.Entity("Admission.Domain.Entities.NextEducationLevel", b =>
                 {
-                    b.HasOne("Admission.Domain.Entities.Applicant", "Applicant")
+                    b.HasOne("Admission.Domain.Entities.EducationDocumentType", "EducationDocumentType")
                         .WithMany("NextEducationLevels")
-                        .HasForeignKey("ApplicantId")
+                        .HasForeignKey("EducationDocumentTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -388,7 +425,7 @@ namespace Admission.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Applicant");
+                    b.Navigation("EducationDocumentType");
 
                     b.Navigation("EducationLevel");
                 });
@@ -426,7 +463,10 @@ namespace Admission.Infrastructure.Migrations
             modelBuilder.Entity("Admission.Domain.Entities.Applicant", b =>
                 {
                     b.Navigation("Admissions");
+                });
 
+            modelBuilder.Entity("Admission.Domain.Entities.EducationDocumentType", b =>
+                {
                     b.Navigation("NextEducationLevels");
                 });
 

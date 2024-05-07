@@ -89,7 +89,27 @@ public sealed class DocumentService: IDocumentService
 
         return Result.Success();
     }
-    
+
+    public Task<Result> CreateEducationDocument(CreateEducationDocumentDto documentDto, Guid userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Result<EducationDocumentDto>> GetEducationDocument(Guid userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Result> EditEducationDocument(EditEducationDocumentDto documentDto, Guid documentId, Guid userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Result> DeleteEducationDocument(Guid documentId, Guid userId)
+    {
+        throw new NotImplementedException();
+    }
+
     private async Task<bool> IsStudentAdmissionClosed(Guid userId)
     {
         var admissions = await _context.StudentAdmissions

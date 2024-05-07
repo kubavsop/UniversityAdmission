@@ -1,9 +1,7 @@
 using Admission.API.Common;
 using Admission.API.Common.Extensions;
 using Admission.Application.Common.Exceptions;
-using Admission.Document.Application.DTOs;
 using Admission.Document.Application.DTOs.Requests;
-using Admission.Document.Application.DTOs.Responses;
 using Admission.Document.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,31 +45,39 @@ public sealed class DocumentController: BaseController
     }
     
     [HttpPost]
+    [Authorize]
     [Route("education")]
     public async Task<IActionResult> CreateEducationDocument(CreateEducationDocumentDto createEducationDocumentDto)
     {
-        throw new NotImplementedException();
+        var result = await _documentService.CreateEducationDocument(createEducationDocumentDto, UserId);
+        return result.ToIActionResult();
     }
 
     [HttpGet]
+    [Authorize]
     [Route("education")]
     public async Task<IActionResult> GetEducationDocument()
     {
-        throw new NotImplementedException();
+        var result = await _documentService.GetEducationDocument(UserId);
+        return result.ToIActionResult();
     }
 
     [HttpPut]
+    [Authorize]
     [Route("education/{id:guid}")]
-    public async Task<IActionResult> EditEducationDocument(EditEducationDocumentTypeDto educationDocumentTypeDto, Guid id)
+    public async Task<IActionResult> EditEducationDocument(EditEducationDocumentDto educationDocumentDto, Guid id)
     {
-        throw new NotImplementedException();
+        var result = await _documentService.EditEducationDocument(educationDocumentDto, id, UserId);
+        return result.ToIActionResult();
     }
 
     [HttpDelete]
+    [Authorize]
     [Route("education/{id:guid}")]
     public async Task<IActionResult> DeleteEducationDocument(Guid id)
     {
-        throw new NotImplementedException();
+        var result = await _documentService.DeleteEducationDocument(id, UserId);
+        return result.ToIActionResult();
     }
 
     [HttpPost]
@@ -80,5 +86,4 @@ public sealed class DocumentController: BaseController
     {
         throw new NotFoundException();
     }
-    
 }

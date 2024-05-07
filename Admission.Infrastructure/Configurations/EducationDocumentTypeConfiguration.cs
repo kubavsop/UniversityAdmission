@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Admission.Infrastructure.Configurations;
 
-internal sealed class ApplicantConfiguration: IEntityTypeConfiguration<Applicant>
+internal sealed class EducationDocumentTypeConfiguration: IEntityTypeConfiguration<EducationDocumentType>
 {
-    public void Configure(EntityTypeBuilder<Applicant> builder)
+    public void Configure(EntityTypeBuilder<EducationDocumentType> builder)
     {
        builder
            .HasMany(a => a.EducationLevels)
@@ -16,5 +16,11 @@ internal sealed class ApplicantConfiguration: IEntityTypeConfiguration<Applicant
                    .HasOne<EducationLevel>(e => e.EducationLevel)
                    .WithMany(e => e.NextEducationLevels)
                    .HasPrincipalKey(e => e.ExternalId));
+       
+       builder
+           .HasOne(t => t.EducationLevel)
+           .WithMany()
+           .HasPrincipalKey(t => t.ExternalId)
+           .IsRequired();
     }
 }

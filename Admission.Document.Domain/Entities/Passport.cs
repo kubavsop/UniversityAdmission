@@ -25,6 +25,7 @@ public sealed class Passport : Document
     {
         var passport = new Passport
         {
+            Id = Guid.NewGuid(),
             Series = series,
             Number = number,
             PlaceOfBirth = placeOfBirth,

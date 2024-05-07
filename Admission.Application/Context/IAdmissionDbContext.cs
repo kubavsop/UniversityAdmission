@@ -5,13 +5,14 @@ namespace Admission.Application.Context;
 
 public interface IAdmissionDbContext
 {
-    public DbSet<AdmissionProgram> AdmissionPrograms { get; }
-    public DbSet<Applicant> Applicants { get; }
-    public DbSet<EducationLevel> EducationLevels { get; }
-    public DbSet<EducationProgram> EducationPrograms { get; }
-    public DbSet<Faculty> Faculties { get; }
-    public DbSet<Manager> Managers { get; }
-    public DbSet<NextEducationLevel> NextEducationLevels { get; }
-    public DbSet<StudentAdmission> StudentAdmissions { get; }
-    public DbSet<AdmissionGroup> AdmissionGroups { get; }
+    DbSet<EducationDocumentType> EducationDocumentTypes { get; }
+    DbSet<AdmissionProgram> AdmissionPrograms { get; }
+    DbSet<Applicant> Applicants { get; }
+    DbSet<EducationLevel> EducationLevels { get; }
+    DbSet<EducationProgram> EducationPrograms { get; }
+    DbSet<Faculty> Faculties { get; }
+    DbSet<Manager> Managers { get; }
+    DbSet<NextEducationLevel> NextEducationLevels { get; }
+    DbSet<StudentAdmission> StudentAdmissions { get; }
+    DbSet<AdmissionGroup> AdmissionGroups { get; }
 }

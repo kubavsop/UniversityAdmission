@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Admission.Document.Application.DTOs.Requests;
 
-public sealed class EditEducationDocumentTypeDto
+public sealed class EditEducationDocumentDto
 {
     [Required]
     [MinLength(1)]

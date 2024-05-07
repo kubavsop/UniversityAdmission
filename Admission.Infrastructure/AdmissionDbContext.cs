@@ -9,6 +9,7 @@ namespace Admission.Infrastructure;
 
 public sealed class AdmissionDbContext : DbContext, IAdmissionDbContext, IOutboxMessageDbContext
 {
+    public DbSet<EducationDocumentType> EducationDocumentTypes { get; init; }
     public DbSet<AdmissionProgram> AdmissionPrograms { get; init; }
     public DbSet<Applicant> Applicants { get; init; }
     public DbSet<EducationLevel> EducationLevels { get; init; }
