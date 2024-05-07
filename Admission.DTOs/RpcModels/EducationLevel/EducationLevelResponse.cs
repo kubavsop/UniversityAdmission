@@ -2,7 +2,9 @@
 
 public sealed class EducationLevelResponse: IRpcResponse
 {
-    public int Id { get; init; }
+    public Guid Id { get; init; }
+    
+    public int ExternalId { get; init; }
     
     public required string Name { get; init; }
 }

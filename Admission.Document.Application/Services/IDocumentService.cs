@@ -9,8 +9,8 @@ public interface IDocumentService
     Task<Result> CreatePassportAsync(CreatePassportDto passportDto, Guid userId);
     Task<Result<PassportDto>> GetPassportAsync(Guid userId);
     Task<Result> EditPassportAsync(EditPassportDto passportDto, Guid userId);
-    Task<Result> CreateEducationDocument(CreateEducationDocumentDto documentDto, Guid userId);
-    Task<Result<EducationDocumentDto>> GetEducationDocument(Guid userId);
-    Task<Result> EditEducationDocument(EditEducationDocumentDto documentDto, Guid documentId, Guid userId);
-    Task<Result> DeleteEducationDocument(Guid documentId, Guid userId);
+    Task<Result> CreateEducationDocumentAsync(CreateEducationDocumentDto documentDto, Guid userId);
+    Task<Result<IEnumerable<EducationDocumentDto>>> GetEducationDocumentAsync(Guid userId);
+    Task<Result> EditEducationDocumentAsync(EditEducationDocumentDto documentDto, Guid documentId, Guid userId);
+    Task<Result> DeleteEducationDocumentAsync(Guid documentId, Guid userId);
 }

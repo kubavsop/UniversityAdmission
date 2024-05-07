@@ -38,7 +38,8 @@ public sealed class GetProgramHandler: IRequestHandler<GetProgramRequest, IRpcRe
                 },
                 EducationLevel = new EducationLevelResponse
                 {
-                    Id = p.EducationLevel.ExternalId,
+                    Id = p.EducationLevel.Id,
+                    ExternalId = p.EducationLevel.ExternalId,
                     Name = p.EducationLevel.Name
                 }
             }).FirstOrDefaultAsync(cancellationToken);

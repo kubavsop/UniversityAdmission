@@ -1,35 +1,38 @@
 using Admission.Application.Common.Exceptions;
 using Admission.Application.Common.Extensions;
 using Admission.Application.Common.Result;
+using Admission.Application.Common.Services;
 using Admission.Document.Application.Context;
 using Admission.Document.Application.DTOs.Requests;
 using Admission.Document.Application.DTOs.Responses;
 using Admission.Document.Domain.Entities;
-using Admission.Document.Domain.Enums;
 using Admission.Domain.Common.Enums;
+using Admission.DTOs.RpcModels.EducationLevel;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Admission.Document.Application.Services.Impl;
 
-public sealed class DocumentService: IDocumentService
+public sealed class DocumentService : IDocumentService
 {
     private readonly IDocumentDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IRpcDictionaryClient _dictionaryClient;
 
-    public DocumentService(IDocumentDbContext context, IMapper mapper)
+    public DocumentService(IDocumentDbContext context, IMapper mapper, IRpcDictionaryClient dictionaryClient)
     {
         _context = context;
         _mapper = mapper;
+        _dictionaryClient = dictionaryClient;
     }
-    
+
     public async Task<Result> CreatePassportAsync(CreatePassportDto passportDto, Guid userId)
     {
         if (await IsStudentAdmissionClosed(userId))
         {
             return new BadRequestException("Admission is closed");
         }
-        
+
         if (_context.Passports.GetUndeleted().Any(p => p.ApplicantId == userId))
         {
             return new BadRequestException("Passport already exists");
@@ -44,7 +47,7 @@ public sealed class DocumentService: IDocumentService
             userId));
 
         await _context.SaveChangesAsync();
-        
+
         return Result.Success();
     }
 
@@ -68,7 +71,7 @@ public sealed class DocumentService: IDocumentService
         {
             return new BadRequestException("Admission is closed");
         }
-        
+
         var passport = await _context.Passports
             .GetUndeleted()
             .Include(p => p.Files)
@@ -90,24 +93,135 @@ public sealed class DocumentService: IDocumentService
         return Result.Success();
     }
 
-    public Task<Result> CreateEducationDocument(CreateEducationDocumentDto documentDto, Guid userId)
+    public async Task<Result> CreateEducationDocumentAsync(CreateEducationDocumentDto documentDto, Guid userId)
     {
-        throw new NotImplementedException();
+        if (await IsStudentAdmissionClosed(userId))
+        {
+            return new BadRequestException("Admission is closed");
+        }
+
+        var result = await EnsureDocumentTypeSaved(documentDto.EducationDocumentTypeId);
+        if (result.IsFailure) return result.Exception;
+
+        await _context.EducationDocuments.AddAsync(EducationDocument.Create(documentDto.Name,
+            documentDto.EducationDocumentTypeId));
+
+        await _context.SaveChangesAsync();
+
+        return Result.Success();
     }
 
-    public Task<Result<EducationDocumentDto>> GetEducationDocument(Guid userId)
+    public async Task<Result<IEnumerable<EducationDocumentDto>>> GetEducationDocumentAsync(Guid userId)
     {
-        throw new NotImplementedException();
+        var documents = await _context.EducationDocuments
+            .AsNoTracking()
+            .GetUndeleted()
+            .Where(d => d.ApplicantId == userId)
+            .Where(d => !d.EducationDocumentType.DeleteTime.HasValue)
+            .Include(d => d.EducationDocumentType)
+            .ThenInclude(t => t.NextEducationLevels
+                .Where(nel => !nel.DeleteTime.HasValue))
+            .ThenInclude(nel => nel.EducationLevel)
+            .ToListAsync();
+
+        return _mapper.Map<List<EducationDocumentDto>>(documents);
     }
 
-    public Task<Result> EditEducationDocument(EditEducationDocumentDto documentDto, Guid documentId, Guid userId)
+    public async Task<Result> EditEducationDocumentAsync(EditEducationDocumentDto documentDto, Guid documentId, Guid userId)
     {
-        throw new NotImplementedException();
+        var document = await _context.EducationDocuments.GetByIdAsync(documentId);
+
+        if (document == null)
+        {
+            return new NotFoundException(nameof(EducationDocument), documentId);
+        }
+
+        if (document.ApplicantId != userId)
+        {
+            return new ForbiddenException(userId);
+        }
+
+        if (document.EducationDocumentTypeId != documentDto.EducationDocumentTypeId)
+        {
+            var result = await EnsureDocumentTypeSaved(documentDto.EducationDocumentTypeId);
+            if (result.IsFailure) return result.Exception;
+        }
+        
+        document.ChangeName(documentDto.Name);
+        document.ChangeDocumentType(documentDto.EducationDocumentTypeId);
+
+        await _context.SaveChangesAsync();
+        
+        return Result.Success();
     }
 
-    public Task<Result> DeleteEducationDocument(Guid documentId, Guid userId)
+    public async Task<Result> DeleteEducationDocumentAsync(Guid documentId, Guid userId)
     {
-        throw new NotImplementedException();
+        var document = await _context.EducationDocuments.GetByIdAsync(documentId);
+
+        if (document == null)
+        {
+            return new NotFoundException(nameof(EducationDocument), documentId);
+        }
+
+        if (document.ApplicantId != userId)
+        {
+            return new ForbiddenException(userId);
+        }
+        
+        document.DeleteTime = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return Result.Success();
+    }
+
+    private async Task<Result> EnsureDocumentTypeSaved(Guid typeId)
+    {
+        var type = await _context.EducationDocumentTypes.FirstOrDefaultAsync(t =>
+            t.Id == typeId);
+        
+        if (type is { DeleteTime: not null })
+        {
+            return new BadRequestException("Type has been deleted");
+        }
+        
+        var documentType = await _dictionaryClient.GetDocumentTypeByIdAsync(typeId);
+
+        if (documentType == null)
+        {
+            return new NotFoundException(nameof(EducationDocumentType), typeId);
+        }
+        
+        var educationLevelsDict = await _context.EducationLevels
+            .AsNoTracking()
+            .GetUndeleted()
+            .ToDictionaryAsync(l => l.ExternalId);
+        
+        if (educationLevelsDict.ContainsKey(documentType.EducationLevel.ExternalId))
+        {
+            await SaveEducationLevel(documentType.EducationLevel);
+        }
+
+        foreach (var educationLevel in documentType.NextEducationLevels)
+        {
+            if (educationLevelsDict.ContainsKey(educationLevel.ExternalId))
+            {
+                await SaveEducationLevel(educationLevel);
+            }
+        }
+
+        return Result.Success();
+    }
+
+    private async Task SaveEducationLevel(EducationLevelResponse educationLevelResponse)
+    {
+        await _context.EducationLevels.AddAsync(new EducationLevel
+        {
+            Id = educationLevelResponse.Id,
+            Name = educationLevelResponse.Name,
+            ExternalId = educationLevelResponse.ExternalId
+        });
     }
 
     private async Task<bool> IsStudentAdmissionClosed(Guid userId)
@@ -116,7 +230,7 @@ public sealed class DocumentService: IDocumentService
             .GetUndeleted()
             .Where(sa => sa.ApplicantId == userId)
             .ToListAsync();
-        
+
         return admissions.Count != 0 && !admissions.Any(
             sa => sa.ApplicantId == userId && sa.Status != AdmissionStatus.Closed);
     }

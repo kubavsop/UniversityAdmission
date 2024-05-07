@@ -49,7 +49,7 @@ public sealed class DocumentController: BaseController
     [Route("education")]
     public async Task<IActionResult> CreateEducationDocument(CreateEducationDocumentDto createEducationDocumentDto)
     {
-        var result = await _documentService.CreateEducationDocument(createEducationDocumentDto, UserId);
+        var result = await _documentService.CreateEducationDocumentAsync(createEducationDocumentDto, UserId);
         return result.ToIActionResult();
     }
 
@@ -58,7 +58,7 @@ public sealed class DocumentController: BaseController
     [Route("education")]
     public async Task<IActionResult> GetEducationDocument()
     {
-        var result = await _documentService.GetEducationDocument(UserId);
+        var result = await _documentService.GetEducationDocumentAsync(UserId);
         return result.ToIActionResult();
     }
 
@@ -67,7 +67,7 @@ public sealed class DocumentController: BaseController
     [Route("education/{id:guid}")]
     public async Task<IActionResult> EditEducationDocument(EditEducationDocumentDto educationDocumentDto, Guid id)
     {
-        var result = await _documentService.EditEducationDocument(educationDocumentDto, id, UserId);
+        var result = await _documentService.EditEducationDocumentAsync(educationDocumentDto, id, UserId);
         return result.ToIActionResult();
     }
 
@@ -76,7 +76,7 @@ public sealed class DocumentController: BaseController
     [Route("education/{id:guid}")]
     public async Task<IActionResult> DeleteEducationDocument(Guid id)
     {
-        var result = await _documentService.DeleteEducationDocument(id, UserId);
+        var result = await _documentService.DeleteEducationDocumentAsync(id, UserId);
         return result.ToIActionResult();
     }
 

@@ -20,6 +20,7 @@ public class InfrastructureServiceInstaller: IServiceInstaller
             .AddRabbitMqConnection(configuration)
             .AddProducer()
             .AddConsumer()
+            .AddRpcDictionaryClient(configuration)
             .AddJwtAuthentication()
             .AddOutboxMessages();
         

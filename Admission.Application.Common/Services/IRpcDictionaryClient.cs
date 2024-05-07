@@ -3,7 +3,7 @@ using Admission.DTOs.RpcModels.EducationLevel;
 using Admission.DTOs.RpcModels.Faculty;
 using Admission.DTOs.RpcModels.Program;
 
-namespace Admission.RabbitMQ.Services;
+namespace Admission.Application.Common.Services;
 
 public interface IRpcDictionaryClient
 {
