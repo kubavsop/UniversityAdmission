@@ -1,6 +1,5 @@
 using Admission.API.Common;
 using Admission.API.Common.Extensions;
-using Admission.Application.Common.Exceptions;
 using Admission.Document.Application.DTOs.Requests;
 using Admission.Document.Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Admission.Document.API.Controllers;
 
+[Authorize]
 public sealed class DocumentController: BaseController
 {
     private readonly IDocumentService _documentService;
@@ -18,7 +18,6 @@ public sealed class DocumentController: BaseController
     }
 
     [HttpPost]
-    [Authorize]
     [Route("passport")]
     public async Task<IActionResult> CreatePassport(CreatePassportDto passportDto)
     {
@@ -27,7 +26,6 @@ public sealed class DocumentController: BaseController
     }
 
     [HttpGet]
-    [Authorize]
     [Route("passport")]
     public async Task<IActionResult> GetPassport()
     {
@@ -36,7 +34,6 @@ public sealed class DocumentController: BaseController
     }
 
     [HttpPut]
-    [Authorize]
     [Route("passport")]
     public async Task<IActionResult> EditPassport(EditPassportDto passportDto)
     {
@@ -45,7 +42,6 @@ public sealed class DocumentController: BaseController
     }
     
     [HttpPost]
-    [Authorize]
     [Route("education")]
     public async Task<IActionResult> CreateEducationDocument(CreateEducationDocumentDto createEducationDocumentDto)
     {
@@ -54,7 +50,6 @@ public sealed class DocumentController: BaseController
     }
 
     [HttpGet]
-    [Authorize]
     [Route("education")]
     public async Task<IActionResult> GetEducationDocument()
     {
@@ -63,7 +58,6 @@ public sealed class DocumentController: BaseController
     }
 
     [HttpPut]
-    [Authorize]
     [Route("education/{id:guid}")]
     public async Task<IActionResult> EditEducationDocument(EditEducationDocumentDto educationDocumentDto, Guid id)
     {
@@ -72,7 +66,6 @@ public sealed class DocumentController: BaseController
     }
 
     [HttpDelete]
-    [Authorize]
     [Route("education/{id:guid}")]
     public async Task<IActionResult> DeleteEducationDocument(Guid id)
     {
@@ -82,8 +75,9 @@ public sealed class DocumentController: BaseController
 
     [HttpPost]
     [Route(("{id:guid}/scan"))]
-    public async Task<IActionResult> CreateScan(Guid id, IFormFile file)
+    public async Task<IActionResult> CreateScan(Guid id, CreateScanDto fileDto)
     {
-        throw new NotFoundException();
+        var result = await _documentService.AddScan(UserId, id, fileDto);
+        return result.ToIActionResult();
     }
 }

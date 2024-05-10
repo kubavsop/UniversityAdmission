@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Admission.Document.Infrastructure.Migrations
 {
     [DbContext(typeof(DocumentDbContext))]
-    [Migration("20240506132916_AddTptMappingStrategy")]
-    partial class AddTptMappingStrategy
+    [Migration("20240510132701_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -163,8 +163,12 @@ namespace Admission.Document.Infrastructure.Migrations
                     b.Property<DateTime?>("DeleteTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("DocumentId")
+                    b.Property<Guid>("DocumentId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Extension")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("timestamp with time zone");
@@ -364,9 +368,13 @@ namespace Admission.Document.Infrastructure.Migrations
 
             modelBuilder.Entity("Admission.Document.Domain.Entities.File", b =>
                 {
-                    b.HasOne("Admission.Document.Domain.Entities.Document", null)
+                    b.HasOne("Admission.Document.Domain.Entities.Document", "Document")
                         .WithMany("Files")
-                        .HasForeignKey("DocumentId");
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Document");
                 });
 
             modelBuilder.Entity("Admission.Document.Domain.Entities.Manager", b =>

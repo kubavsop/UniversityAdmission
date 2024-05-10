@@ -5,6 +5,7 @@ namespace Admission.Document.Application.Context;
 
 public interface IDocumentDbContext
 {
+    public DbSet<Domain.Entities.Document> Documents { get; }
     public DbSet<Applicant> Applicants { get; }
     public DbSet<EducationDocument> EducationDocuments { get; }
     public DbSet<EducationDocumentType> EducationDocumentTypes { get; }

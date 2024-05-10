@@ -72,23 +72,25 @@ namespace Admission.Document.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Passports",
+                name: "Documents",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Series = table.Column<int>(type: "integer", nullable: false),
-                    Number = table.Column<int>(type: "integer", nullable: false),
-                    PlaceOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IssuedBy = table.Column<string>(type: "text", nullable: false),
-                    DateIssued = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ApplicantId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DeleteTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Type = table.Column<int>(type: "integer", nullable: false)
+                    ModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Passports", x => x.Id);
+                    table.PrimaryKey("PK_Documents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Documents_Applicants_ApplicantId",
+                        column: x => x.ApplicantId,
+                        principalTable: "Applicants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -134,20 +136,68 @@ namespace Admission.Document.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Extension = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Size = table.Column<int>(type: "integer", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DeleteTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Files_Documents_DocumentId",
+                        column: x => x.DocumentId,
+                        principalTable: "Documents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Passports",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Series = table.Column<int>(type: "integer", nullable: false),
+                    Number = table.Column<int>(type: "integer", nullable: false),
+                    PlaceOfBirth = table.Column<string>(type: "text", nullable: false),
+                    IssuedBy = table.Column<string>(type: "text", nullable: false),
+                    DateIssued = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Passports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Passports_Documents_Id",
+                        column: x => x.Id,
+                        principalTable: "Documents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EducationDocuments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    EducationDocumentTypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeleteTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Type = table.Column<int>(type: "integer", nullable: false)
+                    EducationDocumentTypeId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EducationDocuments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EducationDocuments_Documents_Id",
+                        column: x => x.Id,
+                        principalTable: "Documents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EducationDocuments_EducationDocumentTypes_EducationDocument~",
                         column: x => x.EducationDocumentTypeId,
@@ -213,33 +263,10 @@ namespace Admission.Document.Infrastructure.Migrations
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Files",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Size = table.Column<int>(type: "integer", nullable: false),
-                    EducationDocumentId = table.Column<Guid>(type: "uuid", nullable: true),
-                    PassportId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeleteTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Files", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Files_EducationDocuments_EducationDocumentId",
-                        column: x => x.EducationDocumentId,
-                        principalTable: "EducationDocuments",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Files_Passports_PassportId",
-                        column: x => x.PassportId,
-                        principalTable: "Passports",
-                        principalColumn: "Id");
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Documents_ApplicantId",
+                table: "Documents",
+                column: "ApplicantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EducationDocuments_EducationDocumentTypeId",
@@ -252,14 +279,9 @@ namespace Admission.Document.Infrastructure.Migrations
                 column: "EducationLevelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Files_EducationDocumentId",
+                name: "IX_Files_DocumentId",
                 table: "Files",
-                column: "EducationDocumentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Files_PassportId",
-                table: "Files",
-                column: "PassportId");
+                column: "DocumentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Managers_FacultyId",
@@ -291,6 +313,9 @@ namespace Admission.Document.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "EducationDocuments");
+
+            migrationBuilder.DropTable(
                 name: "Files");
 
             migrationBuilder.DropTable(
@@ -300,28 +325,28 @@ namespace Admission.Document.Infrastructure.Migrations
                 name: "OutboxMessages");
 
             migrationBuilder.DropTable(
-                name: "StudentAdmissions");
-
-            migrationBuilder.DropTable(
-                name: "EducationDocuments");
-
-            migrationBuilder.DropTable(
                 name: "Passports");
 
             migrationBuilder.DropTable(
-                name: "Applicants");
-
-            migrationBuilder.DropTable(
-                name: "Managers");
+                name: "StudentAdmissions");
 
             migrationBuilder.DropTable(
                 name: "EducationDocumentTypes");
 
             migrationBuilder.DropTable(
-                name: "Faculties");
+                name: "Documents");
+
+            migrationBuilder.DropTable(
+                name: "Managers");
 
             migrationBuilder.DropTable(
                 name: "EducationLevels");
+
+            migrationBuilder.DropTable(
+                name: "Applicants");
+
+            migrationBuilder.DropTable(
+                name: "Faculties");
         }
     }
 }

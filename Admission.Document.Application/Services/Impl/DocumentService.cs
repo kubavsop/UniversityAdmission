@@ -10,6 +10,7 @@ using Admission.Domain.Common.Enums;
 using Admission.DTOs.RpcModels.EducationLevel;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using File = Admission.Document.Domain.Entities.File;
 
 namespace Admission.Document.Application.Services.Impl;
 
@@ -17,13 +18,15 @@ public sealed class DocumentService : IDocumentService
 {
     private readonly IDocumentDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IFileProvider _fileProvider;
     private readonly IRpcDictionaryClient _dictionaryClient;
 
-    public DocumentService(IDocumentDbContext context, IMapper mapper, IRpcDictionaryClient dictionaryClient)
+    public DocumentService(IDocumentDbContext context, IMapper mapper, IRpcDictionaryClient dictionaryClient, IFileProvider fileProvider)
     {
         _context = context;
         _mapper = mapper;
         _dictionaryClient = dictionaryClient;
+        _fileProvider = fileProvider;
     }
 
     public async Task<Result> CreatePassportAsync(CreatePassportDto passportDto, Guid userId)
@@ -182,6 +185,45 @@ public sealed class DocumentService : IDocumentService
         }
 
         document.DeleteTime = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return Result.Success();
+    }
+
+    public async Task<Result> AddScan(Guid userId, Guid documentId, CreateScanDto createScanDto)
+    {
+        var educationDocument = await _context.Documents.GetByIdAsync(documentId);
+
+        if (educationDocument == null)
+        {
+            return new NotFoundException(nameof(Document), documentId);
+        }
+
+        if (educationDocument.ApplicantId != userId)
+        {
+            return new ForbiddenException(userId);
+        }
+        
+        byte[] file;
+        using (var stream = new MemoryStream())
+        {
+            await createScanDto.File.CopyToAsync(stream);
+            file = stream.ToArray();   
+        }
+
+        var fileId = Guid.NewGuid();
+        
+        await _fileProvider.PutFileAsync(fileId, file);
+        
+        await _context.Files.AddAsync(new File
+        {
+            Id = fileId,
+            DocumentId = documentId,
+            Name = Path.GetFileNameWithoutExtension(createScanDto.File.FileName),
+            Extension = Path.GetExtension(createScanDto.File.FileName),
+            Size = createScanDto.File.Length
+        });
 
         await _context.SaveChangesAsync();
 

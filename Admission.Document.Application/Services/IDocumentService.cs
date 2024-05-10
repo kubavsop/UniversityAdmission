@@ -13,4 +13,5 @@ public interface IDocumentService
     Task<Result<IEnumerable<EducationDocumentDto>>> GetEducationDocumentAsync(Guid userId);
     Task<Result> EditEducationDocumentAsync(EditEducationDocumentDto documentDto, Guid documentId, Guid userId);
     Task<Result> DeleteEducationDocumentAsync(Guid documentId, Guid userId);
+    Task<Result> AddScan(Guid userId, Guid documentId, CreateScanDto createScanDto);
 }
