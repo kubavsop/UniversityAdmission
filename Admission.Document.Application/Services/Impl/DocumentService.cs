@@ -100,11 +100,14 @@ public sealed class DocumentService : IDocumentService
             return new BadRequestException("Admission is closed");
         }
 
+        var resultExistenceCheck = await EducationDocumentExistenceCheck(userId, documentDto.EducationDocumentTypeId);
+        if (resultExistenceCheck.IsFailure) return resultExistenceCheck.Exception;
+
         var result = await EnsureDocumentTypeSaved(documentDto.EducationDocumentTypeId);
         if (result.IsFailure) return result.Exception;
 
         await _context.EducationDocuments.AddAsync(EducationDocument.Create(documentDto.Name,
-            documentDto.EducationDocumentTypeId));
+            documentDto.EducationDocumentTypeId, userId));
 
         await _context.SaveChangesAsync();
 
@@ -122,18 +125,27 @@ public sealed class DocumentService : IDocumentService
             .ThenInclude(t => t.NextEducationLevels
                 .Where(nel => !nel.DeleteTime.HasValue))
             .ThenInclude(nel => nel.EducationLevel)
+            .Include(d => d.EducationDocumentType)
+            .ThenInclude(d => d.EducationLevel)
             .ToListAsync();
 
         return _mapper.Map<List<EducationDocumentDto>>(documents);
     }
 
-    public async Task<Result> EditEducationDocumentAsync(EditEducationDocumentDto documentDto, Guid documentId, Guid userId)
+    public async Task<Result> EditEducationDocumentAsync(EditEducationDocumentDto documentDto, Guid documentId,
+        Guid userId)
     {
         var document = await _context.EducationDocuments.GetByIdAsync(documentId);
-
+        
         if (document == null)
         {
             return new NotFoundException(nameof(EducationDocument), documentId);
+        }
+
+        if (document.EducationDocumentTypeId != documentDto.EducationDocumentTypeId)
+        {
+            var result = await EducationDocumentExistenceCheck(userId, documentDto.EducationDocumentTypeId);
+            if (result.IsFailure) return result.Exception;
         }
 
         if (document.ApplicantId != userId)
@@ -146,12 +158,12 @@ public sealed class DocumentService : IDocumentService
             var result = await EnsureDocumentTypeSaved(documentDto.EducationDocumentTypeId);
             if (result.IsFailure) return result.Exception;
         }
-        
+
         document.ChangeName(documentDto.Name);
         document.ChangeDocumentType(documentDto.EducationDocumentTypeId);
 
         await _context.SaveChangesAsync();
-        
+
         return Result.Success();
     }
 
@@ -168,10 +180,20 @@ public sealed class DocumentService : IDocumentService
         {
             return new ForbiddenException(userId);
         }
-        
+
         document.DeleteTime = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
+
+        return Result.Success();
+    }
+
+    private async Task<Result> EducationDocumentExistenceCheck(Guid userId, Guid documentType)
+    {
+        if (await _context.EducationDocuments.AnyAsync(e => e.EducationDocumentTypeId == documentType && userId == e.ApplicantId && !e.DeleteTime.HasValue))
+        {
+            return new BadRequestException("Document already exists");
+        }
 
         return Result.Success();
     }
@@ -180,48 +202,66 @@ public sealed class DocumentService : IDocumentService
     {
         var type = await _context.EducationDocumentTypes.FirstOrDefaultAsync(t =>
             t.Id == typeId);
-        
+
         if (type is { DeleteTime: not null })
         {
             return new BadRequestException("Type has been deleted");
         }
-        
+
+        if (type != null) return Result.Success();
+
         var documentType = await _dictionaryClient.GetDocumentTypeByIdAsync(typeId);
 
         if (documentType == null)
         {
             return new NotFoundException(nameof(EducationDocumentType), typeId);
         }
-        
+
         var educationLevelsDict = await _context.EducationLevels
             .AsNoTracking()
             .GetUndeleted()
             .ToDictionaryAsync(l => l.ExternalId);
-        
-        if (educationLevelsDict.ContainsKey(documentType.EducationLevel.ExternalId))
+
+        if (!educationLevelsDict.ContainsKey(documentType.EducationLevel.ExternalId))
         {
             await SaveEducationLevel(documentType.EducationLevel);
         }
 
         foreach (var educationLevel in documentType.NextEducationLevels)
         {
-            if (educationLevelsDict.ContainsKey(educationLevel.ExternalId))
+            if (!educationLevelsDict.ContainsKey(educationLevel.ExternalId))
             {
                 await SaveEducationLevel(educationLevel);
             }
+
+            await _context.NextEducationLevels.AddAsync(new NextEducationLevel
+            {
+                EducationDocumentTypeId = typeId,
+                EducationLevelId = educationLevel.ExternalId
+            });
         }
+
+
+        await _context.EducationDocumentTypes.AddAsync(new EducationDocumentType
+        {
+            Id = documentType.Id,
+            Name = documentType.Name,
+            EducationLevelId = documentType.EducationLevel.ExternalId,
+        });
 
         return Result.Success();
     }
 
     private async Task SaveEducationLevel(EducationLevelResponse educationLevelResponse)
     {
-        await _context.EducationLevels.AddAsync(new EducationLevel
+        var educationLevel = new EducationLevel
         {
             Id = educationLevelResponse.Id,
             Name = educationLevelResponse.Name,
             ExternalId = educationLevelResponse.ExternalId
-        });
+        };
+
+        await _context.EducationLevels.AddAsync(educationLevel);
     }
 
     private async Task<bool> IsStudentAdmissionClosed(Guid userId)

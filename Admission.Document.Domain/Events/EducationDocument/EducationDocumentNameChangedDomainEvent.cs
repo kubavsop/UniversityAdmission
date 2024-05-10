@@ -10,8 +10,9 @@ public class EducationDocumentNameChangedDomainEvent: IDomainEvent
     
     internal EducationDocumentNameChangedDomainEvent(Entities.EducationDocument educationDocument)
     {
-        Document = educationDocument;
+        Id = educationDocument.Id;
+        Name = educationDocument.Name;
     }
 
-    public Entities.EducationDocument Document;
-}
+    public Guid Id { get; init; }
+    public string Name { get; init; }}

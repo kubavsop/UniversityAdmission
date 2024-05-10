@@ -1,3 +1,4 @@
+using Admission.Document.Domain.Enums;
 using Admission.Document.Domain.Events.EducationDocument;
 
 namespace Admission.Document.Domain.Entities;
@@ -12,13 +13,15 @@ public sealed class EducationDocument: Document
     {
     }
 
-    public static EducationDocument Create(string name, Guid documentTypeId)
+    public static EducationDocument Create(string name, Guid documentTypeId, Guid applicantId)
     {
         var educationDocument = new EducationDocument
         {
             Id = Guid.NewGuid(),
             Name = name,
-            EducationDocumentTypeId = documentTypeId
+            EducationDocumentTypeId = documentTypeId,
+            ApplicantId = applicantId,
+            Type = DocumentType.EducationDocument
         };
         
         educationDocument.AddDomainEvent(new EducationDocumentCreatedDomainEvent(educationDocument));

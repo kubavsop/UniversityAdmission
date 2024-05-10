@@ -5,6 +5,7 @@ namespace Admission.Document.Application.DTOs.Responses;
 
 public sealed class FileDto: IMapFrom<File>
 {
+    public Guid Id { get; set; }
     public required string Name { get; set; }
     public int Size { get; set; }
 }

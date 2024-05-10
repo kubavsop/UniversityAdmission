@@ -6,6 +6,7 @@ namespace Admission.Document.Application.DTOs.Responses;
 
 public class EducationDocumentTypeDto: IMapFrom<EducationDocumentType>
 {
+    public Guid Id { get; set; }
     public required string Name { get; set; }
     public EducationLevelDto EducationLevel { get; set; } = null!;
 

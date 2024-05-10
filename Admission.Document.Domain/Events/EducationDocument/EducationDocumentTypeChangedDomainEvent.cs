@@ -10,8 +10,9 @@ public sealed class EducationDocumentTypeChangedDomainEvent: IDomainEvent
 
     internal EducationDocumentTypeChangedDomainEvent(Entities.EducationDocument educationDocument)
     {
-        Document = educationDocument;
+        Id = educationDocument.Id;
+        EducationDocumentTypeId = educationDocument.EducationDocumentTypeId;
     }
     
-    public Entities.EducationDocument Document;
-}
+    public Guid Id { get; init; }
+    public Guid EducationDocumentTypeId { get; init; }}

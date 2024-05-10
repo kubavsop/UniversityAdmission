@@ -10,8 +10,11 @@ public sealed class EducationDocumentCreatedDomainEvent: IDomainEvent
 
     internal EducationDocumentCreatedDomainEvent(Entities.EducationDocument educationDocument)
     {
-        Document = educationDocument;
+        Id = educationDocument.Id;
+        Name = educationDocument.Name;
+        EducationDocumentTypeId = educationDocument.EducationDocumentTypeId;
     }
 
-    public Entities.EducationDocument Document;
-}
+    public Guid Id { get; init; }
+    public string Name { get; init; }
+    public Guid EducationDocumentTypeId { get; init; }}
