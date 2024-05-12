@@ -16,4 +16,5 @@ public interface IAdmissionDbContext
     DbSet<NextEducationLevel> NextEducationLevels { get; }
     DbSet<StudentAdmission> StudentAdmissions { get; }
     DbSet<AdmissionGroup> AdmissionGroups { get; }
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

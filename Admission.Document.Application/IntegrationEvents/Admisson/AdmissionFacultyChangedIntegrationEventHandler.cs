@@ -17,6 +17,15 @@ public sealed class AdmissionFacultyChangedIntegrationEventHandler: IIntegration
 
     public async Task Handle(AdmissionFacultyChangedIntegrationEvent notification, CancellationToken cancellationToken)
     {
+        if (notification.FirstPriorityFacultyId.HasValue && !await _context.Faculties
+                .AnyAsync(f => f.Id == notification.FirstPriorityFacultyId, cancellationToken))
+        {
+            await _context.Faculties.AddAsync(new Domain.Entities.Faculty
+            {
+                Id = notification.FirstPriorityFacultyId.Value
+            }, cancellationToken);
+        }
+        
         var studentAdmission = await _context.StudentAdmissions.FirstOrDefaultAsync(sa => sa.Id == notification.Id, cancellationToken: cancellationToken);
         if (studentAdmission == null) return;
         

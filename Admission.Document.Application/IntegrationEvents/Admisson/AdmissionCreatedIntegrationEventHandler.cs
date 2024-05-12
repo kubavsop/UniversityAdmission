@@ -17,21 +17,11 @@ public sealed class AdmissionCreatedIntegrationEventHandler: IIntegrationEventHa
 
     public async Task Handle(AdmissionCreatedIntegrationEvent notification, CancellationToken cancellationToken)
     {
-        if (notification.FirstPriorityFacultyId.HasValue && !await _context.Faculties
-                .AnyAsync(f => f.Id == notification.FirstPriorityFacultyId, cancellationToken))
-        {
-            await _context.Faculties.AddAsync(new Domain.Entities.Faculty
-            {
-                Id = notification.FirstPriorityFacultyId.Value
-            }, cancellationToken);
-        }
-
         await _context.StudentAdmissions.AddAsync(new StudentAdmission
         {
             Id = notification.Id,
             ManagerId = notification.ManagerId,
             Status = notification.Status,
-            FirstPriorityFacultyId = notification.FirstPriorityFacultyId,
             ApplicantId = notification.ApplicantId
         }, cancellationToken);
     }

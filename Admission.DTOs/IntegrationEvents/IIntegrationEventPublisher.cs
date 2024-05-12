@@ -2,5 +2,5 @@
 
 public interface IIntegrationEventPublisher
 {
-    void Publish(IIntegrationEvent integrationEvent, string routingKey = "default");
+    void Publish(IIntegrationEvent integrationEvent, string routingKey);
 }
