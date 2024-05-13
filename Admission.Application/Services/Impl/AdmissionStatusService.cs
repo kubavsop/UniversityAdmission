@@ -33,6 +33,8 @@ public sealed class AdmissionStatusService : IAdmissionStatusService
                                        sa.Status != AdmissionStatus.Closed);
 
         if (currentAdmission == null) return;
+        
+        if (currentAdmission.ManagerId != null) // admission changing, when manager
 
         throw new NotImplementedException();
     }
