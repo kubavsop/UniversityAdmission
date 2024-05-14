@@ -42,7 +42,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdmissionGroups");
+                    b.ToTable("AdmissionGroups", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.AdmissionProgram", b =>
@@ -75,7 +75,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("StudentAdmissionId");
 
-                    b.ToTable("AdmissionPrograms");
+                    b.ToTable("AdmissionPrograms", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.Applicant", b =>
@@ -103,7 +103,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Applicants");
+                    b.ToTable("Applicants", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.EducationDocument", b =>
@@ -133,7 +133,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("EducationDocumentTypeId");
 
-                    b.ToTable("EducationDocuments");
+                    b.ToTable("EducationDocuments", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.EducationDocumentType", b =>
@@ -158,7 +158,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("EducationLevelId");
 
-                    b.ToTable("EducationDocumentTypes");
+                    b.ToTable("EducationDocumentTypes", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.EducationLevel", b =>
@@ -185,7 +185,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EducationLevels");
+                    b.ToTable("EducationLevels", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.EducationProgram", b =>
@@ -231,7 +231,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("EducationPrograms");
+                    b.ToTable("EducationPrograms", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.Faculty", b =>
@@ -255,7 +255,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Faculties");
+                    b.ToTable("Faculties", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.Manager", b =>
@@ -284,7 +284,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("Managers");
+                    b.ToTable("Managers", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.NextEducationLevel", b =>
@@ -314,7 +314,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("EducationLevelId");
 
-                    b.ToTable("NextEducationLevels");
+                    b.ToTable("NextEducationLevels", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.StudentAdmission", b =>
@@ -352,7 +352,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("StudentAdmissions");
+                    b.ToTable("StudentAdmissions", (string)null);
                 });
 
             modelBuilder.Entity("Admission.OutboxMessages.OutboxMessages.OutboxMessage", b =>
@@ -377,7 +377,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OutboxMessages");
+                    b.ToTable("OutboxMessages", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.AdmissionProgram", b =>

@@ -20,8 +20,8 @@ public sealed class ApplicantCreatedIntegrationEventHandler: IIntegrationEventHa
             Id = notification.Id,
             Email = notification.Email,
             FullName = notification.FullName
-        }, cancellationToken);
+        });
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync();
     }
 }
