@@ -8,4 +8,5 @@ public sealed class EducationDocumentDto: IMapFrom<EducationDocument>
     public Guid Id { get; set; }
     public required string Name { get; set; }
     public EducationDocumentTypeDto EducationDocumentType { get; set; }
+    public ICollection<FileDto> Files { get; } = new List<FileDto>();
 }

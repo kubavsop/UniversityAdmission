@@ -2,6 +2,7 @@ using Admission.Application.Common.Exceptions;
 using Admission.Application.Common.Extensions;
 using Admission.Application.Common.Result;
 using Admission.Application.Common.Services;
+using Admission.Document.Application.Constants;
 using Admission.Document.Application.Context;
 using Admission.Document.Application.DTOs.Requests;
 using Admission.Document.Application.DTOs.Responses;
@@ -57,6 +58,7 @@ public sealed class DocumentService : IDocumentService
     public async Task<Result<PassportDto>> GetPassportAsync(Guid userId)
     {
         var passport = await _context.Passports
+            .Include(p => p.Files.Where(f => !f.DeleteTime.HasValue))
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.ApplicantId == userId);
 
@@ -77,7 +79,6 @@ public sealed class DocumentService : IDocumentService
 
         var passport = await _context.Passports
             .GetUndeleted()
-            .Include(p => p.Files)
             .FirstOrDefaultAsync(p => p.ApplicantId == userId);
 
         if (passport == null)
@@ -122,6 +123,7 @@ public sealed class DocumentService : IDocumentService
         var documents = await _context.EducationDocuments
             .AsNoTracking()
             .GetUndeleted()
+            .Include(p => p.Files.Where(f => !f.DeleteTime.HasValue))
             .Where(d => d.ApplicantId == userId)
             .Where(d => !d.EducationDocumentType.DeleteTime.HasValue)
             .Include(d => d.EducationDocumentType)
@@ -221,7 +223,7 @@ public sealed class DocumentService : IDocumentService
             Id = fileId,
             DocumentId = documentId,
             Name = Path.GetFileNameWithoutExtension(createScanDto.File.FileName),
-            Extension = Path.GetExtension(createScanDto.File.FileName),
+            Extension = ContentTypeMappings.TypeMappings[Path.GetExtension(createScanDto.File.FileName)],
             Size = createScanDto.File.Length
         });
 
