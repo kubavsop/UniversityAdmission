@@ -42,10 +42,13 @@ namespace Admission.Document.Infrastructure.Migrations
                     b.ToTable("Applicants");
                 });
 
-            modelBuilder.Entity("Admission.Document.Domain.Entities.EducationDocument", b =>
+            modelBuilder.Entity("Admission.Document.Domain.Entities.Document", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ApplicantId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreateTime")
@@ -54,24 +57,19 @@ namespace Admission.Document.Infrastructure.Migrations
                     b.Property<DateTime?>("DeleteTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("EducationDocumentTypeId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EducationDocumentTypeId");
+                    b.HasIndex("ApplicantId");
 
-                    b.ToTable("EducationDocuments");
+                    b.ToTable("Documents");
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Admission.Document.Domain.Entities.EducationDocumentType", b =>
@@ -162,8 +160,12 @@ namespace Admission.Document.Infrastructure.Migrations
                     b.Property<DateTime?>("DeleteTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("EducationDocumentId")
+                    b.Property<Guid>("DocumentId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Extension")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("timestamp with time zone");
@@ -172,17 +174,12 @@ namespace Admission.Document.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("PassportId")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("Size")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EducationDocumentId");
-
-                    b.HasIndex("PassportId");
+                    b.HasIndex("DocumentId");
 
                     b.ToTable("Files");
                 });
@@ -240,45 +237,6 @@ namespace Admission.Document.Infrastructure.Migrations
                     b.HasIndex("EducationLevelId");
 
                     b.ToTable("NextEducationLevels");
-                });
-
-            modelBuilder.Entity("Admission.Document.Domain.Entities.Passport", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DateIssued")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeleteTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("IssuedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("PlaceOfBirth")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Series")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Passports");
                 });
 
             modelBuilder.Entity("Admission.Document.Domain.Entities.StudentAdmission", b =>
@@ -344,13 +302,53 @@ namespace Admission.Document.Infrastructure.Migrations
 
             modelBuilder.Entity("Admission.Document.Domain.Entities.EducationDocument", b =>
                 {
-                    b.HasOne("Admission.Document.Domain.Entities.EducationDocumentType", "EducationDocumentType")
+                    b.HasBaseType("Admission.Document.Domain.Entities.Document");
+
+                    b.Property<Guid>("EducationDocumentTypeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("EducationDocumentTypeId");
+
+                    b.ToTable("EducationDocuments");
+                });
+
+            modelBuilder.Entity("Admission.Document.Domain.Entities.Passport", b =>
+                {
+                    b.HasBaseType("Admission.Document.Domain.Entities.Document");
+
+                    b.Property<DateTime>("DateIssued")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IssuedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PlaceOfBirth")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Series")
+                        .HasColumnType("integer");
+
+                    b.ToTable("Passports");
+                });
+
+            modelBuilder.Entity("Admission.Document.Domain.Entities.Document", b =>
+                {
+                    b.HasOne("Admission.Document.Domain.Entities.Applicant", "Applicant")
                         .WithMany()
-                        .HasForeignKey("EducationDocumentTypeId")
+                        .HasForeignKey("ApplicantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("EducationDocumentType");
+                    b.Navigation("Applicant");
                 });
 
             modelBuilder.Entity("Admission.Document.Domain.Entities.EducationDocumentType", b =>
@@ -367,13 +365,13 @@ namespace Admission.Document.Infrastructure.Migrations
 
             modelBuilder.Entity("Admission.Document.Domain.Entities.File", b =>
                 {
-                    b.HasOne("Admission.Document.Domain.Entities.EducationDocument", null)
+                    b.HasOne("Admission.Document.Domain.Entities.Document", "Document")
                         .WithMany("Files")
-                        .HasForeignKey("EducationDocumentId");
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Admission.Document.Domain.Entities.Passport", null)
-                        .WithMany("Files")
-                        .HasForeignKey("PassportId");
+                    b.Navigation("Document");
                 });
 
             modelBuilder.Entity("Admission.Document.Domain.Entities.Manager", b =>
@@ -422,12 +420,38 @@ namespace Admission.Document.Infrastructure.Migrations
                     b.Navigation("Manager");
                 });
 
+            modelBuilder.Entity("Admission.Document.Domain.Entities.EducationDocument", b =>
+                {
+                    b.HasOne("Admission.Document.Domain.Entities.EducationDocumentType", "EducationDocumentType")
+                        .WithMany()
+                        .HasForeignKey("EducationDocumentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Admission.Document.Domain.Entities.Document", null)
+                        .WithOne()
+                        .HasForeignKey("Admission.Document.Domain.Entities.EducationDocument", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EducationDocumentType");
+                });
+
+            modelBuilder.Entity("Admission.Document.Domain.Entities.Passport", b =>
+                {
+                    b.HasOne("Admission.Document.Domain.Entities.Document", null)
+                        .WithOne()
+                        .HasForeignKey("Admission.Document.Domain.Entities.Passport", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Admission.Document.Domain.Entities.Applicant", b =>
                 {
                     b.Navigation("Admissions");
                 });
 
-            modelBuilder.Entity("Admission.Document.Domain.Entities.EducationDocument", b =>
+            modelBuilder.Entity("Admission.Document.Domain.Entities.Document", b =>
                 {
                     b.Navigation("Files");
                 });
@@ -445,11 +469,6 @@ namespace Admission.Document.Infrastructure.Migrations
             modelBuilder.Entity("Admission.Document.Domain.Entities.Manager", b =>
                 {
                     b.Navigation("Admissions");
-                });
-
-            modelBuilder.Entity("Admission.Document.Domain.Entities.Passport", b =>
-                {
-                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

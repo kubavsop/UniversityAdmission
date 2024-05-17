@@ -30,7 +30,7 @@ public sealed class IntegrationEventPublisher: IIntegrationEventPublisher, IDisp
         }
     }
 
-    public void Publish(IIntegrationEvent integrationEvent, string routingKey = "default")
+    public void Publish(IIntegrationEvent integrationEvent, string routingKey)
     {  
         var payload = JsonConvert.SerializeObject(integrationEvent, new JsonSerializerSettings
         {

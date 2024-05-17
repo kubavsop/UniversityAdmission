@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Text;
+using Admission.Application.Common.Services;
 using Admission.DTOs.RpcModels;
 using Admission.DTOs.RpcModels.DocumentType;
 using Admission.DTOs.RpcModels.EducationLevel;

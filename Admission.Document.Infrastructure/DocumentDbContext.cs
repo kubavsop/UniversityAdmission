@@ -10,6 +10,7 @@ namespace Admission.Document.Infrastructure;
 
 public class DocumentDbContext: DbContext, IDocumentDbContext, IOutboxMessageDbContext
 {
+    public DbSet<Domain.Entities.Document> Documents { get; init; }
     public DbSet<Applicant> Applicants { get; init; }
     public DbSet<EducationDocument> EducationDocuments { get; init; }
     public DbSet<EducationDocumentType> EducationDocumentTypes { get; init; }
@@ -28,6 +29,7 @@ public class DocumentDbContext: DbContext, IDocumentDbContext, IOutboxMessageDbC
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        builder.Entity<Domain.Entities.Document>().UseTptMappingStrategy();
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

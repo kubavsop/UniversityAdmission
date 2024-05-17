@@ -42,7 +42,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdmissionGroups");
+                    b.ToTable("AdmissionGroups", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.AdmissionProgram", b =>
@@ -75,7 +75,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("StudentAdmissionId");
 
-                    b.ToTable("AdmissionPrograms");
+                    b.ToTable("AdmissionPrograms", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.Applicant", b =>
@@ -103,7 +103,62 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Applicants");
+                    b.ToTable("Applicants", (string)null);
+                });
+
+            modelBuilder.Entity("Admission.Domain.Entities.EducationDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ApplicantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeleteTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EducationDocumentTypeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.HasIndex("EducationDocumentTypeId");
+
+                    b.ToTable("EducationDocuments", (string)null);
+                });
+
+            modelBuilder.Entity("Admission.Domain.Entities.EducationDocumentType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeleteTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("EducationLevelId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EducationLevelId");
+
+                    b.ToTable("EducationDocumentTypes", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.EducationLevel", b =>
@@ -130,7 +185,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EducationLevels");
+                    b.ToTable("EducationLevels", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.EducationProgram", b =>
@@ -176,7 +231,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("EducationPrograms");
+                    b.ToTable("EducationPrograms", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.Faculty", b =>
@@ -200,7 +255,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Faculties");
+                    b.ToTable("Faculties", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.Manager", b =>
@@ -229,7 +284,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("Managers");
+                    b.ToTable("Managers", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.NextEducationLevel", b =>
@@ -238,14 +293,14 @@ namespace Admission.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ApplicantId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteTime")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EducationDocumentTypeId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("EducationLevelId")
                         .HasColumnType("integer");
@@ -255,11 +310,11 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicantId");
+                    b.HasIndex("EducationDocumentTypeId");
 
                     b.HasIndex("EducationLevelId");
 
-                    b.ToTable("NextEducationLevels");
+                    b.ToTable("NextEducationLevels", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.StudentAdmission", b =>
@@ -297,7 +352,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("StudentAdmissions");
+                    b.ToTable("StudentAdmissions", (string)null);
                 });
 
             modelBuilder.Entity("Admission.OutboxMessages.OutboxMessages.OutboxMessage", b =>
@@ -322,7 +377,7 @@ namespace Admission.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OutboxMessages");
+                    b.ToTable("OutboxMessages", (string)null);
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.AdmissionProgram", b =>
@@ -342,6 +397,37 @@ namespace Admission.Infrastructure.Migrations
                     b.Navigation("EducationProgram");
 
                     b.Navigation("StudentAdmission");
+                });
+
+            modelBuilder.Entity("Admission.Domain.Entities.EducationDocument", b =>
+                {
+                    b.HasOne("Admission.Domain.Entities.Applicant", "Applicant")
+                        .WithMany()
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Admission.Domain.Entities.EducationDocumentType", "EducationDocumentType")
+                        .WithMany()
+                        .HasForeignKey("EducationDocumentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+
+                    b.Navigation("EducationDocumentType");
+                });
+
+            modelBuilder.Entity("Admission.Domain.Entities.EducationDocumentType", b =>
+                {
+                    b.HasOne("Admission.Domain.Entities.EducationLevel", "EducationLevel")
+                        .WithMany()
+                        .HasForeignKey("EducationLevelId")
+                        .HasPrincipalKey("ExternalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EducationLevel");
                 });
 
             modelBuilder.Entity("Admission.Domain.Entities.EducationProgram", b =>
@@ -375,9 +461,9 @@ namespace Admission.Infrastructure.Migrations
 
             modelBuilder.Entity("Admission.Domain.Entities.NextEducationLevel", b =>
                 {
-                    b.HasOne("Admission.Domain.Entities.Applicant", "Applicant")
+                    b.HasOne("Admission.Domain.Entities.EducationDocumentType", "EducationDocumentType")
                         .WithMany("NextEducationLevels")
-                        .HasForeignKey("ApplicantId")
+                        .HasForeignKey("EducationDocumentTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -388,7 +474,7 @@ namespace Admission.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Applicant");
+                    b.Navigation("EducationDocumentType");
 
                     b.Navigation("EducationLevel");
                 });
@@ -426,7 +512,10 @@ namespace Admission.Infrastructure.Migrations
             modelBuilder.Entity("Admission.Domain.Entities.Applicant", b =>
                 {
                     b.Navigation("Admissions");
+                });
 
+            modelBuilder.Entity("Admission.Domain.Entities.EducationDocumentType", b =>
+                {
                     b.Navigation("NextEducationLevels");
                 });
 

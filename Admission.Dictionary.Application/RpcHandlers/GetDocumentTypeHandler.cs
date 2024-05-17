@@ -29,14 +29,16 @@ public sealed class GetDocumentTypeHandler: IRequestHandler<GetDocumentTypeReque
                 Name = t.Name,
                 EducationLevel = new EducationLevelResponse
                 {
-                    Id = t.EducationLevel.ExternalId,
+                    Id = t.EducationLevel.Id,
+                    ExternalId = t.EducationLevel.ExternalId,
                     Name = t.EducationLevel.Name
                 },
                 NextEducationLevels = t.NextEducationLevels
                     .Where(nel => !nel.EducationLevel.DeleteTime.HasValue && !nel.DeleteTime.HasValue)
                     .Select(nel => new EducationLevelResponse
                     {
-                        Id = nel.EducationLevel.ExternalId,
+                        Id = nel.EducationLevel.Id,
+                        ExternalId = nel.EducationLevel.ExternalId,
                         Name = nel.EducationLevel.Name
                     })
             }).FirstOrDefaultAsync(cancellationToken);

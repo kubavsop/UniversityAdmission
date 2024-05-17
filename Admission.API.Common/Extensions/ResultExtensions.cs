@@ -22,12 +22,12 @@ public static class ResultExtension
         );
     }
     
-    private static IActionResult SuccessResult<TValue>(TValue value)
+    public static IActionResult SuccessResult<TValue>(TValue value)
     {
         return new OkObjectResult(value);
     }
     
-    private static ObjectResult FailureResult(Exception exception)
+    public static ObjectResult FailureResult(Exception exception)
     {
         return exception switch
         {

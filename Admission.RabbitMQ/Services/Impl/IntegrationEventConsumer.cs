@@ -12,5 +12,5 @@ public sealed class IntegrationEventConsumer: IIntegrationEventConsumer
         _publisher = publisher;
     }
     
-    public void Consume(IIntegrationEvent integrationEvent) => _publisher.Publish(integrationEvent);
+    public void Consume(IIntegrationEvent integrationEvent) => _publisher.Publish(integrationEvent).GetAwaiter().GetResult();
 }

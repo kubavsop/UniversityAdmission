@@ -19,14 +19,14 @@ public sealed class ManagerCreatedEventHandler: BaseDomainEventHandler<ManagerCr
             Id = notification.Id,
             FullName = notification.FullName,
             Email = notification.Email
-        }, RoutingKeys.NotificationRoutingKey);
+        }, RoutingKeys.ManagerCreatedRoutingKey);
         
         Publisher.Publish(new MailRequestIntegrationEvent
         {
             EmailTo = notification.Email,
             Subject = "Creating a manager",
             Body = "Congratulations! You became a manager"
-        });
+        }, RoutingKeys.NotificationRoutingKey);
 
         return Task.CompletedTask;
     }

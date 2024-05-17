@@ -1,4 +1,5 @@
-﻿using Admission.DTOs.IntegrationEvents;
+﻿using Admission.Application.Common.Services;
+using Admission.DTOs.IntegrationEvents;
 using Admission.RabbitMQ.BackgroundServices;
 using Admission.RabbitMQ.Options;
 using Admission.RabbitMQ.Services;

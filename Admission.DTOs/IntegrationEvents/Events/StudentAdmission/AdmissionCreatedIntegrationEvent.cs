@@ -8,6 +8,4 @@ public sealed class AdmissionCreatedIntegrationEvent: IIntegrationEvent
     public Guid? ManagerId { get; set; }
     public Guid ApplicantId { get; set; }
     public AdmissionStatus Status { get; set; }
-    public Guid? FirstPriorityFacultyId { get; set; }
-    public required string FirstPriorityFacultyName { get; set; }
 }

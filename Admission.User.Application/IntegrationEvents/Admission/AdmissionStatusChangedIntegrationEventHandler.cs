@@ -2,6 +2,7 @@ using Admission.Application.Common.Extensions;
 using Admission.DTOs.IntegrationEvents;
 using Admission.DTOs.IntegrationEvents.Events.StudentAdmission;
 using Admission.User.Application.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Admission.User.Application.IntegrationEvents.Admission;
 
@@ -17,7 +18,8 @@ public sealed class
 
     public async Task Handle(AdmissionStatusChangedIntegrationEvent notification, CancellationToken cancellationToken)
     {
-        var studentAdmission = await _context.StudentAdmissions.GetByIdAsync(notification.Id);
+        var studentAdmission = await _context.StudentAdmissions.FirstOrDefaultAsync(sa => sa.Id == notification.Id,
+            cancellationToken: cancellationToken);
         if (studentAdmission == null) return;
 
         studentAdmission.Status = notification.Status;

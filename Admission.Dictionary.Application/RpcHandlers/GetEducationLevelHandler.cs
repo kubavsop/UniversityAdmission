@@ -23,7 +23,8 @@ public sealed class GetEducationLevelHandler: IRequestHandler<GetEducationLevelR
 
         return new EducationLevelResponse
         {
-            Id = level.ExternalId,
+            Id = level.Id,
+            ExternalId = level.ExternalId,
             Name = level.Name
         };
     }
