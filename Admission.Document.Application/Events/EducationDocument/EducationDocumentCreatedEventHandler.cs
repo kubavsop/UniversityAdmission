@@ -17,7 +17,8 @@ public sealed class EducationDocumentCreatedEventHandler: BaseDomainEventHandler
         {
             Id = notification.Id,
             EducationDocumentTypeId = notification.EducationDocumentTypeId,
-            Name = notification.Name
+            Name = notification.Name,
+            UserId = notification.UserId
         }, RoutingKeys.DataChangedRoutingKey);
         
         return Task.CompletedTask;

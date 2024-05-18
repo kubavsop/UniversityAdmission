@@ -7,5 +7,5 @@ public sealed class AdmissionGroupDto
     public Guid Id { get; init; }
     public DateTime CreateTime { get; init; }
     public AdmissionGroupStatus Status { get; init; }
-    public Guid ApplicantAdmissionId { get; init; }
+    public StudentAdmissionShortDto? ApplicantAdmission { get; init; }
 }

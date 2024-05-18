@@ -1,4 +1,3 @@
-using Admission.Application.Common.Extensions;
 using Admission.Document.Application.Context;
 using Admission.DTOs.IntegrationEvents;
 using Admission.DTOs.IntegrationEvents.Events.DocumentType;

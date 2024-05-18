@@ -46,4 +46,11 @@ public sealed class EducationDocument: Document
         
         AddDomainEvent(new EducationDocumentNameChangedDomainEvent(this));
     }
+
+    public override void ChangeDeleteTime(DateTime? deleteTime)
+    {
+        if (DeleteTime == deleteTime) return;
+        base.ChangeDeleteTime(deleteTime);
+        AddDomainEvent(new EducationDocumentDeleteTimeChangedDomainEvent(this));
+    }
 }

@@ -1,4 +1,5 @@
 using Admission.API.Common;
+using Admission.Application.DTOs.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admission.API.Controllers;
@@ -7,13 +8,13 @@ namespace Admission.API.Controllers;
 public sealed class ProgramController: BaseController
 {
     [HttpPost]
-    public async Task<IActionResult> CreateProgram()
+    public async Task<IActionResult> CreateProgram(CreateProgramDto createProgramDto)
     {
         throw new NotImplementedException();
     }
 
     [HttpPut]
-    public async Task<IActionResult> EditPrograms()
+    public async Task<IActionResult> EditPrograms(IEnumerable<EditProgramDto> editProgramDtos)
     {
         throw new NotImplementedException();
     }

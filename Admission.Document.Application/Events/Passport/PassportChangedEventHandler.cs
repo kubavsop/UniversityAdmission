@@ -15,7 +15,7 @@ public sealed class PassportChangedEventHandler: BaseDomainEventHandler<Passport
     {
         Publisher.Publish(new PassportChangedIntegrationEvent
         {
-            Id = notification.Id
+            UserId = notification.UserId
         }, RoutingKeys.DataChangedRoutingKey);
 
         return Task.CompletedTask;

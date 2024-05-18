@@ -45,7 +45,7 @@ public sealed class ScanService: IScanService
 
         var file = fileResult.Value;
         
-        file.DeleteTime = DateTime.UtcNow;
+        file.ChangeDeleteTime(DateTime.UtcNow, file.Document.ApplicantId);
 
         await _context.SaveChangesAsync();
 

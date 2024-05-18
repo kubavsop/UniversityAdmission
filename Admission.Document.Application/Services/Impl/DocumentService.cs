@@ -186,7 +186,7 @@ public sealed class DocumentService : IDocumentService
             return new ForbiddenException(userId);
         }
 
-        document.DeleteTime = DateTime.UtcNow;
+        document.ChangeDeleteTime(DateTime.UtcNow);
 
         await _context.SaveChangesAsync();
 
@@ -218,14 +218,13 @@ public sealed class DocumentService : IDocumentService
         
         await _fileProvider.PutFileAsync(fileId, file);
         
-        await _context.Files.AddAsync(new File
-        {
-            Id = fileId,
-            DocumentId = documentId,
-            Name = Path.GetFileNameWithoutExtension(createScanDto.File.FileName),
-            Extension = ContentTypeMappings.TypeMappings[Path.GetExtension(createScanDto.File.FileName)],
-            Size = createScanDto.File.Length
-        });
+        await _context.Files.AddAsync(File.Create(
+            fileId,
+            documentId,
+            Path.GetFileNameWithoutExtension(createScanDto.File.FileName),
+            ContentTypeMappings.TypeMappings[Path.GetExtension(createScanDto.File.FileName)],
+            createScanDto.File.Length,
+           educationDocument.ApplicantId));
 
         await _context.SaveChangesAsync();
 

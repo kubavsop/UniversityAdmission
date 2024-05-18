@@ -12,6 +12,8 @@ public sealed class ApplicationServiceInstaller: IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<IGroupService, GroupService>();
+        services.AddScoped<IDocumentService, DocumentService>();
         services.AddScoped<IIntegrationAdmissionService, IntegrationAdmissionService>();
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(ApplicantChangedIntegrationEventHandler).Assembly));
         services.AddMapping();

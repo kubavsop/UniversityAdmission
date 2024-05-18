@@ -13,7 +13,7 @@ public sealed class AdmissionController: BaseController
 
    [HttpGet]
    [Route("{id:guid}")]
-   public async Task<IActionResult> GetAdmissions(Guid id)
+   public async Task<IActionResult> GetAdmission(Guid id)
    {
       throw new NotImplementedException();
    }

@@ -2,7 +2,7 @@ using Admission.Domain.Common.Events;
 
 namespace Admission.Document.Domain.Events.EducationDocument;
 
-public class EducationDocumentNameChangedDomainEvent: IDomainEvent
+public sealed class EducationDocumentNameChangedDomainEvent: IDomainEvent
 {
     public EducationDocumentNameChangedDomainEvent()
     {
@@ -12,7 +12,10 @@ public class EducationDocumentNameChangedDomainEvent: IDomainEvent
     {
         Id = educationDocument.Id;
         Name = educationDocument.Name;
+        UserId = educationDocument.ApplicantId;
     }
 
     public Guid Id { get; init; }
-    public string Name { get; init; }}
+    public string Name { get; init; }
+    public Guid UserId { get; init; }
+}

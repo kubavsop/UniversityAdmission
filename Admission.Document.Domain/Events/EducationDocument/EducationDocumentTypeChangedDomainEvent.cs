@@ -12,7 +12,10 @@ public sealed class EducationDocumentTypeChangedDomainEvent: IDomainEvent
     {
         Id = educationDocument.Id;
         EducationDocumentTypeId = educationDocument.EducationDocumentTypeId;
+        UserId = educationDocument.ApplicantId;
     }
     
     public Guid Id { get; init; }
-    public Guid EducationDocumentTypeId { get; init; }}
+    public Guid EducationDocumentTypeId { get; init; }
+    public Guid UserId { get; init; }
+}

@@ -13,8 +13,11 @@ public sealed class EducationDocumentCreatedDomainEvent: IDomainEvent
         Id = educationDocument.Id;
         Name = educationDocument.Name;
         EducationDocumentTypeId = educationDocument.EducationDocumentTypeId;
+        UserId = educationDocument.ApplicantId;
     }
 
     public Guid Id { get; init; }
     public string Name { get; init; }
-    public Guid EducationDocumentTypeId { get; init; }}
+    public Guid EducationDocumentTypeId { get; init; }
+    public Guid UserId { get; init; }
+}
