@@ -1,10 +1,11 @@
 using Admission.API.Common;
 using Admission.Application.DTOs.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admission.API.Controllers;
 
-
+[Authorize]
 public sealed class ProgramController: BaseController
 {
     [HttpPost]

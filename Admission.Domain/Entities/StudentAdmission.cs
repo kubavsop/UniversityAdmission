@@ -21,13 +21,15 @@ public sealed class StudentAdmission: AggregateRoot
     {
     }
     
-    public static StudentAdmission Create(Guid applicantId, Guid groupId)
+    public static StudentAdmission Create(Applicant applicant, Guid groupId)
     {
         var studentAdmission = new StudentAdmission
         {
             Id = Guid.NewGuid(),
-            ApplicantId = applicantId,
-            Status = AdmissionStatus.Created
+            ApplicantId = applicant.Id,
+            Applicant = applicant,
+            Status = AdmissionStatus.Created,
+            AdmissionGroupId = groupId
         };
         
         studentAdmission.AddDomainEvent(new AdmissionCreatedDomainEvent(studentAdmission));
