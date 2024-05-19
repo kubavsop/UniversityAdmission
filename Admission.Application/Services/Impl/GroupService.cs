@@ -16,7 +16,10 @@ public sealed class GroupService: IGroupService
 
     public async Task<Result<IEnumerable<AdmissionGroupDto>>> GetGroupsAsync(Guid userId)
     {
-        return await _context.AdmissionGroups.Where(g => !g.DeleteTime.HasValue).Select(g => new AdmissionGroupDto
+        return await _context.AdmissionGroups
+            .AsNoTracking()
+            .Where(g => !g.DeleteTime.HasValue)
+            .Select(g => new AdmissionGroupDto
         {
             Id = g.Id,
             CreateTime = g.CreateTime,

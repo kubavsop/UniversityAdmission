@@ -1,5 +1,6 @@
 ﻿using Admission.API.Common.Extensions;
 using Admission.API.Common.ServiceInstaller;
+using Admission.Application.Options;
 
 namespace Admission.API.Configurations;
 

@@ -14,7 +14,6 @@ public class AdmissionService: IAdmissionService
 {
     private readonly IAdmissionDbContext _context;
     private readonly IMapper _mapper;
-
     public AdmissionService(IAdmissionDbContext context, IMapper mapper)
     {
         _context = context;
@@ -45,8 +44,13 @@ public class AdmissionService: IAdmissionService
     public async Task<Result<StudentAdmissionDto>> GetAdmissionAsync(Guid admissionId, Guid userId)
     {
         var admission = await _context.StudentAdmissions
+            .AsNoTracking()
             .Include(a => a.AdmissionPrograms)
-            .ThenInclude(p => p.EducationProgram)
+                .ThenInclude(p => p.EducationProgram)
+                    .ThenInclude(e => e.Faculty)
+            .Include(a => a.AdmissionPrograms)
+                .ThenInclude(p => p.EducationProgram)
+                    .ThenInclude(e => e.EducationLevel)
             .GetByIdAsync(admissionId);
         
         if (admission == null)
