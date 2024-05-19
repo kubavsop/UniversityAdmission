@@ -14,10 +14,13 @@ public sealed class AdmissionManagerChangedDomainEvent: IDomainEvent
         Id = admission.Id;
         ManagerId = admission.Manager?.Id;
         ManagerEmail = admission.Manager?.Email;
+        ApplicantEmail = admission.Applicant.Email;
     }
     
     public Guid Id { get; init; }
     public Guid? ManagerId { get; init; }
     
     public string? ManagerEmail { get; init; }
+    
+    public string ApplicantEmail { get; init; }
 }

@@ -58,7 +58,7 @@ public static class RabbitMqExtension
     public static IServiceCollection AddRpcDictionaryClient(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<RpcClientQueueNameOptions>(configuration.GetSection("RpcClientQueueName"));
-        services.AddSingleton<IRpcDictionaryClient, RpcClient>();
+        services.AddSingleton<IRpcDictionaryClient, RpcDictionaryClient>();
         return services;
     }
 
