@@ -45,7 +45,7 @@ public class AdmissionService: IAdmissionService
     {
         var admission = await _context.StudentAdmissions
             .AsNoTracking()
-            .Include(a => a.AdmissionPrograms)
+            .Include(a => a.AdmissionPrograms.Where(ap => !ap.DeleteTime.HasValue))
                 .ThenInclude(p => p.EducationProgram)
                     .ThenInclude(e => e.Faculty)
             .Include(a => a.AdmissionPrograms)

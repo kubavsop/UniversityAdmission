@@ -14,6 +14,8 @@ namespace Admission.Application.Services.Impl;
 
 public class ProgramService: IProgramService
 {
+    private const int BachelorId = 0;
+    private const int SpecialtyId = 3;
     private readonly IAdmissionDbContext _context;
     private readonly IRpcDictionaryClient _dictionaryClient;
     private readonly MaximumNumberOfApplicantPrograms _maximumNumberOfApplicantPrograms;
@@ -40,7 +42,9 @@ public class ProgramService: IProgramService
         
         var ensureResult = await EnsureProgramSavedAsync(createProgramDto.EducationProgramId);
         if (ensureResult.IsFailure) return ensureResult;
-        
+
+        var validResult = await IsValidEducationProgram(ensureResult.Value.EducationLevelId, admission);
+        if (validResult.IsFailure) return validResult;
         
         if (await _context.AdmissionPrograms.AnyAsync(a => (a.Priority == createProgramDto.Priority || a.EducationProgramId == createProgramDto.EducationProgramId) && a.StudentAdmissionId == admission.Id && !a.DeleteTime.HasValue))
         {
@@ -254,5 +258,37 @@ public class ProgramService: IProgramService
         }
 
         return program;
+    }
+
+    private async Task<Result> IsValidEducationProgram(int externalLevelId, StudentAdmission currentAdmission)
+    {
+        var documentTypes = await _context.EducationDocuments
+            .AsNoTracking()
+            .Where(d => !d.DeleteTime.HasValue && d.ApplicantId == currentAdmission.ApplicantId)
+            .Include(t => t.EducationDocumentType)
+            .ThenInclude(d => d.NextEducationLevels)
+            .Select(d => d.EducationDocumentType)
+            .ToListAsync();
+
+        if (documentTypes
+            .All(t => t.EducationLevelId != externalLevelId && !t.DeleteTime.HasValue && t.NextEducationLevels
+                                       .All(nl => nl.EducationLevelId != externalLevelId && !nl.DeleteTime.HasValue)))
+        {
+            return new BadRequestException("Unacceptable level of education");
+        }
+
+        var admissionProgram = await _context.AdmissionPrograms
+            .Include(ap => ap.EducationProgram)
+            .FirstOrDefaultAsync(ap => !ap.DeleteTime.HasValue && ap.StudentAdmissionId == currentAdmission.Id);
+        if (admissionProgram == null) return Result.Success();
+
+        if (admissionProgram.EducationProgram.EducationLevelId != externalLevelId &&
+            !(admissionProgram.EducationProgram.EducationLevelId == SpecialtyId && externalLevelId == BachelorId) &&
+            !(admissionProgram.EducationProgram.EducationLevelId == BachelorId && externalLevelId == SpecialtyId))
+        {
+            return new BadRequestException("You cannot choose directions of different levels");
+        }
+        
+        return Result.Success();
     }
 }
