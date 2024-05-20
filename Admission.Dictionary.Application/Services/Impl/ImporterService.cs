@@ -3,22 +3,25 @@ using Admission.Dictionary.Application.Context;
 using Admission.Dictionary.Application.DTOs.Responses;
 using Admission.Dictionary.Domain.Entities;
 using Admission.Domain.Common.Entities;
+using Admission.DTOs.RpcModels.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Admission.Dictionary.Application.Services.Impl;
 
 public class ImporterService : IImporterService
 {
+    private readonly IUpdateStatusService _updateStatusService;
     private readonly IExternalDictionaryService _externalDictionaryService;
     private readonly IDictionaryDbContext _context;
 
     private IEnumerable<EducationLevel> _educationLevels;
     private IEnumerable<Faculty> _faculties;
 
-    public ImporterService(IExternalDictionaryService externalDictionaryService, IDictionaryDbContext context)
+    public ImporterService(IExternalDictionaryService externalDictionaryService, IDictionaryDbContext context, IUpdateStatusService updateStatusService)
     {
         _externalDictionaryService = externalDictionaryService;
         _context = context;
+        _updateStatusService = updateStatusService;
     }
 
     public async Task TestUpdate()
@@ -28,34 +31,58 @@ public class ImporterService : IImporterService
 
     public async Task UpdateFacultiesAsync()
     {
+        await _updateStatusService.SetStatuses();
+        _updateStatusService.FacultyStatusInformation!.UpdateStatus = UpdateStatus.ProcessOfUpdating;
+        
         await UpdateFaculties();
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateProgramsAsync()
     {
+        await _updateStatusService.SetStatuses();
+        _updateStatusService.ProgramStatusInformation!.UpdateStatus = UpdateStatus.ProcessOfUpdating;
+        
         await UpdatePrograms();
         await _context.SaveChangesAsync();
+
+        await _updateStatusService.UpdateStatuses();
     }
 
     public async Task UpdateEducationLevelsAsync()
     {
+        await _updateStatusService.SetStatuses();
+        _updateStatusService.EducationLevelStatusInformation!.UpdateStatus = UpdateStatus.ProcessOfUpdating;
+
+        
         await UpdateEducationLevels();
         await _context.SaveChangesAsync();
+        
+        await _updateStatusService.UpdateStatuses();
     }
 
     public async Task UpdateDocumentTypesAsync()
     {
+        await _updateStatusService.SetStatuses();
+        _updateStatusService.EducationLevelStatusInformation!.UpdateStatus = UpdateStatus.ProcessOfUpdating;
+        _updateStatusService.DocumentTypeStatusInformation!.UpdateStatus = UpdateStatus.ProcessOfUpdating;
+        
         await UpdateDocumentTypes();
         await _context.SaveChangesAsync();
+        
+        await _updateStatusService.UpdateStatuses();
     }
 
     public async Task UpdateAllAsync()
     {
+        await _updateStatusService.SetAllProgressStatus();
+        
         await UpdateFaculties();
         await UpdateDocumentTypes();
         await UpdatePrograms();
         await _context.SaveChangesAsync();
+        
+        await _updateStatusService.UpdateStatuses();
     }
 
     private async Task UpdateFaculties()
