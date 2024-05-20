@@ -4,7 +4,7 @@ using Admission.Application.Context;
 using Admission.Domain.Common.Enums;
 using Admission.Domain.Entities;
 using Admission.DTOs.IntegrationEvents.Events.EducationDocument;
-using Admission.DTOs.RpcModels.EducationLevel;
+using Admission.DTOs.RpcModels.DictionaryService.GetEducationLevel;
 using Microsoft.EntityFrameworkCore;
 
 namespace Admission.Application.Services.Impl;

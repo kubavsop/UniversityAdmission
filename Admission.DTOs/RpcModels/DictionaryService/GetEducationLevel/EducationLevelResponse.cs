@@ -1,4 +1,4 @@
-﻿namespace Admission.DTOs.RpcModels.EducationLevel;
+﻿namespace Admission.DTOs.RpcModels.DictionaryService.GetEducationLevel;
 
 public sealed class EducationLevelResponse: IRpcResponse
 {

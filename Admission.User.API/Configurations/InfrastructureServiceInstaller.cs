@@ -19,6 +19,7 @@ public class UserDbServiceInstaller: IServiceInstaller
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services
+            .AddRpcConsumer(configuration)
             .AddJwtAuthentication()
             .AddRabbitMqConnection(configuration)
             .AddProducer()

@@ -1,7 +1,7 @@
 ﻿using Admission.DTOs.RpcModels.Base;
-using Admission.DTOs.RpcModels.EducationLevel;
+using Admission.DTOs.RpcModels.DictionaryService.GetEducationLevel;
 
-namespace Admission.DTOs.RpcModels.DocumentType;
+namespace Admission.DTOs.RpcModels.DictionaryService.GetDocumentType;
 
 public sealed class DocumentTypeResponse: BaseDto, IRpcResponse
 {

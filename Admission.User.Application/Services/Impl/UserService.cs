@@ -88,7 +88,6 @@ public sealed class UserService : IUserService
 
     public async Task<Result> EditPasswordAsync(EditPasswordDto dto, Guid userId)
     {
-        
         if (dto.NewPassword == dto.OldPassword)
         {
             return new BadRequestException("Passwords must be different");

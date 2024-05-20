@@ -32,11 +32,12 @@ public sealed class Manager: AggregateRoot
         AddDomainEvent(new ManagerFullNameChangedDomainEvent(User));
     }
 
-    public void ChangeFaculty(Faculty faculty)
+    public void ChangeFaculty(Faculty? faculty)
     {
-        if (faculty.Id == FacultyId) return;
+        if (Faculty == faculty) return;
         
         Faculty = faculty;
+        FacultyId = faculty?.Id;
         
         AddDomainEvent(new ManagerFacultyChangedDomainEvent(this));
     }

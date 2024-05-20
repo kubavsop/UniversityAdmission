@@ -8,7 +8,7 @@ using Admission.Document.Application.DTOs.Requests;
 using Admission.Document.Application.DTOs.Responses;
 using Admission.Document.Domain.Entities;
 using Admission.Domain.Common.Enums;
-using Admission.DTOs.RpcModels.EducationLevel;
+using Admission.DTOs.RpcModels.DictionaryService.GetEducationLevel;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using File = Admission.Document.Domain.Entities.File;

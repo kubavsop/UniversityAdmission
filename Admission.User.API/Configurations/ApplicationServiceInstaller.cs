@@ -15,6 +15,7 @@ public class ApplicationServiceInstaller: IServiceInstaller
         services.Configure<RefreshTokenOptions>(configuration.GetSection("RefreshToken"));
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IManagerAccessService, ManagerAccessService>();
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(ApplicantCreatedEventHandler).Assembly));
     }
 }

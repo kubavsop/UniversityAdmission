@@ -5,6 +5,8 @@ namespace Admission.User.Application.Context;
 
 public interface IUserDbContext
 {
+    DbSet<AdmissionRole> Roles { get; }
+    DbSet<AdmissionUserRole> UserRoles { get; }
     DbSet<AdmissionUser> Users { get; }
     DbSet<Applicant> Applicants { get; }
     DbSet<Faculty> Faculties { get;  }

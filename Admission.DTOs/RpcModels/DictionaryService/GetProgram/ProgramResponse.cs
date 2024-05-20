@@ -1,8 +1,8 @@
 ﻿using Admission.DTOs.RpcModels.Base;
-using Admission.DTOs.RpcModels.EducationLevel;
-using Admission.DTOs.RpcModels.Faculty;
+using Admission.DTOs.RpcModels.DictionaryService.GetEducationLevel;
+using Admission.DTOs.RpcModels.DictionaryService.GetFaculty;
 
-namespace Admission.DTOs.RpcModels.Program;
+namespace Admission.DTOs.RpcModels.DictionaryService.GetProgram;
 
 public sealed class ProgramResponse: BaseDto, IRpcResponse
 {

@@ -1,8 +1,8 @@
 ﻿using Admission.Application.Common.Services;
-using Admission.DTOs.RpcModels.DocumentType;
-using Admission.DTOs.RpcModels.EducationLevel;
-using Admission.DTOs.RpcModels.Faculty;
-using Admission.DTOs.RpcModels.Program;
+using Admission.DTOs.RpcModels.DictionaryService.GetDocumentType;
+using Admission.DTOs.RpcModels.DictionaryService.GetEducationLevel;
+using Admission.DTOs.RpcModels.DictionaryService.GetFaculty;
+using Admission.DTOs.RpcModels.DictionaryService.GetProgram;
 using Admission.RabbitMQ.Options;
 using Admission.RabbitMQ.Services.Base;
 using Microsoft.Extensions.Options;
