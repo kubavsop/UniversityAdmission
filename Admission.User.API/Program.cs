@@ -14,6 +14,7 @@ var app = builder.Build();
 
 await app.Services.AddAutoMigrationAsync();
 await app.Services.EnsureRoleCreatedAsync();
+await app.Services.EnsureAdminCreatedAsync();
 
 app.UseExceptionHandlingMiddleware();
 
