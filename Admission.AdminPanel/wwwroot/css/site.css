@@ -15,8 +15,27 @@ html {
 html {
   position: relative;
   min-height: 100%;
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 initial;
 }
 
 body {
-  margin-bottom: 60px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+body > div.container {
+  flex: 1 1 auto;
+}
+
+footer {
+  display: flex;
+  padding: 1rem;
+}
+
+footer > div.container {
+  display: flex;
+  justify-content: center;
 }
