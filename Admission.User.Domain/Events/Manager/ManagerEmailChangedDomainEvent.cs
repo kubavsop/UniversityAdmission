@@ -5,7 +5,10 @@ namespace Admission.User.Domain.Events.Manager;
 
 public sealed class ManagerEmailChangedDomainEvent: IDomainEvent
 {
-    public ManagerEmailChangedDomainEvent(AdmissionUser user)
+    public ManagerEmailChangedDomainEvent()
+    {
+    }
+    internal ManagerEmailChangedDomainEvent(AdmissionUser user)
     {
         Id = user.Id;
         Email = user.Email;

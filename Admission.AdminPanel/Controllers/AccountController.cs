@@ -11,7 +11,7 @@ namespace Admission.AdminPanel.Controllers;
 public sealed class AccountController: Controller
 {
     private readonly ICookieAuthService _cookieAuthService;
-
+    
     public AccountController(ICookieAuthService cookieAuthService)
     {
         _cookieAuthService = cookieAuthService;
@@ -35,14 +35,37 @@ public sealed class AccountController: Controller
             ModelState.AddModelError("LoginErrors", result.Exception.Message);
             return View(loginViewModel);
         }
-        else
+
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(result.Value)
+        );
+        return RedirectToAction("Index", "home");
+    }
+    
+    [HttpGet]
+    public IActionResult Register()
+    {
+        return View(new RegisterViewModel());
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+    {
+        if (!ModelState.IsValid)
+            return View(registerViewModel);
+        var result = await _cookieAuthService.Register(registerViewModel);
+        if (result.IsFailure)
         {
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(result.Value)
-            );
-            return RedirectToAction("Index", "home");
-        }    
+            ModelState.AddModelError("RegisterErrors", result.Exception.Message);
+            return View(registerViewModel);
+        }
+
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(result.Value)
+        );
+        return RedirectToAction("Index", "home");
     }
     
     [Authorize]

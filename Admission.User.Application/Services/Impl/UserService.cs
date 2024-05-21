@@ -69,7 +69,9 @@ public sealed class UserService : IUserService
         {
             return new BadRequestException("User with this email already exists");
         }
-
+        
+        applicant.User.NormalizedUserName = dto.Email.ToUpper();
+        applicant.User.NormalizedEmail = dto.Email.ToUpper();
         applicant.ChangeEmail(dto.Email);
         await ChangeManagerEmail(dto.Email, userId);
 

@@ -4,6 +4,6 @@ namespace Admission.DTOs.RpcModels.Base;
 
 public abstract class AuthorizedRequest
 {
-    public required Guid Id { get; init; }
-    public required RoleType Role { get; init; }
+    public Guid Id { get; set; }
+    public RoleType Role { get; set; }
 }

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Admission.AdminPanel.Constants
+@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -19,9 +21,15 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                @if (User.Identity?.IsAuthenticated ?? false)
+                @if ((User.Identity?.IsAuthenticated ?? false) && ValidRoles.Roles.Contains(User.FindFirst(ClaimTypes.Role)!.Value))
                 {
                     <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Profile">Профиль</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Password">Настройки</a>
+                    </li>
+                    <li class="nav-item ms-auto">
                         <form class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
                             <button type="submit" class="border-0 bg-transparent">Выйти</button>
                         </form>
@@ -29,8 +37,11 @@
                 }
                 else
                 {
-                    <li class="nav-item">
+                    <li class="nav-item ms-auto">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Вход</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
                     </li>
                 }
                 </ul>

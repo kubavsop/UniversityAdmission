@@ -50,54 +50,92 @@ public sealed class RpcUserClient: BaseRpcClient, IRpcUserClient
         return (result as RegisterResponse)!;
     }
 
-    public Task<Result<ManagersResponse>> GetManagersAsync(GetManagersRequest getManagersRequest)
+    public async Task<Result<ManagersResponse>> GetManagersAsync(GetManagersRequest getManagersRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(getManagersRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;
+        
+        return (result as ManagersResponse)!;
     }
 
-    public Task<Result<ManagerDataResponse>> GetManagerAsync(GetManagerDataRequest getManagerDataRequest)
+    public async Task<Result<ManagerDataResponse>> GetManagerAsync(GetManagerDataRequest getManagerDataRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(getManagerDataRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;
+        
+        return (result as ManagerDataResponse)!;
     }
 
-    public Task<Result<ApplicantsResponse>> GetApplicantsAsync(GetApplicantsRequest applicantsRequest)
+    public async Task<Result<ApplicantsResponse>> GetApplicantsAsync(GetApplicantsRequest applicantsRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(applicantsRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;
+        
+        return (result as ApplicantsResponse)!;
     }
 
-    public Task<Result<ApplicantDataResponse>> GetApplicantAsync(GetApplicantDataRequest getApplicantDataRequest)
+    public async Task<Result<ApplicantDataResponse>> GetApplicantAsync(GetApplicantDataRequest getApplicantDataRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(getApplicantDataRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;
+        
+        return (result as ApplicantDataResponse)!;
     }
 
-    public Task<Result> DeleteUserRoleAsync(DeleteUserRoleRequest deleteUserRoleRequest)
+    public async Task<Result> DeleteUserRoleAsync(DeleteUserRoleRequest deleteUserRoleRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(deleteUserRoleRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> ChangePasswordAsync(ChangePasswordRequest changePasswordRequest)
+    public async Task<Result> ChangePasswordAsync(ChangePasswordRequest changePasswordRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(changePasswordRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> ChangeManagerDataAsync(ChangeManagerDataRequest changeManagerDataRequest)
+    public async Task<Result> ChangeManagerDataAsync(ChangeManagerDataRequest changeManagerDataRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(changeManagerDataRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> ChangeApplicantDataAsync(ChangeApplicantDataRequest changeApplicantDataRequest)
+    public async Task<Result> ChangeApplicantDataAsync(ChangeApplicantDataRequest changeApplicantDataRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(changeApplicantDataRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> AddUserRoleAsync(AddUserRoleRequest addUserRoleRequest)
+    public async Task<Result> AddUserRoleAsync(AddUserRoleRequest addUserRoleRequest)
     {
-        throw new NotImplementedException();
-    }
-
-    private Result CheckError(IRpcResponse rpcResponse)
-    {
-        if (rpcResponse is RpcErrorResponse error) return new RpcException(error.Message);
-        return Result.Success();
+        var result = await CallAsync(addUserRoleRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;    
     }
 }

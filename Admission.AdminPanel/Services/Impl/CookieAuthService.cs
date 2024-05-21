@@ -2,7 +2,7 @@
 using Admission.AdminPanel.Models;
 using Admission.Application.Common.Result;
 using Admission.DTOs.RpcModels.UserService.Login;
-using Microsoft.AspNetCore.Authentication;
+using Admission.DTOs.RpcModels.UserService.Register;
 
 namespace Admission.AdminPanel.Services.Impl;
 
@@ -15,14 +15,34 @@ public class CookieAuthService: ICookieAuthService
         _userClient = userClient;
     }
 
-    public async Task<Result<ClaimsIdentity>> Login(LoginViewModel dto)
+    public async Task<Result<ClaimsIdentity>> Login(LoginViewModel loginViewModel)
     {
         var response = await _userClient.LoginAsync(new LoginUserRequest
         {
-            Email = dto.Email,
-            Password = dto.Password
+            Email = loginViewModel.Email,
+            Password = loginViewModel.Password
         });
 
+        if (response.IsFailure) return response.Exception;
+        
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Role, response.Value.RoleType.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, response.Value.UserId.ToString())
+        };
+        
+        return new ClaimsIdentity(claims, "ApplicationCookie");
+    }
+
+    public async Task<Result<ClaimsIdentity>> Register(RegisterViewModel registerViewModel)
+    {
+        var response = await _userClient.RegisterAsync(new RegisterUserRequest
+        {
+            FullName = registerViewModel.FullName,
+            Email = registerViewModel.Email,
+            Password = registerViewModel.Password
+        });
+        
         if (response.IsFailure) return response.Exception;
         
         var claims = new List<Claim>

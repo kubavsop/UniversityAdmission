@@ -24,6 +24,17 @@ public sealed class ChangeManagerDataRequestHandler: IRequestHandler<ChangeManag
         if (request.Id != request.ManagerId && request.Role != RoleType.Admin)
             return new RpcErrorResponse("You have no rights");
 
+        if (request.Id == request.ManagerId && request.Role != RoleType.Admin && request.FacultyId != null)
+        {
+            return new RpcErrorResponse("You have no rights");
+        }
+        
+        var modifiedNormalizedEmail = request.Email.ToUpper();
+        if (await _context.Users.AnyAsync(u => request.ManagerId != u.Id && u.NormalizedEmail == modifiedNormalizedEmail, cancellationToken: cancellationToken))
+        {
+            return new RpcErrorResponse("User with this email already exists");
+        }
+
         var manager = await _context.Managers.Include(u => u.User).GetByIdAsync(request.ManagerId);
         if (manager == null) return new RpcErrorResponse("Manager not found");
 
@@ -46,6 +57,8 @@ public sealed class ChangeManagerDataRequestHandler: IRequestHandler<ChangeManag
             manager.ChangeFaculty(null);
         }
         
+        manager.User.NormalizedUserName = request.Email.ToUpper();
+        manager.User.NormalizedEmail = request.Email.ToUpper();
         manager.ChangeFullname(request.FullName);
         manager.ChangeEmail(request.Email);
 

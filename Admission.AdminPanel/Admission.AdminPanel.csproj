@@ -15,8 +15,4 @@
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.2" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Views\User\" />
-    </ItemGroup>
-
 </Project>

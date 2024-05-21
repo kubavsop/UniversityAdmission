@@ -16,11 +16,11 @@
             }
             else
             {
-                <h3 class="text-danger m-5">У вас нет прав, для того чтобы пользоваться этим приложением</h3>
+                <h3 class="text-danger m-5">У вас пока нет прав, для того чтобы пользоваться этим приложением</h3>
             }
         }
         else
         {
-            <h3 class="m-5">Пожалуйста, <a class=" text-decoration-none" asp-controller="Account" asp-action="Login">войдите</a></h3>
+            <h3 class="m-5">Пожалуйста, <a class=" text-decoration-none" asp-controller="Account" asp-action="Login">войдите</a> или <a class=" text-decoration-none" asp-controller="Account" asp-action="Register">зарегистрируйтесь</a></h3>
         }
 </div>

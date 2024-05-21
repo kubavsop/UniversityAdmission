@@ -1,6 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using System.Text;
+using Admission.Application.Common.Exceptions;
+using Admission.Application.Common.Result;
 using Admission.DTOs.RpcModels;
+using Admission.DTOs.RpcModels.Base;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -68,6 +71,12 @@ public abstract class BaseRpcClient: IDisposable
 
         cancellationToken.Register(() => _callbackMapper.TryRemove(correlationId, out _));
         return tcs.Task;
+    }
+    
+    protected Result CheckError(IRpcResponse rpcResponse)
+    {
+        if (rpcResponse is RpcErrorResponse error) return new RpcException(error.Message);
+        return Result.Success();
     }
 
     public void Dispose()

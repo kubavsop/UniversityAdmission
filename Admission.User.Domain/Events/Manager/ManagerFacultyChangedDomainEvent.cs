@@ -5,7 +5,10 @@ namespace Admission.User.Domain.Events.Manager;
 
 public sealed class ManagerFacultyChangedDomainEvent: IDomainEvent
 {
-    public ManagerFacultyChangedDomainEvent(Entities.Manager manager)
+    public ManagerFacultyChangedDomainEvent()
+    {
+    }
+    internal ManagerFacultyChangedDomainEvent(Entities.Manager manager)
     {
         Id = manager.Id;
         Faculty = manager.Faculty!;

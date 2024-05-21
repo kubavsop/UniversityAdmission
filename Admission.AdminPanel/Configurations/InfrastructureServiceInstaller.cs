@@ -14,11 +14,13 @@ public sealed class InfrastructureServiceInstaller: IServiceInstaller
         services.AddRabbitMqConnection(configuration);
         services.Configure<RpcClientQueueNameOptions>(configuration.GetSection("RpcClientQueueName"));
         services.AddSingleton<IRpcUserClient, RpcUserClient>();
+        services.AddSingleton<IRpcDictionaryMvcClient, RpcDictionaryMvcClient>();
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
                 options.LoginPath = new PathString("/Account/Login");
                 options.LogoutPath = new PathString("/Account/Logout");
             });
+        services.AddRazorPages().AddRazorRuntimeCompilation();
     }
 }

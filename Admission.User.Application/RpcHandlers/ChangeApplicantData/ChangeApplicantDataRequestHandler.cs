@@ -6,6 +6,7 @@ using Admission.User.Application.Context;
 using Admission.User.Application.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Admission.User.Application.RpcHandlers.ChangeApplicantData;
 
@@ -35,7 +36,14 @@ public sealed class ChangeApplicantDataRequestHandler: IRequestHandler<ChangeApp
                 Message = "Applicant not found"
             };
         
+        var modifiedNormalizedEmail = request.Email.ToUpper();
+        if (await _context.Users.AnyAsync(u => request.ApplicantId != u.Id && u.NormalizedEmail == modifiedNormalizedEmail, cancellationToken: cancellationToken))
+        {
+            return new RpcErrorResponse("User with this email already exists");
+        }
         
+        applicant.User.NormalizedUserName = request.Email.ToUpper();
+        applicant.User.NormalizedEmail = request.Email.ToUpper();
         applicant.ChangeFullname(request.FullName);
         applicant.ChangeEmail(request.Email);
         applicant.ChangeBirthday(request.Birthday);
