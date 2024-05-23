@@ -1,5 +1,6 @@
 ﻿@using Admission.AdminPanel.Constants
 @using System.Security.Claims
+@using Admission.Domain.Common.Enums
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +24,12 @@
                 <ul class="navbar-nav flex-grow-1">
                 @if ((User.Identity?.IsAuthenticated ?? false) && ValidRoles.Roles.Contains(User.FindFirst(ClaimTypes.Role)!.Value))
                 {
+                    @if(User.IsInRole(ValidRoles.AdminRole))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Managers">Менеджеры</a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Profile">Профиль</a>
                     </li>

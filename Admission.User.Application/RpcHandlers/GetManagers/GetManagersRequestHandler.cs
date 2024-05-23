@@ -24,20 +24,16 @@ public sealed class GetManagersRequestHandler: IRequestHandler<GetManagersReques
         {
             Message = "You have no rights"
         };
-
-        var adminRole = await _context.Roles.FirstOrDefaultAsync(r => r.Type == RoleType.Admin, cancellationToken: cancellationToken);
-        var seniorManagerRole = await _context.Roles.FirstOrDefaultAsync(r => r.Type == RoleType.SeniorManager, cancellationToken: cancellationToken);
-
+        
+        
         var managers = await _context.Managers
-            .Where(m => m.User.UserRoles.Any(ur => ur.RoleId != adminRole!.Id))
+            .Where(m => m.Id != request.Id)
             .Select(m => new ShortManagerDataResponse
             {
                 FullName = m.User.FullName,
                 Email = m.User.Email,
                 ManagerId = m.Id,
-                ManagerRole = m.User.UserRoles.Any(ur => ur.RoleId == seniorManagerRole!.Id)
-                    ? RoleType.SeniorManager
-                    : RoleType.Manager
+                ManagerRole = m.User.UserRoles.Max(ur => ur.Role.Type)
             })
             .ToListAsync(cancellationToken: cancellationToken);
 
