@@ -16,7 +16,8 @@ public sealed class EducationDocumentTypeChangedEventHandler: BaseDomainEventHan
         Publisher.Publish(new EducationDocumentTypeChangedIntegrationEvent
         {
             Id = notification.Id,
-            EducationDocumentTypeId = notification.EducationDocumentTypeId
+            EducationDocumentTypeId = notification.EducationDocumentTypeId,
+            UserId = notification.UserId
         }, RoutingKeys.DataChangedRoutingKey);
         
         return Task.CompletedTask;

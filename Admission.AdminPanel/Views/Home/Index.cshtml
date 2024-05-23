@@ -1,8 +1,26 @@
-﻿@{
+﻿@using Admission.Domain.Common.Enums
+@using Admission.AdminPanel.Constants
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Добро пожаловать в админку</h1>
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            var userRole = ValidRoles.Roles.FirstOrDefault(role => User.IsInRole(role));
+
+            if (userRole != null)
+            {
+                <h3 class="text-success m-5">Ваша роль: @userRole</h3>
+            }
+            else
+            {
+                <h3 class="text-danger m-5">У вас пока нет прав, для того чтобы пользоваться этим приложением</h3>
+            }
+        }
+        else
+        {
+            <h3 class="m-5">Пожалуйста, <a class=" text-decoration-none" asp-controller="Account" asp-action="Login">войдите</a> или <a class=" text-decoration-none" asp-controller="Account" asp-action="Register">зарегистрируйтесь</a></h3>
+        }
 </div>

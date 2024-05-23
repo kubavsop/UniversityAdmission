@@ -30,6 +30,12 @@ public sealed class AdmissionManagerChangedEventHandler: BaseDomainEventHandler<
             }, RoutingKeys.NotificationRoutingKey);
         } 
         
+        Publisher.Publish(new MailRequestIntegrationEvent
+        {
+            EmailTo = notification.ApplicantEmail,
+            Subject = "Admission status",
+            Body = "Your admission has been accepted for consideration."
+        }, RoutingKeys.NotificationRoutingKey);        
         return Task.CompletedTask;
     }
 }

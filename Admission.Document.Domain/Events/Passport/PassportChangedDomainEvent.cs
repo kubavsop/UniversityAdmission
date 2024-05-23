@@ -10,8 +10,8 @@ public sealed class PassportChangedDomainEvent: IDomainEvent
 
     internal PassportChangedDomainEvent(Entities.Passport passport)
     {
-        Id = passport.Id;
+        UserId = passport.ApplicantId;
     }
     
-    public Guid Id { get; init; }
+    public Guid UserId { get; init; }
 }

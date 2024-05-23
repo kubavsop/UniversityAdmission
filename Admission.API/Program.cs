@@ -3,7 +3,6 @@ using Admission.API.Common.Middlewares;
 using Admission.API.Common.ServiceInstaller;
 using Admission.Infrastructure;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.InstallServices(builder.Configuration, Assembly.GetExecutingAssembly());

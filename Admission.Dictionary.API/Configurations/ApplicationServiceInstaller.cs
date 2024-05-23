@@ -10,6 +10,7 @@ public sealed class ApplicationServiceInstaller: IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<IUpdateStatusService, UpdateStatusService>();
         services.AddScoped<IDictionaryService, DictionaryService>();
         services.AddScoped<IImporterService, ImporterService>();
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(DocumentNameChangedEventHandler).Assembly));

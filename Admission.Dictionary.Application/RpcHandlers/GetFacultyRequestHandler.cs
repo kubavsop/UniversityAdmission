@@ -1,7 +1,7 @@
 ﻿using Admission.Application.Common.Extensions;
 using Admission.Dictionary.Application.Context;
 using Admission.DTOs.RpcModels;
-using Admission.DTOs.RpcModels.Faculty;
+using Admission.DTOs.RpcModels.DictionaryService.GetFaculty;
 using MediatR;
 
 namespace Admission.Dictionary.Application.RpcHandlers;

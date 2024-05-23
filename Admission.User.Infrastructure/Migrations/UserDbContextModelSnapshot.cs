@@ -44,7 +44,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OutboxMessages");
+                    b.ToTable("OutboxMessages", (string)null);
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.AdmissionRole", b =>
@@ -199,7 +199,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Applicants");
+                    b.ToTable("Applicants", (string)null);
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.Faculty", b =>
@@ -223,7 +223,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Faculties");
+                    b.ToTable("Faculties", (string)null);
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.Manager", b =>
@@ -247,7 +247,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("Managers");
+                    b.ToTable("Managers", (string)null);
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.RefreshToken", b =>
@@ -288,7 +288,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("Admission.User.Domain.Entities.StudentAdmission", b =>
@@ -326,7 +326,7 @@ namespace Admission.User.Infrastructure.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("StudentAdmissions");
+                    b.ToTable("StudentAdmissions", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

@@ -16,6 +16,7 @@ public class InfrastructureServiceInstaller: IServiceInstaller
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services
+            .AddRpcDictionaryClient(configuration)
             .AddRabbitMqConnection(configuration)
             .AddProducer()
             .AddConsumer()

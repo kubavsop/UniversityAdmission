@@ -14,11 +14,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Admission.User.API.Configurations;
 
-public class UserDbServiceInstaller: IServiceInstaller
+public class InfrastructureServiceInstaller: IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services
+            .AddRpcConsumer(configuration)
             .AddJwtAuthentication()
             .AddRabbitMqConnection(configuration)
             .AddProducer()

@@ -24,5 +24,7 @@ public sealed class AdmissionCreatedIntegrationEventHandler: IIntegrationEventHa
             Status = notification.Status,
             ApplicantId = notification.ApplicantId
         }, cancellationToken);
+
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

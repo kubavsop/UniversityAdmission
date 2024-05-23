@@ -1,3 +1,3 @@
 namespace Admission.DTOs.RpcModels.Base;
 
-public class RpcOkResponse: IRpcResponse;
+public sealed class RpcOkResponse: IRpcResponse;

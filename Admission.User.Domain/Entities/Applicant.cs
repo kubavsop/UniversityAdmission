@@ -90,4 +90,16 @@ public sealed class Applicant: AggregateRoot
 
         return applicant;
     }
+
+    public static Applicant Create(AdmissionUser user)
+    {
+        var applicant = new Applicant
+        {
+            User = user
+        };
+        
+        applicant.AddDomainEvent(new ApplicantCreatedDomainEvent(user));
+
+        return applicant;
+    }
 }

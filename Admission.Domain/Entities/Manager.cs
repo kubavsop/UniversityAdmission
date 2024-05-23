@@ -4,6 +4,7 @@ namespace Admission.Domain.Entities;
 
 public sealed class Manager: BaseEntity
 {
+    public required string FullName { get; set; }
     public required string Email { get; set; }
     public Guid? FacultyId { get; set; }
     public Faculty? Faculty { get; set; }

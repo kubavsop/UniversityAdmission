@@ -69,7 +69,9 @@ public sealed class UserService : IUserService
         {
             return new BadRequestException("User with this email already exists");
         }
-
+        
+        applicant.User.NormalizedUserName = dto.Email.ToUpper();
+        applicant.User.NormalizedEmail = dto.Email.ToUpper();
         applicant.ChangeEmail(dto.Email);
         await ChangeManagerEmail(dto.Email, userId);
 
@@ -88,7 +90,6 @@ public sealed class UserService : IUserService
 
     public async Task<Result> EditPasswordAsync(EditPasswordDto dto, Guid userId)
     {
-        
         if (dto.NewPassword == dto.OldPassword)
         {
             return new BadRequestException("Passwords must be different");

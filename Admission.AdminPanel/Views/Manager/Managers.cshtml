@@ -1,0 +1,18 @@
+﻿@model ManagersViewModel
+
+@{
+    ViewData["Title"] = "Менеджеры";
+}
+
+<div class="d-flex flex-column flex-fill gap-4">
+    <h3 class="mr-1">Менеджеры</h3>
+    
+    @if (Model.Managers.Count > 0)
+    {
+
+        @foreach (var item in Model.Managers)
+        {
+            @await Html.PartialAsync("ManagerShort", item)
+        }
+    }
+</div>

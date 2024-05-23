@@ -19,6 +19,7 @@ public sealed class InfrastructureServiceInstaller: IServiceInstaller
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services
+            .AddConsumer()
             .AddJwtAuthentication()
             .AddRabbitMqConnection(configuration)
             .AddProducer()

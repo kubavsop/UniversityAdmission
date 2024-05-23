@@ -1,6 +1,9 @@
-﻿using Admission.Dictionary.Domain.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
+using Admission.Dictionary.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Admission.Dictionary.Application.Context;
 
@@ -15,4 +18,5 @@ public interface IDictionaryDbContext
         TEntity entity,
         CancellationToken cancellationToken = default)
         where TEntity : class;
+    public DbSet<TEntity> Set<TEntity>() where TEntity : class;
 }

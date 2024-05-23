@@ -2,5 +2,5 @@
 
 public abstract class BaseDto
 {
-    public Guid Id { get; init; }
+    public required Guid Id { get; init; }
 }

@@ -1,7 +1,7 @@
 ﻿using Admission.Application.Common.Extensions;
 using Admission.Dictionary.Application.Context;
 using Admission.DTOs.RpcModels;
-using Admission.DTOs.RpcModels.EducationLevel;
+using Admission.DTOs.RpcModels.DictionaryService.GetEducationLevel;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
