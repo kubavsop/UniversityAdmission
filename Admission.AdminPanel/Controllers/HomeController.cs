@@ -4,7 +4,7 @@ using Admission.AdminPanel.Models;
 
 namespace Admission.AdminPanel.Controllers;
 
-public class HomeController : Controller
+public sealed class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 

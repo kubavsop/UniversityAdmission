@@ -1,0 +1,18 @@
+﻿@model ApplicantsViewModel
+
+@{
+    ViewData["Title"] = "Абитуриенты";
+}
+
+<div class="d-flex flex-column flex-fill gap-4">
+    <h3 class="mr-1">Абитуриенты</h3>
+    
+    @if (Model.Applicants.Count > 0)
+    {
+
+        @foreach (var item in Model.Applicants)
+        {
+            @await Html.PartialAsync("ApplicantShort", item)
+        }
+    }
+</div>

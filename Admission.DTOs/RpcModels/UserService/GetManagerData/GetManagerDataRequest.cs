@@ -4,5 +4,5 @@ namespace Admission.DTOs.RpcModels.UserService.GetManagerData;
 
 public sealed class GetManagerDataRequest: AuthorizedRequest, IRpcRequest<ManagerDataResponse>
 {
-    public Guid UserId { get; set; }
+    public required Guid UserId { get; set; }
 }

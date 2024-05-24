@@ -9,7 +9,6 @@
     
     @if (Model.Managers.Count > 0)
     {
-
         @foreach (var item in Model.Managers)
         {
             @await Html.PartialAsync("ManagerShort", item)

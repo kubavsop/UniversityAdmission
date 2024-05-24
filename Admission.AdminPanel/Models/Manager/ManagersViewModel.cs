@@ -1,7 +1,7 @@
 ﻿using Admission.Application.Common.Mapping;
 using Admission.DTOs.RpcModels.UserService.GetManagers;
 
-namespace Admission.AdminPanel.Models;
+namespace Admission.AdminPanel.Models.Manager;
 
 public class ManagersViewModel: IMapFrom<ManagersResponse>
 {

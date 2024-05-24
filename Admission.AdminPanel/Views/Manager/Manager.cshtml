@@ -1,0 +1,48 @@
+﻿@using Admission.DTOs.RpcModels.DictionaryService.GetFaculty
+@model ManagerProfileViewModel
+
+@{
+    ViewData["Title"] = "Менеджер";
+}
+
+<div class="d-flex flex-column flex-wrap justify-content-center">
+    <h2>Менеджер</h2>
+
+    <form asp-action="Manager" method="post" class="">
+        <div class="d-flex flex-column flex-wrap gap-2">
+            <input class="form-control" type="text" asp-for="ManagerId" hidden/>
+            <div class="form-group">
+                <label asp-for="FullName"></label>
+                <input class="form-control" type="text" asp-for="FullName"/>
+                <span class="text-danger" asp-validation-for="FullName"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input class="form-control" type="text" asp-for="Email"/>
+                <span class="text-danger" asp-validation-for="Email"/>
+            </div>
+            <div class="form-group">
+                <label>Факультет</label>
+                <select class="form-select" asp-for="Faculty" sorting-type>
+                    <option selected="@Model.Faculty == null" value="null">
+                        -
+                    </option>
+                    @foreach (var item in (ViewData["Faculties"] as IEnumerable<FacultyResponse>)!)
+                    {
+                        <option selected="@(Model.Faculty?.Id == item.Id)" value="@item">
+                            @item.Name
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <button type="submit" class="btn mt-1 btn-primary btn-block">Сохранить</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

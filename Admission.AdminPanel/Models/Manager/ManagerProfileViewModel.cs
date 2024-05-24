@@ -3,7 +3,7 @@ using Admission.Application.Common.Mapping;
 using Admission.DTOs.RpcModels.DictionaryService.GetFaculty;
 using Admission.DTOs.RpcModels.UserService.GetManagerData;
 
-namespace Admission.AdminPanel.Models;
+namespace Admission.AdminPanel.Models.Manager;
 
 public sealed class ManagerProfileViewModel: IMapFrom<ManagerDataResponse>
 {
@@ -20,6 +20,8 @@ public sealed class ManagerProfileViewModel: IMapFrom<ManagerDataResponse>
     [DataType(DataType.Text)]
     public string FullName { get; init; }
     
+    
+    [Display(Name = "Факультет")]
     [DataType(DataType.Text)]
     public FacultyResponse? Faculty { get; init; }
 }
