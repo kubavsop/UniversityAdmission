@@ -24,17 +24,20 @@
                 <ul class="navbar-nav flex-grow-1">
                 @if ((User.Identity?.IsAuthenticated ?? false) && ValidRoles.Roles.Contains(User.FindFirst(ClaimTypes.Role)!.Value))
                 {
-                    @if(User.IsInRole(ValidRoles.AdminRole))
+                    @if(User.IsInRole(ValidRoles.AdminRole) || User.IsInRole(ValidRoles.SeniorManagerRole))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Managers">Менеджеры</a>
                         </li>
                     }
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Profile">Профиль</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Applicant" asp-action="Applicants">Абитуриенты</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Password">Настройки</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Profile">Профиль</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Password">Настройки</a>
                     </li>
                     <li class="nav-item ms-auto">
                         <form class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout" method="post">

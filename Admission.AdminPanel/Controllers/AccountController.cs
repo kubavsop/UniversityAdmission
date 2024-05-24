@@ -24,7 +24,6 @@ public sealed class AccountController: Controller
     }
     
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel loginViewModel)
     {
         if (!ModelState.IsValid)

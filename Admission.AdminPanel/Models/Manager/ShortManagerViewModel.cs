@@ -2,7 +2,7 @@
 using Admission.Domain.Common.Enums;
 using Admission.DTOs.RpcModels.UserService.GetManagers;
 
-namespace Admission.AdminPanel.Models;
+namespace Admission.AdminPanel.Models.Manager;
 
 public sealed class ShortManagerViewModel: IMapFrom<ShortManagerDataResponse>
 {

@@ -25,6 +25,7 @@ public sealed class GetApplicantsRequestHandler: IRequestHandler<GetApplicantsRe
         };
 
         var users = await _context.Users
+            .Where(u => u.UserRoles.Count == 1)
             .Select(u => new ShortApplicantResponse {
             ApplicantId = u.Id,
             Email = u.Email,

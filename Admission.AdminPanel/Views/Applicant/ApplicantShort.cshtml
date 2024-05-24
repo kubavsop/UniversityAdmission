@@ -1,0 +1,39 @@
+﻿@using Admission.AdminPanel.Constants
+@model ShortApplicantViewModel
+
+@{
+
+}
+<div class="card">
+    <div class="card-body d-flex flex-row flex-wrap">
+        <div class="d-flex flex-column">
+            <div class="mr-1">
+                @Model.Email
+            </div>
+            <div class="mr-1">
+                @Model.FullName
+            </div>
+        </div>
+        @if(User.IsInRole(ValidRoles.AdminRole))
+        {
+            <form asp-controller="Applicant" asp-action="Role" method="post" class="ms-auto">
+                <div class="d-flex flex-row flex-wrap gap-2">
+                    <input asp-for="ApplicantId" type="text" class="form-control" hidden>
+                    <select class="form-select" asp-for="RoleToAdd" sorting-type>
+                        <option selected="@Model.RoleToAdd == null" value="null">
+                            -
+                        </option>
+                        @foreach (var item in ValidRoles.EnumRoles)
+                        {
+                            <option selected="@(Model.RoleToAdd == item)" value="@item">
+                                @item.ToString()
+                            </option>
+                        }
+                    </select>
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                    <button type="submit" class="btn mt-1 btn-primary btn-block ms-auto">Выдать роль</button>
+                </div>
+            </form>
+        }
+    </div>
+</div>

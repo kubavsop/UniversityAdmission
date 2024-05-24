@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Admission.AdminPanel.Models;
+namespace Admission.AdminPanel.Models.Manager;
 
 public sealed class ChangePasswordViewModel
 {

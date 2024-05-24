@@ -11,9 +11,9 @@ namespace Admission.AdminPanel.Services.Impl;
 public sealed class RpcDictionaryMvcClient: BaseRpcClient, IRpcDictionaryMvcClient
 {
     private const string QueueName = "DictionaryRpcQueue";
-
+    private const string ReplyQueueName = "RpcDictionaryClientAdminPanelQueue";
     
-    public RpcDictionaryMvcClient(IOptions<RpcClientQueueNameOptions> replyQueueName, IConnection connection) : base(QueueName, replyQueueName.Value.Name, connection)
+    public RpcDictionaryMvcClient(IConnection connection) : base(QueueName, ReplyQueueName, connection)
     {
     }
 

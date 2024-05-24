@@ -23,8 +23,9 @@ namespace Admission.AdminPanel.Services.Impl;
 public sealed class RpcUserClient: BaseRpcClient, IRpcUserClient
 {
     private const string QueueName = "UserRpcQueue";
+    private const string ReplyQueueName = "RpcUserClientAdminPanelQueue";
     
-    public RpcUserClient(IOptions<RpcClientQueueNameOptions> replyQueueName, IConnection connection) : base(QueueName, replyQueueName.Value.Name, connection)
+    public RpcUserClient(IConnection connection) : base(QueueName, ReplyQueueName, connection)
     {
     }
     
