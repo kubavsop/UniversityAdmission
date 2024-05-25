@@ -11,7 +11,9 @@ public sealed class InfrastructureServiceInstaller: IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddRabbitMqConnection(configuration);
+        services
+            .AddProducer()
+            .AddRabbitMqConnection(configuration);
         services.AddSingleton<IRpcUserClient, RpcUserClient>();
         services.AddSingleton<IRpcDictionaryMvcClient, RpcDictionaryMvcClient>();
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

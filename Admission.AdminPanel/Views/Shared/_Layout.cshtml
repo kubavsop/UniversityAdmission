@@ -32,6 +32,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Managers">Менеджеры</a>
                             </li>
                         }
+                        @if (User.IsInRole(ValidRoles.AdminRole))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Dictionary" asp-action="Dictionaries">Справочники</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Applicant" asp-action="Applicants">Абитуриенты</a>
                         </li>

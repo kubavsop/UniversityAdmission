@@ -24,11 +24,6 @@ public class ImporterService : IImporterService
         _updateStatusService = updateStatusService;
     }
 
-    public async Task TestUpdate()
-    {
-        await UpdateAllAsync();
-    }
-
     public async Task UpdateFacultiesAsync()
     {
         await _updateStatusService.SetStatuses();
@@ -36,6 +31,8 @@ public class ImporterService : IImporterService
         
         await UpdateFaculties();
         await _context.SaveChangesAsync();
+        
+        await _updateStatusService.UpdateStatuses();
     }
 
     public async Task UpdateProgramsAsync()

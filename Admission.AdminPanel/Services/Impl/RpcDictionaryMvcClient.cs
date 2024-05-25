@@ -1,9 +1,8 @@
 ﻿using Admission.Application.Common.Exceptions;
 using Admission.Application.Common.Result;
 using Admission.DTOs.RpcModels.DictionaryService.GetFaculties;
-using Admission.RabbitMQ.Options;
+using Admission.DTOs.RpcModels.DictionaryService.GetUpdateStatus;
 using Admission.RabbitMQ.Services.Base;
-using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
 namespace Admission.AdminPanel.Services.Impl;
@@ -27,5 +26,16 @@ public sealed class RpcDictionaryMvcClient: BaseRpcClient, IRpcDictionaryMvcClie
         if (errorResult.IsFailure) return errorResult.Exception;
 
         return (result as FacultiesResponse)!;
+    }
+
+    public async Task<Result<UpdateStatusResponse>> GetUpdateStatuses(GetUpdateStatusRequest getUpdateStatusRequest)
+    {
+        var result = await CallAsync(getUpdateStatusRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;  
+        
+        return (result as UpdateStatusResponse)!;
     }
 }

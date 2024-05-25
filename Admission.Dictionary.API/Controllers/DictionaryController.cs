@@ -2,11 +2,12 @@
 using Admission.API.Common.Extensions;
 using Admission.Dictionary.Application.DTOs.Requests;
 using Admission.Dictionary.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admission.Dictionary.API.Controllers;
 
-
+[Authorize]
 public sealed class DictionaryController: BaseController
 {
     private readonly IDictionaryService _dictionaryService;
@@ -48,12 +49,5 @@ public sealed class DictionaryController: BaseController
     {
         var result = await _dictionaryService.GetEducationProgramsAsync(parameters);
         return result.ToIActionResult();
-    }
-    
-    [HttpPost]
-    [Route("Test")]
-    public async Task TestUpdate()
-    {
-        await _importerService.TestUpdate();
     }
 }
