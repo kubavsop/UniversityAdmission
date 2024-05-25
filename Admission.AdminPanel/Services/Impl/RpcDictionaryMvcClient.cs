@@ -17,7 +17,7 @@ public sealed class RpcDictionaryMvcClient: BaseRpcClient, IRpcDictionaryMvcClie
     }
 
 
-    public async Task<Result<FacultiesResponse>> GetFaculties(GetFacultiesRequest getFacultiesRequest)
+    public async Task<Result<FacultiesResponse>> GetFacultiesAsync(GetFacultiesRequest getFacultiesRequest)
     {
         var result = await CallAsync(getFacultiesRequest);
         if (result == null) return new RpcException("null response");
@@ -28,7 +28,7 @@ public sealed class RpcDictionaryMvcClient: BaseRpcClient, IRpcDictionaryMvcClie
         return (result as FacultiesResponse)!;
     }
 
-    public async Task<Result<UpdateStatusResponse>> GetUpdateStatuses(GetUpdateStatusRequest getUpdateStatusRequest)
+    public async Task<Result<UpdateStatusResponse>> GetUpdateStatusesAsync(GetUpdateStatusRequest getUpdateStatusRequest)
     {
         var result = await CallAsync(getUpdateStatusRequest);
         if (result == null) return new RpcException("null response");

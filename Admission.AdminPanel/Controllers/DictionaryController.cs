@@ -32,7 +32,7 @@ public sealed class DictionaryController: Controller
     [HttpGet]
     public async Task<IActionResult> Dictionaries()
     {
-        var statuses = await _client.GetUpdateStatuses(User.SetAuthRequest(new GetUpdateStatusRequest()));
+        var statuses = await _client.GetUpdateStatusesAsync(User.SetAuthRequest(new GetUpdateStatusRequest()));
         
         return View(_mapper.Map<UpdateDictionaryViewModel>(statuses.Value));
     }

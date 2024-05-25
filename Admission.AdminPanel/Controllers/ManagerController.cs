@@ -118,7 +118,7 @@ public sealed class ManagerController: Controller
     [AuthorizeRole([RoleType.Admin, RoleType.SeniorManager])]
     public async Task<IActionResult> Manager([FromRoute] Guid id)
     {
-        ViewData["Faculties"] = (await _dictionaryMvcClient.GetFaculties(User.SetAuthRequest(new GetFacultiesRequest()))).Value.Faculties;
+        ViewData["Faculties"] = (await _dictionaryMvcClient.GetFacultiesAsync(User.SetAuthRequest(new GetFacultiesRequest()))).Value.Faculties;
         var profile = await _userClient.GetManagerAsync(User.SetAuthRequest(new GetManagerDataRequest{ UserId = id }));
         
         if (!profile.IsFailure) return View(new ManagerProfileViewModel
@@ -138,7 +138,7 @@ public sealed class ManagerController: Controller
     [AuthorizeRole(RoleType.Admin)]
     public async Task<IActionResult> Manager(ManagerProfileViewModel profile)
     {
-        ViewData["Faculties"] = (await _dictionaryMvcClient.GetFaculties(User.SetAuthRequest(new GetFacultiesRequest()))).Value.Faculties;
+        ViewData["Faculties"] = (await _dictionaryMvcClient.GetFacultiesAsync(User.SetAuthRequest(new GetFacultiesRequest()))).Value.Faculties;
         if (!ModelState.IsValid) return View(profile);
         
         var result = await _userClient.ChangeManagerDataAsync(User.SetAuthRequest(new ChangeManagerDataRequest
