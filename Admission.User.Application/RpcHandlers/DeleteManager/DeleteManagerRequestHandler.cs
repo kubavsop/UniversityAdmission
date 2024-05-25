@@ -1,4 +1,5 @@
-﻿using Admission.Domain.Common.Enums;
+﻿using Admission.Application.Common.Extensions;
+using Admission.Domain.Common.Enums;
 using Admission.DTOs.RpcModels;
 using Admission.DTOs.RpcModels.Base;
 using Admission.DTOs.RpcModels.UserService.DeleteUserRole;
@@ -6,26 +7,37 @@ using Admission.User.Application.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Admission.User.Application.RpcHandlers.DeleteUserRole;
+namespace Admission.User.Application.RpcHandlers.DeleteManager;
 
-public sealed class DeleteUserRoleRequestHandler: IRequestHandler<DeleteUserRoleRequest, IRpcResponse>
+public sealed class DeleteManagerRequestHandler: IRequestHandler<DeleteManagerRequest, IRpcResponse>
 {
     private readonly IUserDbContext _context;
 
-    public DeleteUserRoleRequestHandler(IUserDbContext context)
+    public DeleteManagerRequestHandler(IUserDbContext context)
     {
         _context = context;
     }
 
-    public async Task<IRpcResponse> Handle(DeleteUserRoleRequest request, CancellationToken cancellationToken)
+    public async Task<IRpcResponse> Handle(DeleteManagerRequest request, CancellationToken cancellationToken)
     {
         if (request.Role != RoleType.Admin && request.UserId == request.Id) return new RpcErrorResponse
         {
             Message = "You have no rights"
         };
 
+        var manager = await _context.Managers
+            .Include(u => u.User)
+            .GetByIdAsync(request.UserId);
+
+        if (manager == null) return new RpcErrorResponse
+        {
+            Message = "Manager not found"
+        };
+        
+        manager.ChangeDeleteTime(DateTime.UtcNow);
+        
         var userRole = await _context.UserRoles.FirstOrDefaultAsync(
-                ur => ur.UserId == request.UserId && ur.Role.Type == request.UserRole, cancellationToken: cancellationToken);
+                ur => ur.UserId == request.UserId && ur.Role.Type != RoleType.Applicant, cancellationToken: cancellationToken);
         
         if (userRole != null)
         {
@@ -39,7 +51,7 @@ public sealed class DeleteUserRoleRequestHandler: IRequestHandler<DeleteUserRole
                 Message = "User role not found"
             };
         }
-
+        
         return new RpcOkResponse();
     }
 }

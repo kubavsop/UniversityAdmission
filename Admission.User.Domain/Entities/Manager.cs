@@ -34,12 +34,20 @@ public sealed class Manager: AggregateRoot
 
     public void ChangeFaculty(Faculty? faculty)
     {
-        if (Faculty == faculty) return;
+        if (FacultyId == faculty?.Id) return;
         
         Faculty = faculty;
         FacultyId = faculty?.Id;
         
         AddDomainEvent(new ManagerFacultyChangedDomainEvent(this));
+    }
+
+    public override void ChangeDeleteTime(DateTime? deleteTime)
+    {
+        if (DeleteTime == deleteTime) return;
+        DeleteTime = deleteTime;
+        
+        AddDomainEvent(new ManagerDeleteTimeChangedDomainEvent(Id, DeleteTime, User.Email));
     }
 
     public static Manager Create(AdmissionUser user)

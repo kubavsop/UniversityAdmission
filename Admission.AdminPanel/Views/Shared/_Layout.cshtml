@@ -22,28 +22,31 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                @if ((User.Identity?.IsAuthenticated ?? false) && ValidRoles.Roles.Contains(User.FindFirst(ClaimTypes.Role)!.Value))
+                @if (User.Identity?.IsAuthenticated ?? false)
                 {
-                    @if(User.IsInRole(ValidRoles.AdminRole) || User.IsInRole(ValidRoles.SeniorManagerRole))
+                    @if (ValidRoles.Roles.Contains(User.FindFirst(ClaimTypes.Role)!.Value))
                     {
+                        @if(User.IsInRole(ValidRoles.AdminRole) || User.IsInRole(ValidRoles.SeniorManagerRole))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Managers">Менеджеры</a>
+                            </li>
+                        }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Managers">Менеджеры</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Applicant" asp-action="Applicants">Абитуриенты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Profile">Профиль</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Password">Настройки</a>
                         </li>
                     }
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Applicant" asp-action="Applicants">Абитуриенты</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Profile">Профиль</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Password">Настройки</a>
-                    </li>
                     <li class="nav-item ms-auto">
                         <form class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
                             <button type="submit" class="border-0 bg-transparent">Выйти</button>
                         </form>
-                    </li>
+                    </li>   
                 }
                 else
                 {

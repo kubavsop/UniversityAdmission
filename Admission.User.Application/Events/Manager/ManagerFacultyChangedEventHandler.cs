@@ -16,8 +16,8 @@ public sealed class ManagerFacultyChangedEventHandler: BaseDomainEventHandler<Ma
         Publisher.Publish(new ManagerFacultyChangedIntegrationEvent
         {
             Id = notification.Id,
-            FacultyId = notification.Faculty.Id,
-            FacultyName = notification.Faculty.Name
+            FacultyId = notification.Faculty?.Id,
+            FacultyName = notification.Faculty?.Name
         }, RoutingKeys.ManagerFacultyChangedRoutingKey);
 
         return Task.CompletedTask;

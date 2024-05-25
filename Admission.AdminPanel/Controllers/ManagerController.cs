@@ -1,13 +1,13 @@
 ﻿using System.Security.Claims;
 using Admission.AdminPanel.Attributes;
 using Admission.AdminPanel.Extensions;
-using Admission.AdminPanel.Models;
 using Admission.AdminPanel.Models.Manager;
 using Admission.AdminPanel.Services;
 using Admission.Domain.Common.Enums;
 using Admission.DTOs.RpcModels.DictionaryService.GetFaculties;
 using Admission.DTOs.RpcModels.UserService.ChangeManagerData;
 using Admission.DTOs.RpcModels.UserService.ChangePassword;
+using Admission.DTOs.RpcModels.UserService.DeleteUserRole;
 using Admission.DTOs.RpcModels.UserService.GetManagerData;
 using Admission.DTOs.RpcModels.UserService.GetManagers;
 using AutoMapper;
@@ -40,7 +40,14 @@ public sealed class ManagerController: Controller
             ModelState.AddModelError("GettingError", managerProfileResult.Exception.Message);
             return View(new ManagerProfileViewModel());
         }
-        return View(_mapper.Map<ManagerProfileViewModel>(managerProfileResult.Value));
+        return View(new ManagerProfileViewModel
+        {
+            FullName = managerProfileResult.Value.FullName,
+            Email = managerProfileResult.Value.Email,
+            FacultyId = managerProfileResult.Value.Faculty?.Id,
+            FacultyName = managerProfileResult.Value.Faculty?.Name,
+            ManagerId = managerProfileResult.Value.ManagerId
+        });
     }
     
     [HttpPost]
@@ -48,6 +55,8 @@ public sealed class ManagerController: Controller
     [AuthorizeRole([RoleType.Admin, RoleType.Manager, RoleType.SeniorManager])]
     public async Task<IActionResult> Profile(ManagerProfileViewModel profile)
     {
+        if (!ModelState.IsValid) return View(profile);
+        
         var result = await _userClient.ChangeManagerDataAsync(User.SetAuthRequest(new ChangeManagerDataRequest
         {
             ManagerId = profile.ManagerId,
@@ -75,6 +84,8 @@ public sealed class ManagerController: Controller
     [AuthorizeRole([RoleType.Admin, RoleType.Manager, RoleType.SeniorManager])]
     public async Task<IActionResult> Password(ChangePasswordViewModel changePasswordViewModel)
     {
+        if (!ModelState.IsValid) return View(changePasswordViewModel);
+        
         var result = await _userClient.ChangePasswordAsync(User.SetAuthRequest(new ChangePasswordRequest
         {
             OldPassword = changePasswordViewModel.OldPassword,
@@ -110,22 +121,33 @@ public sealed class ManagerController: Controller
         ViewData["Faculties"] = (await _dictionaryMvcClient.GetFaculties(User.SetAuthRequest(new GetFacultiesRequest()))).Value.Faculties;
         var profile = await _userClient.GetManagerAsync(User.SetAuthRequest(new GetManagerDataRequest{ UserId = id }));
         
-        if (!profile.IsFailure) return View(_mapper.Map<ManagerProfileViewModel>(profile.Value));
+        if (!profile.IsFailure) return View(new ManagerProfileViewModel
+        {
+            FullName = profile.Value.FullName,
+            Email = profile.Value.Email,
+            FacultyId = profile.Value.Faculty?.Id,
+            FacultyName = profile.Value.Faculty?.Name,
+            ManagerId = profile.Value.ManagerId
+        });
         
         ModelState.AddModelError("GettingError", profile.Exception.Message);
         return View(new ManagerProfileViewModel());
     }
 
     [HttpPost]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task<IActionResult> Manager(ManagerProfileViewModel profile)
     {
+        ViewData["Faculties"] = (await _dictionaryMvcClient.GetFaculties(User.SetAuthRequest(new GetFacultiesRequest()))).Value.Faculties;
+        if (!ModelState.IsValid) return View(profile);
+        
         var result = await _userClient.ChangeManagerDataAsync(User.SetAuthRequest(new ChangeManagerDataRequest
         {
             ManagerId = profile.ManagerId,
             Email = profile.Email,
             FullName = profile.FullName,
-            FacultyId = profile.Faculty?.Id,
-            FacultyName = profile.Faculty?.Name
+            FacultyId = profile.FacultyId,
+            FacultyName = profile.FacultyName
         }));
         
         if (result.IsFailure)
@@ -134,5 +156,18 @@ public sealed class ManagerController: Controller
         }
         
         return View(profile);
+    }
+    
+    [AuthorizeRole(RoleType.Admin)]
+    public async Task<IActionResult> DeleteManager([FromRoute] Guid id)
+    {
+        var result = await _userClient.DeleteManagerRoleAsync(User.SetAuthRequest(new DeleteManagerRequest { UserId = id }));
+        
+        if (result.IsFailure)
+        {
+            // TODO
+        }
+        
+        return RedirectToAction("Managers");
     }
 }

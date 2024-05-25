@@ -20,7 +20,7 @@
             <a asp-controller="Manager" asp-action="Manager" asp-route-id="@Model.ManagerId" class="btn btn-warning">
                 Изменить
             </a>
-            <a class="btn btn-danger">
+            <a asp-controller="Manager" asp-action="DeleteManager" asp-route-id="@Model.ManagerId" class="btn btn-danger">
                 Удалить
             </a>
         </div>

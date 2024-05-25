@@ -30,7 +30,7 @@ public sealed class EducationDocumentType: AggregateRoot
 
     public override void ChangeDeleteTime(DateTime? deleteTime)
     {
-        if ((deleteTime == null && DeleteTime == null) || (deleteTime != null && DeleteTime != null)) return;
+        if (DeleteTime == deleteTime) return;
         DeleteTime = deleteTime;
         AddDomainEvent(new DocumentDeleteTimeChangedDomainEvent(this));
     }

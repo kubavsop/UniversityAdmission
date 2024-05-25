@@ -1,11 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Admission.Application.Common.Mapping;
 using Admission.DTOs.RpcModels.DictionaryService.GetFaculty;
 using Admission.DTOs.RpcModels.UserService.GetManagerData;
+using AutoMapper;
 
 namespace Admission.AdminPanel.Models.Manager;
 
-public sealed class ManagerProfileViewModel: IMapFrom<ManagerDataResponse>
+public sealed class ManagerProfileViewModel
 {
     public Guid ManagerId { get; init; }
     
@@ -22,6 +25,8 @@ public sealed class ManagerProfileViewModel: IMapFrom<ManagerDataResponse>
     
     
     [Display(Name = "Факультет")]
-    [DataType(DataType.Text)]
-    public FacultyResponse? Faculty { get; init; }
+    public Guid? FacultyId { get; init; }
+    
+    [Display(Name = "Факультет")]
+    public string? FacultyName { get; init; }
 }

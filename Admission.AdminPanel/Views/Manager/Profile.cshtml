@@ -10,11 +10,9 @@
     <form asp-action="Profile" method="post" class="">
         <div class="d-flex flex-column flex-wrap gap-2">
             <input class="form-control" type="text" asp-for="ManagerId" hidden/>
-            @if (Model.Faculty is not null)
-            {
-                <input asp-for="Faculty!.Id" type="text" class="form-control" hidden>
-                <input asp-for="Faculty!.Name" type="text" class="form-control" hidden>
-            }
+            <input asp-for="FacultyId" type="text" class="form-control" hidden>
+            <input asp-for="FacultyName" type="text" class="form-control" hidden>
+            
             
             <div class="form-group">
                 <label asp-for="FullName"></label>
@@ -26,12 +24,18 @@
                 <input class="form-control" type="text" asp-for="Email"/>
                 <span class="text-danger" asp-validation-for="Email"/>
             </div>
-            @if (Model.Faculty is not null)
+            @if (Model.FacultyId is not null)
             {
                 <div class="form-group">
-                    <label asp-for="Faculty!.Name">Факультет</label>
-                    <input class="form-control" asp-for="Faculty!.Name" disabled/>
-                    <span class="text-danger" asp-validation-for="Faculty!.Name"/>
+                    <label asp-for="FacultyName">Факультет</label>
+                    <input class="form-control" asp-for="FacultyName" disabled/>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="FacultyName">Факультет</label>
+                    <input class="form-control" value="-" disabled>
                 </div>
             }
 

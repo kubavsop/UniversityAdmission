@@ -9,7 +9,7 @@ public sealed class Faculty: AggregateRoot
     
     public override void ChangeDeleteTime(DateTime? deleteTime)
     {
-        if ((deleteTime == null && DeleteTime == null) || (deleteTime != null && DeleteTime != null)) return;
+        if (DeleteTime == deleteTime) return;
         DeleteTime = deleteTime;
         AddDomainEvent(new FacultyDeleteTimeChangedDomainEvent(this));
     }

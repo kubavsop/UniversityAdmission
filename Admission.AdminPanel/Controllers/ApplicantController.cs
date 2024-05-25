@@ -40,7 +40,7 @@ public sealed class ApplicantController: Controller
     [AuthorizeRole(RoleType.Admin)]
     public async Task<IActionResult> Role(AddRoleViewModel roleViewModel)
     {
-        var result = await _userClient.AddUserRoleAsync(User.SetAuthRequest(new AddUserRoleRequest
+        var result = await _userClient.CreateManagerAsync(User.SetAuthRequest(new CreateManagerRequest
             { UserId = roleViewModel.ApplicantId, UserRole = roleViewModel.RoleToAdd }));
         
         if (result.IsFailure)

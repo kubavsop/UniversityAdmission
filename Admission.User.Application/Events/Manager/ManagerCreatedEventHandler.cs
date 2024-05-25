@@ -19,7 +19,7 @@ public sealed class ManagerCreatedEventHandler: BaseDomainEventHandler<ManagerCr
             Id = notification.Id,
             FullName = notification.FullName,
             Email = notification.Email
-        }, RoutingKeys.ManagerCreatedRoutingKey);
+        }, RoutingKeys.ManagerExistenceHasChanged);
         
         Publisher.Publish(new MailRequestIntegrationEvent
         {

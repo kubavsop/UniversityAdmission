@@ -27,7 +27,7 @@ public sealed class GetManagersRequestHandler: IRequestHandler<GetManagersReques
         
         
         var managers = await _context.Managers
-            .Where(m => m.Id != request.Id)
+            .Where(m => m.Id != request.Id && !m.DeleteTime.HasValue)
             .Select(m => new ShortManagerDataResponse
             {
                 FullName = m.User.FullName,

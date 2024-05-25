@@ -7,18 +7,18 @@ using Admission.User.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Admission.User.Application.RpcHandlers.AddUserRole;
+namespace Admission.User.Application.RpcHandlers.CreateManager;
 
-public sealed class AddUserRoleRequestHandler: IRequestHandler<AddUserRoleRequest, IRpcResponse>
+public sealed class CreateManagerRoleRequestHandler: IRequestHandler<CreateManagerRequest, IRpcResponse>
 {
     private readonly IUserDbContext _context;
 
-    public AddUserRoleRequestHandler(IUserDbContext context)
+    public CreateManagerRoleRequestHandler(IUserDbContext context)
     {
         _context = context;
     }
 
-    public async Task<IRpcResponse> Handle(AddUserRoleRequest request, CancellationToken cancellationToken)
+    public async Task<IRpcResponse> Handle(CreateManagerRequest request, CancellationToken cancellationToken)
     {
         if (request.Role != RoleType.Admin) return new RpcErrorResponse
         {
@@ -57,7 +57,16 @@ public sealed class AddUserRoleRequestHandler: IRequestHandler<AddUserRoleReques
             }
         }
 
-        await _context.Managers.AddAsync(Manager.Create(user), cancellationToken);
+        var manager = await _context.Managers
+            .Include(m => m.User)
+            .FirstOrDefaultAsync(m => m.Id == request.UserId, cancellationToken: cancellationToken);
+        if (manager == null) {
+            await _context.Managers.AddAsync(Manager.Create(user), cancellationToken);
+        }
+        else
+        {
+            manager.ChangeDeleteTime(null);
+        }
         
         await _context.UserRoles.AddAsync(new AdmissionUserRole
         {
