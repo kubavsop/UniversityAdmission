@@ -7,7 +7,7 @@ namespace Admission.DTOs.RpcModels.AdmissionService.GetStudentAdmissions;
 
 public sealed class GetStudentAdmissionsRequest: AuthorizedRequest, IRpcRequest<StudentAdmissionsResponse>
 {
-    public Guid? ProgramId { get; init; }
+    public string? EducationProgramName { get; init; }
     public string? ApplicantName { get; init; }
     public AdmissionStatus? AdmissionStatus { get; init; }
     public SortingOptions? SortingOptions { get; init; }

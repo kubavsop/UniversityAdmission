@@ -9,10 +9,5 @@ public sealed class ChangePassportRequest: AuthorizedRequest, IRpcRequest<IRpcRe
     public required int Number { get; init; }
     public required string PlaceOfBirth { get; init; }
     public required string IssuedBy { get; init; }
-    public required DateTime DateIssued 
-    {
-        get => _dateIssued;
-        set => _dateIssued = DateTime.SpecifyKind(value, DateTimeKind.Utc);
-    }
-    private DateTime _dateIssued;
+    public required DateTime DateIssued { get; init; }
 }

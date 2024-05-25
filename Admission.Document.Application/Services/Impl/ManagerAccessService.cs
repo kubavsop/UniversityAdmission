@@ -1,15 +1,16 @@
 ﻿using Admission.Application.Common.Extensions;
+using Admission.Document.Application.Context;
+using Admission.Document.Domain.Entities;
 using Admission.Domain.Common.Enums;
-using Admission.User.Application.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Admission.User.Application.Services.Impl;
+namespace Admission.Document.Application.Services.Impl;
 
-public sealed class ManagerAccessService: IManagerAccessService
+public class ManagerAccessService: IManagerAccessService
 {
-    private readonly IUserDbContext _context;
+    private readonly IDocumentDbContext _context;
 
-    public ManagerAccessService(IUserDbContext context)
+    public ManagerAccessService(IDocumentDbContext context)
     {
         _context = context;
     }
@@ -28,6 +29,19 @@ public sealed class ManagerAccessService: IManagerAccessService
         if (studentAdmission == null || manager == null) return false;
 
         if (studentAdmission.ManagerId == managerId ||
+            studentAdmission.FirstPriorityFacultyId == manager.FacultyId) return true;
+        
+        return false;
+    }
+    
+    public bool HasEditPermissions(Manager? manager, RoleType managerRole, StudentAdmission? studentAdmission)
+    {
+        if (managerRole == RoleType.Applicant) return false;
+        if (managerRole >= RoleType.SeniorManager) return true;
+        
+        if (studentAdmission == null || manager == null) return false;
+        
+        if (studentAdmission.ManagerId == manager.Id ||
             studentAdmission.FirstPriorityFacultyId == manager.FacultyId) return true;
         
         return false;

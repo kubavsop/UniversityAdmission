@@ -9,4 +9,5 @@ public sealed class PassportResponse: IRpcResponse
     public required string IssuedBy { get; init; }
     public required DateTime DateIssued { get; init; }
     public required IEnumerable<ScanRpcModel> Scans { get; init; }
+    public required bool IsEditable { get; init; }
 }
