@@ -20,9 +20,9 @@ public class InfrastructureServiceInstaller: IServiceInstaller
             .AddRabbitMqConnection(configuration)
             .AddProducer()
             .AddConsumer()
+            .AddRpcConsumer(configuration)
             .AddJwtAuthentication()
             .AddOutboxMessages();
-        
         
         services.AddSingleton<AuditableEntityInterceptor>();
         services.AddScoped<IAdmissionDbContext>(provider => provider.GetRequiredService<AdmissionDbContext>());

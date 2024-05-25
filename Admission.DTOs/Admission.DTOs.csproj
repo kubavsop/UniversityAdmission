@@ -10,16 +10,4 @@
       <ProjectReference Include="..\Admission.Domain.Common\Admission.Domain.Common.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="RpcModels\AdmissionService\ChangeStudentAdmissionStatus\" />
-      <Folder Include="RpcModels\AdmissionService\ChangeProgramPriorities\" />
-      <Folder Include="RpcModels\AdmissionService\CreateAdmissionGroup\" />
-      <Folder Include="RpcModels\AdmissionService\DeleteAdmissionProgram\" />
-      <Folder Include="RpcModels\AdmissionService\GetAdmissionGroups\" />
-      <Folder Include="RpcModels\AdmissionService\GetAdmissionPrograms\" />
-      <Folder Include="RpcModels\AdmissionService\RefuseAdmission\" />
-      <Folder Include="RpcModels\AdmissionService\TakeAdmission\" />
-      <Folder Include="RpcModels\DocumentService\" />
-    </ItemGroup>
-
 </Project>
