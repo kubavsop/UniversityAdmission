@@ -32,7 +32,7 @@ public sealed class ChangeEducationDocumentRequestHandler: IRequestHandler<Chang
         var result = await _documentService.EditEducationDocumentAsync(
             new EditEducationDocumentDto
                 { EducationDocumentTypeId = request.EducationDocumentTypeId, Name = request.Name }, request.DocumentId,
-            documentType.ApplicantId);
+            documentType.ApplicantId,true);
         if (result.IsFailure) return new RpcErrorResponse(result.Exception.Message);
 
         return new RpcOkResponse();

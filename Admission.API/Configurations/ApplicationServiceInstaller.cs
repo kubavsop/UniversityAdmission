@@ -11,6 +11,7 @@ public sealed class ApplicationServiceInstaller: IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<IManagerAccessService, ManagerAccessService>();
         services.AddScoped<IProgramService, ProgramService>();
         services.AddScoped<IAdmissionService, AdmissionService>();
         services.AddScoped<IGroupService, GroupService>();

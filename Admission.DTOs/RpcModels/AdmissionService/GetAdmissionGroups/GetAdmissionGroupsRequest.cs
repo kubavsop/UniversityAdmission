@@ -2,4 +2,4 @@
 
 namespace Admission.DTOs.RpcModels.AdmissionService.GetAdmissionGroups;
 
-public sealed class GetAdmissionGroupsRequest: AuthorizedRequest, IRpcRequest<IRpcResponse>;
+public sealed class GetAdmissionGroupsRequest: AuthorizedRequest, IRpcRequest<AdmissionGroupsResponse>;

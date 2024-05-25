@@ -36,7 +36,7 @@ public sealed class ChangePassportRequestHandler: IRequestHandler<ChangePassport
             PlaceOfBirth = request.PlaceOfBirth,
             IssuedBy = request.IssuedBy,
             DateIssued = request.DateIssued
-        }, documentType.ApplicantId);
+        }, documentType.ApplicantId, true);
         if (result.IsFailure) return new RpcErrorResponse(result.Exception.Message);
 
         return new RpcOkResponse();

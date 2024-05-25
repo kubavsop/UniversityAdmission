@@ -1,4 +1,4 @@
-﻿namespace Admission.Domain.Enums;
+﻿namespace Admission.Domain.Common.Enums;
 
 public enum AdmissionGroupStatus
 {

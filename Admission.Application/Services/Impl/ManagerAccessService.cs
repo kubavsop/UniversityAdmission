@@ -1,15 +1,15 @@
 ﻿using Admission.Application.Common.Extensions;
+using Admission.Application.Context;
 using Admission.Domain.Common.Enums;
-using Admission.User.Application.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Admission.User.Application.Services.Impl;
+namespace Admission.Application.Services.Impl;
 
 public sealed class ManagerAccessService: IManagerAccessService
 {
-    private readonly IUserDbContext _context;
+    private readonly IAdmissionDbContext _context;
 
-    public ManagerAccessService(IUserDbContext context)
+    public ManagerAccessService(IAdmissionDbContext context)
     {
         _context = context;
     }
@@ -24,10 +24,17 @@ public sealed class ManagerAccessService: IManagerAccessService
             .Where(sa => sa.ApplicantId == applicantId)
             .OrderByDescending(sa => sa.CreateTime)
             .FirstOrDefaultAsync();
-
+        
         if (studentAdmission == null || manager == null) return false;
 
+        var program = await _context.AdmissionPrograms
+            .Include(p => p.EducationProgram)
+            .Where(p => p.StudentAdmissionId == studentAdmission.Id)
+            .OrderBy(p => p.Priority)
+            .FirstOrDefaultAsync();
+
+        
         return studentAdmission.ManagerId == managerId ||
-               studentAdmission.FirstPriorityFacultyId == manager.FacultyId;
+               program?.EducationProgram.FacultyId == manager.FacultyId;
     }
 }

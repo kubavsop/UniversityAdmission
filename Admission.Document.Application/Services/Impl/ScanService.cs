@@ -3,6 +3,7 @@ using Admission.Application.Common.Extensions;
 using Admission.Application.Common.Result;
 using Admission.Document.Application.Context;
 using Admission.Document.Application.DTOs.Responses;
+using Admission.Domain.Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using File = Admission.Document.Domain.Entities.File;
 
@@ -37,8 +38,13 @@ public sealed class ScanService: IScanService
         };
     }
 
-    public async Task<Result> DeleteScanAsync(Guid userId, Guid fileId)
+    public async Task<Result> DeleteScanAsync(Guid userId, Guid fileId, bool isManager = false)
     {
+        if (!isManager && await IsStudentAdmissionClosed(userId))
+        {
+            return new BadRequestException("Admission is closed");
+        }
+        
         var fileResult = await GetFileAsync(fileId, userId);
 
         if (fileResult.IsFailure) return fileResult.Exception;
@@ -69,5 +75,16 @@ public sealed class ScanService: IScanService
         }
 
         return file;
+    }
+    
+    private async Task<bool> IsStudentAdmissionClosed(Guid userId)
+    {
+        var admissions = await _context.StudentAdmissions
+            .GetUndeleted()
+            .Where(sa => sa.ApplicantId == userId)
+            .ToListAsync();
+
+        return admissions.Count != 0 && !admissions.Any(
+            sa => sa.ApplicantId == userId && sa.Status != AdmissionStatus.Closed);
     }
 }

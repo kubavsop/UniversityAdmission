@@ -38,7 +38,7 @@ public sealed class AddScanRequestHandler: IRequestHandler<AddScanRequest, IRpcR
             ContentType = request.ScanModel.ContentType
         };
 
-        var result = await _documentService.AddScan(documentType.ApplicantId, documentType.Id, new CreateScanDto { File = file });
+        var result = await _documentService.AddScan(documentType.ApplicantId, documentType.Id, new CreateScanDto { File = file }, true);
         if (result.IsFailure) return new RpcErrorResponse(result.Exception.Message);
 
         return new RpcOkResponse();

@@ -30,9 +30,9 @@ public sealed class DocumentService : IDocumentService
         _fileProvider = fileProvider;
     }
 
-    public async Task<Result> CreatePassportAsync(CreatePassportDto passportDto, Guid userId)
+    public async Task<Result> CreatePassportAsync(CreatePassportDto passportDto, Guid userId, bool isManager = false)
     {
-        if (await IsStudentAdmissionClosed(userId))
+        if (!isManager && await IsStudentAdmissionClosed(userId))
         {
             return new BadRequestException("Admission is closed");
         }
@@ -70,9 +70,9 @@ public sealed class DocumentService : IDocumentService
         return _mapper.Map<PassportDto>(passport);
     }
 
-    public async Task<Result> EditPassportAsync(EditPassportDto passportDto, Guid userId)
+    public async Task<Result> EditPassportAsync(EditPassportDto passportDto, Guid userId, bool isManager = false)
     {
-        if (await IsStudentAdmissionClosed(userId))
+        if (!isManager && await IsStudentAdmissionClosed(userId))
         {
             return new BadRequestException("Admission is closed");
         }
@@ -97,9 +97,9 @@ public sealed class DocumentService : IDocumentService
         return Result.Success();
     }
 
-    public async Task<Result> CreateEducationDocumentAsync(CreateEducationDocumentDto documentDto, Guid userId)
+    public async Task<Result> CreateEducationDocumentAsync(CreateEducationDocumentDto documentDto, Guid userId, bool isManager = false)
     {
-        if (await IsStudentAdmissionClosed(userId))
+        if (!isManager && await IsStudentAdmissionClosed(userId))
         {
             return new BadRequestException("Admission is closed");
         }
@@ -137,9 +137,13 @@ public sealed class DocumentService : IDocumentService
         return _mapper.Map<List<EducationDocumentDto>>(documents);
     }
 
-    public async Task<Result> EditEducationDocumentAsync(EditEducationDocumentDto documentDto, Guid documentId,
-        Guid userId)
+    public async Task<Result> EditEducationDocumentAsync(EditEducationDocumentDto documentDto, Guid documentId, Guid userId, bool isManager = false)
     {
+        if (!isManager && await IsStudentAdmissionClosed(userId))
+        {
+            return new BadRequestException("Admission is closed");
+        }
+        
         var document = await _context.EducationDocuments.GetByIdAsync(documentId);
         
         if (document == null)
@@ -172,8 +176,13 @@ public sealed class DocumentService : IDocumentService
         return Result.Success();
     }
 
-    public async Task<Result> DeleteEducationDocumentAsync(Guid documentId, Guid userId)
+    public async Task<Result> DeleteEducationDocumentAsync(Guid documentId, Guid userId, bool isManager = false)
     {
+        if (!isManager && await IsStudentAdmissionClosed(userId))
+        {
+            return new BadRequestException("Admission is closed");
+        }
+        
         var document = await _context.EducationDocuments.GetByIdAsync(documentId);
 
         if (document == null)
@@ -193,8 +202,13 @@ public sealed class DocumentService : IDocumentService
         return Result.Success();
     }
 
-    public async Task<Result> AddScan(Guid userId, Guid documentId, CreateScanDto createScanDto)
+    public async Task<Result> AddScan(Guid userId, Guid documentId, CreateScanDto createScanDto, bool isManager = false)
     {
+        if (!isManager && await IsStudentAdmissionClosed(userId))
+        {
+            return new BadRequestException("Admission is closed");
+        }
+        
         var educationDocument = await _context.Documents.GetByIdAsync(documentId);
 
         if (educationDocument == null)

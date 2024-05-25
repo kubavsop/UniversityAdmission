@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using Admission.Domain.Common.Entities;
-using Admission.Domain.Enums;
+using Admission.Domain.Common.Enums;
 
 namespace Admission.Domain.Entities;
 

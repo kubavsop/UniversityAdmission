@@ -3,8 +3,8 @@ using Admission.Application.Common.Extensions;
 using Admission.Application.Common.Result;
 using Admission.Application.Context;
 using Admission.Application.DTOs.Responses;
+using Admission.Domain.Common.Enums;
 using Admission.Domain.Entities;
-using Admission.Domain.Enums;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 

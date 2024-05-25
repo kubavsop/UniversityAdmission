@@ -32,7 +32,7 @@ public sealed class DeleteScanRequestHandler: IRequestHandler<DeleteScanRequest,
 
         if (!await _managerAccessService.HasEditPermissions(request.Id, request.Role, file.Document.ApplicantId)) return new RpcErrorResponse("You have no rights");
 
-        var result = await _scanService.DeleteScanAsync(file.Document.ApplicantId, request.ScanId);
+        var result = await _scanService.DeleteScanAsync(file.Document.ApplicantId, request.ScanId, true);
         if (result.IsFailure) return new RpcErrorResponse(result.Exception.Message);
 
         return new RpcOkResponse();

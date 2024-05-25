@@ -2,7 +2,7 @@
 
 namespace Admission.DTOs.RpcModels.AdmissionService.GetAdmissionPrograms;
 
-public sealed class GetAdmissionPrograms: AuthorizedRequest, IRpcRequest<AdmissionProgramsResponse>
+public sealed class GetAdmissionProgramsRequest: AuthorizedRequest, IRpcRequest<AdmissionProgramsResponse>
 {
     public required Guid StudentAdmissionId { get; init; }
 }

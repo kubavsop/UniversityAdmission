@@ -42,7 +42,7 @@ public sealed class StudentAdmission: AggregateRoot
         if (ManagerId == manager?.Id) return;
         Manager = manager;
 
-        if (manager != null)
+        if (manager != null && Status == AdmissionStatus.Created)
         {
             ChangeStatus(AdmissionStatus.UnderReview);
         }

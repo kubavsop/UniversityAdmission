@@ -5,7 +5,7 @@ namespace Admission.Application.Services;
 
 public interface IProgramService
 {
-    Task<Result> CreateProgramAsync(CreateProgramDto createProgramDto, Guid userId);
-    Task<Result> EditProgramsAsync(EditProgramsDto editProgramDto, Guid userId);
-    Task<Result> DeleteProgramAsync(Guid programId, Guid userId);
+    Task<Result> CreateProgramAsync(CreateProgramDto createProgramDto, Guid userId, bool isManager = false);
+    Task<Result> EditProgramsAsync(EditProgramsDto editProgramDto, Guid userId, bool isManager = false);
+    Task<Result> DeleteProgramAsync(Guid programId, Guid userId, bool isManager = false);
 }

@@ -41,9 +41,7 @@ public class ManagerAccessService: IManagerAccessService
         
         if (studentAdmission == null || manager == null) return false;
         
-        if (studentAdmission.ManagerId == manager.Id ||
-            studentAdmission.FirstPriorityFacultyId == manager.FacultyId) return true;
-        
-        return false;
+        return studentAdmission.ManagerId == manager.Id ||
+               studentAdmission.FirstPriorityFacultyId == manager.FacultyId;
     }
 }

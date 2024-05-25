@@ -6,5 +6,5 @@ namespace Admission.Document.Application.Services;
 public interface IScanService
 {
     Task<Result<FileResponse>> GetScanAsync(Guid userId, Guid fileId);
-    Task<Result> DeleteScanAsync(Guid userId, Guid fileId);
+    Task<Result> DeleteScanAsync(Guid userId, Guid fileId, bool isManager = false);
 }
