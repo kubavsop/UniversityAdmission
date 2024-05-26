@@ -15,6 +15,27 @@
         <input program-name class="form-control" type="text" value="@Model.StudentAdmissionsRequest.EducationProgramName" placeholder="фильтрация по программе" />
         <input applicant-name class="form-control" type="text" value="@Model.StudentAdmissionsRequest.ApplicantName" placeholder="фильтрация по абитуриенту" />
         <div class="input-group gap-2">
+            <select class="form-select" without-manager>
+                <option selected="@(Model.StudentAdmissionsRequest.WithoutManager == null)" value="">
+                    Все
+                </option>
+                <option selected="@(Model.StudentAdmissionsRequest.WithoutManager == true)" value="@true">
+                    Без менеджера
+                </option>
+                <option selected="@(Model.StudentAdmissionsRequest.WithoutManager == false)" value="@false">
+                    С менеджером
+                </option>
+            </select>
+            <select class="form-select" only-mine>
+                <option selected="@(Model.StudentAdmissionsRequest.OnlyMine == true)" value="@true">
+                    Только мои
+                </option>
+                <option selected="@(Model.StudentAdmissionsRequest.OnlyMine == false)" value="@false">
+                    Все
+                </option>
+            </select>
+        </div>
+        <div class="input-group gap-2">
             <select class="form-select" admission-status>
                 <option selected="@(Model.StudentAdmissionsRequest.AdmissionStatus == null)" value="">
                     -

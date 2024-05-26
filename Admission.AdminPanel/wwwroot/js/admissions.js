@@ -5,8 +5,8 @@ function init() {
     $.ajaxSetup({
         contentType: 'application/json'
     });
-    query = new Query($("[page-number]").val(), $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(),null, $("[sorting-options]").val(), $("[only-mine]").val());
-    newQuery = new Query(1, $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(),null, $("[sorting-options]").val(), $("[only-mine]").val());
+    query = new Query($("[page-number]").val(), $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(), $("[without-manager]").val(), $("[sorting-options]").val(), $("[only-mine]").val());
+    newQuery = new Query(1, $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(), $("[without-manager]").val(), $("[sorting-options]").val(), $("[only-mine]").val());
     setListeners();
 }
 function setListeners() {
@@ -25,6 +25,9 @@ function setListeners() {
     });
     $("[only-mine]").on("input", (e) => {
         newQuery.OnlyMine = $(e.target).val()
+    });
+    $("[without-manager]").on("input", (e) => {
+        newQuery.WithoutManager = $(e.target).val()
     });
     $("[to-page]").on("click", (e) => {
         query.Page = $(e.target).attr("to-page");
