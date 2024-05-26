@@ -19,7 +19,7 @@
         </div>
         <div class="flex-column card-covert-content gap-1 ms-auto align-content-center">
             <a asp-controller="Manager" asp-action="Manager" asp-route-id="@Model.ManagerId" class="btn btn-warning">
-                Личные данные
+                Профиль
             </a>
             @if (User.IsInRole(ValidRoles.AdminRole))
             {

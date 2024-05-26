@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace Admission.User.Application.ValidationAttributes;
+namespace Admission.Application.Common.ValidationAttributes;
 
 public sealed partial class PhoneNumberAttribute: ValidationAttribute
 {
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext) => 
-        value is string stringValue && PhoneRegex().IsMatch(stringValue)
+        value == null || value is string stringValue && PhoneRegex().IsMatch(stringValue)
             ? ValidationResult.Success
             : new ValidationResult("Phone number is not a valid");
 

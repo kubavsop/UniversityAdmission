@@ -15,12 +15,15 @@ public sealed class ManagerProfileViewModel
     [Display(Name = "Email")]
     [Required(ErrorMessage = "Поле обязательно")]
     [DataType(DataType.EmailAddress)]
+    [MaxLength(1000, ErrorMessage = "Максимальная длина - 1000 символов")]
     [EmailAddress(ErrorMessage = "Некорректный email")]
     public string Email { get; init; } 
     
     [Display(Name = "ФИО")]
     [Required(ErrorMessage = "Поле обязательно")]
     [DataType(DataType.Text)]
+    [MinLength(1, ErrorMessage = "Минимальная длина - 1 символ")]
+    [MaxLength(1000, ErrorMessage = "Максимальная длина - 1000 символов")]
     public string FullName { get; init; }
     
     

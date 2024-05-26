@@ -3,6 +3,7 @@ using Admission.DTOs.RpcModels;
 using Admission.DTOs.RpcModels.Base;
 using Admission.DTOs.RpcModels.UserService.GetApplicantData;
 using Admission.User.Application.Context;
+using Admission.User.Application.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +12,12 @@ namespace Admission.User.Application.RpcHandlers.GetApplicantData;
 public sealed class GetApplicantDataRequestHandler: IRequestHandler<GetApplicantDataRequest, IRpcResponse>
 {
     private readonly IUserDbContext _context;
+    private readonly IManagerAccessService _managerAccessService;
 
-    public GetApplicantDataRequestHandler(IUserDbContext context)
+    public GetApplicantDataRequestHandler(IUserDbContext context, IManagerAccessService managerAccessService)
     {
         _context = context;
+        _managerAccessService = managerAccessService;
     }
 
     public async Task<IRpcResponse> Handle(GetApplicantDataRequest request, CancellationToken cancellationToken)
@@ -41,9 +44,11 @@ public sealed class GetApplicantDataRequestHandler: IRequestHandler<GetApplicant
             ApplicantId = applicant.Id,
             Birthday = applicant.Birthday,
             Citizenship = applicant.Citizenship,
+            Gender = applicant.Gender,
             Email = applicant.User.Email,
             FullName = applicant.User.FullName,
-            PhoneNumber = applicant.PhoneNumber
+            PhoneNumber = applicant.PhoneNumber,
+            IsEditable = await _managerAccessService.HasEditPermissions(request.Id, request.Role, request.ApplicantId)
         };
     }
 }

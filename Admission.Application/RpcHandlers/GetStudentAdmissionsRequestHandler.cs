@@ -23,10 +23,14 @@ public sealed class GetStudentAdmissionsRequestHandler: IRequestHandler<GetStude
     {
         var normalizedApplicantName = request.ApplicantName?.ToUpper();
         var normalizedEducationProgramName = request.EducationProgramName?.ToUpper();
-
-
+        
+        var currentGroup = await _context.AdmissionGroups
+            .OrderByDescending(g => g.CreateTime)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        
         var studentAdmissionsQueryable = _context.StudentAdmissions
             .GetUndeleted()
+            .Where(sa => currentGroup != null && sa.AdmissionGroupId == currentGroup.Id)
             .Where(s => normalizedApplicantName == null ||
                         s.Applicant.FullName.ToUpper().Contains(normalizedApplicantName))
             .Where(s => normalizedEducationProgramName == null ||
