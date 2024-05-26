@@ -45,14 +45,14 @@ class Query {
         page = 1, 
         educationProgramName = null,
         applicantName = null,
-        admissionStats = null,
+        admissionStatus = null,
         withoutManager = null,
         sortingOptions = null,
         onlyMine = null) {
         this.Page = page;
         this.EducationProgramName = educationProgramName;
         this.ApplicantName = applicantName;
-        this.AdmissionStatus = admissionStats;
+        this.AdmissionStatus = admissionStatus;
         this.WithoutManager = withoutManager;
         this.OnlyMine = onlyMine;
         this.SortingOptions = sortingOptions;
