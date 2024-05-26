@@ -5,8 +5,8 @@ function init() {
     $.ajaxSetup({
         contentType: 'application/json'
     });
-    query = new Query($("[page-number]").val(), $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(), $("[without-manager]").val(), $("[sorting-options]").val(), $("[only-mine]").val());
-    newQuery = new Query(1, $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(), $("[without-manager]").val(), $("[sorting-options]").val(), $("[only-mine]").val());
+    query = new Query($("[page-number]").val(), $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(), $("[without-manager]").val(), $("[sorting-options]").val(), $("[only-mine]").val(), $("[faculties]").val());
+    newQuery = new Query(1, $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(), $("[without-manager]").val(), $("[sorting-options]").val(), $("[only-mine]").val(), $("[faculties]").val());
     setListeners();
 }
 function setListeners() {
@@ -28,6 +28,9 @@ function setListeners() {
     });
     $("[without-manager]").on("input", (e) => {
         newQuery.WithoutManager = $(e.target).val()
+    });
+    $("[faculties]").on("input", (e) => {
+        newQuery.Faculties = $(e.target).val()
     });
     $("[to-page]").on("click", (e) => {
         query.Page = $(e.target).attr("to-page");
@@ -51,7 +54,8 @@ class Query {
         admissionStatus = null,
         withoutManager = null,
         sortingOptions = null,
-        onlyMine = null) {
+        onlyMine = null,
+        faculties = null) {
         this.Page = page;
         this.EducationProgramName = educationProgramName;
         this.ApplicantName = applicantName;
@@ -59,11 +63,20 @@ class Query {
         this.WithoutManager = withoutManager;
         this.OnlyMine = onlyMine;
         this.SortingOptions = sortingOptions;
+        this.Faculties = faculties;
     }
     queryString() {
         let result = "?"
         for (let attr in this) {
-            if (this[attr]) result += `${attr}=${this[attr]}&`;
+            if (this[attr]) {
+                if (attr === this.Faculties) {
+                    this[attr].forEach(guid => {
+                        result += `Faculties=${guid}&`;
+                    });
+                } else {
+                    result += `${attr}=${this[attr]}&`
+                }
+            }
         }
         if (result.slice(-1) == '&' || result.slice(-1) == '?') result = result.slice(0, -1);
         return result;

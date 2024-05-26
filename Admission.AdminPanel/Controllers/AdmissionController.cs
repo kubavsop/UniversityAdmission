@@ -12,6 +12,7 @@ using Admission.DTOs.RpcModels.AdmissionService.GetAdmissionPrograms;
 using Admission.DTOs.RpcModels.AdmissionService.GetStudentAdmissions;
 using Admission.DTOs.RpcModels.AdmissionService.RefuseAdmission;
 using Admission.DTOs.RpcModels.AdmissionService.TakeAdmission;
+using Admission.DTOs.RpcModels.DictionaryService.GetFaculties;
 using Admission.DTOs.RpcModels.UserService.GetManagers;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -20,15 +21,17 @@ namespace Admission.AdminPanel.Controllers;
 
 public sealed class AdmissionController: Controller
 {
+    private readonly IRpcDictionaryMvcClient _dictionaryMvcClient;
     private readonly IRpcAdmissionClient _admissionClient;
     private readonly IRpcUserClient _userClient;
     private readonly IMapper _mapper;
 
-    public AdmissionController(IRpcAdmissionClient admissionClient, IMapper mapper, IRpcUserClient userClient)
+    public AdmissionController(IRpcAdmissionClient admissionClient, IMapper mapper, IRpcUserClient userClient, IRpcDictionaryMvcClient dictionaryMvcClient)
     {
         _admissionClient = admissionClient;
         _mapper = mapper;
         _userClient = userClient;
+        _dictionaryMvcClient = dictionaryMvcClient;
     }
 
     [HttpGet]
@@ -53,7 +56,10 @@ public sealed class AdmissionController: Controller
     public async Task<IActionResult> StudentAdmissions([FromQuery] GetStudentAdmissionsRequest studentAdmissionsRequest)
     {
         ViewData["Managers"] = (await _userClient.GetManagersAsync(User.SetAuthRequest(new GetManagersRequest()))).Value.Managers;
-
+        ViewData["Faculties"] =
+            (await _dictionaryMvcClient.GetFacultiesAsync(User.SetAuthRequest(new GetFacultiesRequest()))).Value
+            .Faculties;
+        
         var result =
             await _admissionClient.GetStudentAdmissionsRequestAsync(User.SetAuthRequest(studentAdmissionsRequest));
 

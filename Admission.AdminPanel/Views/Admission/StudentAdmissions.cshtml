@@ -1,5 +1,7 @@
 ﻿@using Admission.Domain.Common.Enums
+@using Admission.DTOs.RpcModels.DictionaryService.GetFaculty
 @using Admission.DTOs.RpcModels.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.OpenApi.Extensions
 @model StudentAdmissionsViewModel
 
@@ -14,6 +16,14 @@
     <div class="d-flex flex-column gap-3">
         <input program-name class="form-control" type="text" value="@Model.StudentAdmissionsRequest.EducationProgramName" placeholder="фильтрация по программе" />
         <input applicant-name class="form-control" type="text" value="@Model.StudentAdmissionsRequest.ApplicantName" placeholder="фильтрация по абитуриенту" />
+        <select class="form-select" multiple size="4" faculties>
+            @foreach (var faculty in (ViewData["Faculties"] as IEnumerable<FacultyResponse>)!)
+            {
+                <option selected="@(@Model.StudentAdmissionsRequest.Faculties.Contains(faculty.Id))" value="@faculty.Id">
+                    @faculty.Name
+                </option>
+            }
+        </select>
         <div class="input-group gap-2">
             <select class="form-select" without-manager>
                 <option selected="@(Model.StudentAdmissionsRequest.WithoutManager == null)" value="">
