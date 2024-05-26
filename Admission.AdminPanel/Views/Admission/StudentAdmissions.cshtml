@@ -16,11 +16,11 @@
         <input applicant-name class="form-control" type="text" value="@Model.StudentAdmissionsRequest.ApplicantName" placeholder="фильтрация по абитуриенту" />
         <div class="input-group gap-2">
             <select class="form-select" admisson-status>
+                <option selected="@(Model.StudentAdmissionsRequest.AdmissionStatus == null)" value="">
+                    -
+                </option>
                 @foreach (var item in Enum.GetValues(typeof(AdmissionStatus)).Cast<AdmissionStatus>())
                 {
-                    <option selected="@(Model.StudentAdmissionsRequest.AdmissionStatus == null)" value="">
-                        -
-                    </option>
                     <option selected="@(Model.StudentAdmissionsRequest.AdmissionStatus == item)" value="@item">
                         @item.GetDisplayName()
                     </option>
