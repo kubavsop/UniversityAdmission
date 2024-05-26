@@ -69,7 +69,8 @@ class Query {
         let result = "?"
         for (let attr in this) {
             if (this[attr]) {
-                if (attr === this.Faculties) {
+                if (attr === "Faculties") {
+                    console.log(this[attr])
                     this[attr].forEach(guid => {
                         result += `Faculties=${guid}&`;
                     });
