@@ -3,9 +3,12 @@ using Admission.AdminPanel.Extensions;
 using Admission.AdminPanel.Models.Admission;
 using Admission.AdminPanel.Services;
 using Admission.Domain.Common.Enums;
+using Admission.DTOs.RpcModels.AdmissionService;
+using Admission.DTOs.RpcModels.AdmissionService.ChangeProgramPriorities;
 using Admission.DTOs.RpcModels.AdmissionService.ChangeStudentAdmissionStatus;
 using Admission.DTOs.RpcModels.AdmissionService.CreateAdmissionGroup;
 using Admission.DTOs.RpcModels.AdmissionService.GetAdmissionGroups;
+using Admission.DTOs.RpcModels.AdmissionService.GetAdmissionPrograms;
 using Admission.DTOs.RpcModels.AdmissionService.GetStudentAdmissions;
 using Admission.DTOs.RpcModels.AdmissionService.RefuseAdmission;
 using Admission.DTOs.RpcModels.AdmissionService.TakeAdmission;
@@ -106,8 +109,38 @@ public sealed class AdmissionController: Controller
 
     [HttpGet]
     [AuthorizeRole([RoleType.Admin, RoleType.Manager, RoleType.SeniorManager])]
-    public async Task<IActionResult> Programs([FromRoute] Guid Id)
+    public async Task<IActionResult> Programs([FromRoute] Guid id)
     {
-        throw new NotImplementedException();
+        var programResult = await _admissionClient.GetAdmissionProgramsAsync(User.SetAuthRequest(
+            new GetAdmissionProgramsRequest
+            {
+                StudentAdmissionId = id
+            }));
+        var viewModel = _mapper.Map<ProgramViewModel>(programResult.Value);
+        viewModel.StudentAdmissionId = id;
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [AuthorizeRole([RoleType.Admin, RoleType.Manager, RoleType.SeniorManager])]
+    public async Task<IActionResult> Programs(ProgramViewModel programViewModel)
+    {
+        var refererUrl = Request.Headers["Referer"].ToString();
+        var programs = programViewModel.Programs.Select(p => new ChangeProgramModel
+        {
+            Id = p.Id,
+            Priority = p.Priority
+        }).ToList();
+            
+        var result = await _admissionClient.ChangeProgramsPrioritiesAsync(User.SetAuthRequest(
+            new ChangeProgramsPrioritiesRequest
+            {
+                StudentAdmissionId = programViewModel.StudentAdmissionId,
+                Programs = programs
+            }));
+        
+        
+        if (!string.IsNullOrEmpty(refererUrl)) return Redirect(refererUrl);
+        return RedirectToAction("Index", "Home");
     }
 }

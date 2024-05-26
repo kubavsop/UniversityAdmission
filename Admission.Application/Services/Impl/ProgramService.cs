@@ -231,8 +231,13 @@ public class ProgramService: IProgramService
         };
         
         await _context.EducationPrograms.AddAsync(educationProgram);
-
-        return educationProgram;
+        await _context.SaveChangesAsync();
+        
+        var educationProgramResult = await _context.EducationPrograms
+            .Include(p => p.Faculty)
+            .GetByIdAsync(educationProgram.Id);
+        
+        return educationProgramResult!;
     }
 
     private async Task<Result<StudentAdmission>> GetCurrentStudentAdmissionAsync(Guid userId)

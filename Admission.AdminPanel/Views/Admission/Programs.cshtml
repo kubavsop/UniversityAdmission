@@ -1,9 +1,22 @@
-﻿@model ManagersViewModel
+﻿@model ProgramViewModel
 
 @{
     ViewData["Title"] = "Программы";
 }
 
 <div class="d-flex flex-column flex-fill gap-4">
-
+    <h3 class="mr-1">Программмы поступления</h3>
+    <form asp-action="Programs" method="post" class="">
+        <input type="hidden" asp-for="@Model.IsEditable"/>
+        <input type="hidden" asp-for="@Model.StudentAdmissionId"/>
+        @for (var i = 0; i < Model.Programs.Count; i++)
+        {
+            <input type="hidden" asp-for="@Model.Programs[i].EducationProgramName"/>
+            <input type="hidden" asp-for="@Model.Programs[i].Id"/>
+            <label asp-for="@Model.Programs[i].Priority">@Model.Programs[i].EducationProgramName</label>
+            <input type="number" asp-for="@Model.Programs[i].Priority" class="form-control"/>
+            <br/>
+        }
+        <button type="submit" class="btn btn-primary w-100">Изменить</button>
+    </form>
 </div>
