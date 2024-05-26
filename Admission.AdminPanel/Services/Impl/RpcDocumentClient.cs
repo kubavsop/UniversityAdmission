@@ -1,4 +1,5 @@
-﻿using Admission.Application.Common.Result;
+﻿using Admission.Application.Common.Exceptions;
+using Admission.Application.Common.Result;
 using Admission.DTOs.RpcModels.DocumentService.AddScan;
 using Admission.DTOs.RpcModels.DocumentService.ChangeEducationDocument;
 using Admission.DTOs.RpcModels.DocumentService.ChangePassport;
@@ -19,33 +20,61 @@ public sealed class RpcDocumentClient: BaseRpcClient, IRpcDocumentClient
     {
     }
 
-    public Task<Result> AddScanAsync(AddScanRequest scanRequest)
+    public async Task<Result> AddScanAsync(AddScanRequest scanRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(scanRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> ChangeEducationDocumentAsync(ChangeEducationDocumentRequest educationDocumentRequest)
+    public async Task<Result> ChangeEducationDocumentAsync(ChangeEducationDocumentRequest educationDocumentRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(educationDocumentRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> ChangePassportAsync(ChangePassportRequest passportRequest)
+    public async Task<Result> ChangePassportAsync(ChangePassportRequest passportRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(passportRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> DeleteScanAsync(DeleteScanRequest scanRequest)
+    public async Task<Result> DeleteScanAsync(DeleteScanRequest scanRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(scanRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result<EducationDocumentsResponse>> GetEducationDocumentsAsync(GetEducationDocumentsRequest documentsRequest)
+    public async Task<Result<EducationDocumentsResponse>> GetEducationDocumentsAsync(GetEducationDocumentsRequest documentsRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(documentsRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;  
+        
+        return (result as EducationDocumentsResponse)!;
     }
 
-    public Task<Result<PassportResponse>> GetPassportResponseAsync(GetPassportRequest getPassportRequest)
+    public async Task<Result<PassportResponse>> GetPassportResponseAsync(GetPassportRequest getPassportRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(getPassportRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;  
+        
+        return (result as PassportResponse)!;
     }
 }

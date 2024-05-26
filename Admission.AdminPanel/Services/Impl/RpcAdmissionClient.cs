@@ -1,4 +1,5 @@
-﻿using Admission.Application.Common.Result;
+﻿using Admission.Application.Common.Exceptions;
+using Admission.Application.Common.Result;
 using Admission.DTOs.RpcModels.AdmissionService.ChangeProgramPriorities;
 using Admission.DTOs.RpcModels.AdmissionService.ChangeStudentAdmissionStatus;
 using Admission.DTOs.RpcModels.AdmissionService.CreateAdmissionGroup;
@@ -22,48 +23,89 @@ public sealed class RpcAdmissionClient: BaseRpcClient, IRpcAdmissionClient
     {
     }
 
-    public Task<Result> ChangeProgramsPrioritiesAsync(ChangeProgramsPrioritiesRequest programsPrioritiesRequest)
+    public async Task<Result> ChangeProgramsPrioritiesAsync(ChangeProgramsPrioritiesRequest programsPrioritiesRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(programsPrioritiesRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> ChangeStudentAdmissionStatusAsync(ChangeStudentAdmissionStatusRequest changeStudentAdmissionStatusRequest)
+    public async Task<Result> ChangeStudentAdmissionStatusAsync(ChangeStudentAdmissionStatusRequest changeStudentAdmissionStatusRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(changeStudentAdmissionStatusRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;    }
+
+    public async Task<Result> CreateAdmissionGroupAsync(CreateAdmissionGroupRequest admissionGroupRequest)
+    {
+        var result = await CallAsync(admissionGroupRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> CreateAdmissionGroupAsync(CreateAdmissionGroupRequest admissionGroupRequest)
+    public async Task<Result> DeleteAdmissionProgramAsync(DeleteAdmissionProgramRequest deleteAdmissionProgramRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(deleteAdmissionProgramRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> DeleteAdmissionProgramAsync(DeleteAdmissionProgramRequest deleteAdmissionProgramRequest)
+    public async Task<Result> RefuseAdmissionAsync(RefuseAdmissionRequest refuseAdmissionRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(refuseAdmissionRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> RefuseAdmissionAsync(RefuseAdmissionRequest refuseAdmissionRequest)
+    public async Task<Result> TakeAdmissionAsync(TakeAdmissionRequest takeAdmissionRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(takeAdmissionRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        return errorResult;
     }
 
-    public Task<Result> TakeAdmissionAsync(TakeAdmissionRequest takeAdmissionRequest)
+    public async Task<Result<AdmissionGroupsResponse>> GetAdmissionGroupsAsync(GetAdmissionGroupsRequest getAdmissionGroupsRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(getAdmissionGroupsRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;  
+        
+        return (result as AdmissionGroupsResponse)!;
     }
 
-    public Task<Result<AdmissionGroupsResponse>> GetAdmissionGroupsAsync(GetAdmissionGroupsRequest getAdmissionGroupsRequest)
+    public async Task<Result<AdmissionProgramsResponse>> GetAdmissionProgramsAsync(GetAdmissionProgramsRequest programsRequest)
     {
-        throw new NotImplementedException();
+        var result = await CallAsync(programsRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;  
+        
+        return (result as AdmissionProgramsResponse)!;
     }
 
-    public Task<Result<AdmissionProgramsResponse>> GetAdmissionProgramsAsync(GetAdmissionProgramsRequest programsRequest)
+    public async Task<Result<StudentAdmissionsResponse>> GetStudentAdmissionsRequestAsync(GetStudentAdmissionsRequest admissionsRequest)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<Result<StudentAdmissionsResponse>> GetStudentAdmissionsRequestAsync(GetStudentAdmissionsRequest admissionsRequest)
-    {
-        throw new NotImplementedException();
+        var result = await CallAsync(admissionsRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;  
+        
+        return (result as StudentAdmissionsResponse)!;
     }
 }
