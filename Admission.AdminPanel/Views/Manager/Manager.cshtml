@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label>Факультет</label>
                 <select class="form-select" asp-for="FacultyId" disabled="@(!User.IsInRole(ValidRoles.AdminRole))">
-                    <option selected="@Model.FacultyId == null" value="">
+                    <option selected="@(Model.FacultyId == null)" value="">
                         -
                     </option>
                     @foreach (var item in (ViewData["Faculties"] as IEnumerable<FacultyResponse>)!)

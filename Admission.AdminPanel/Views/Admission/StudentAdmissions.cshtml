@@ -1,0 +1,85 @@
+﻿@using Admission.Domain.Common.Enums
+@using Admission.DTOs.RpcModels.Enums
+@using Microsoft.OpenApi.Extensions
+@model StudentAdmissionsViewModel
+
+@{
+    ViewData["Title"] = "Поступления абитуриентов";
+    
+}
+
+<input hidden page-number value="@Model.PageInfoModel.Current" />
+<div class="d-flex flex-column flex-fill gap-4">
+    <h3 class="mr-1">Поступления абитуриентов</h3>
+    <div class="d-flex flex-column gap-3">
+        <input program-name class="form-control" type="text" value="@Model.StudentAdmissionsRequest.EducationProgramName" placeholder="фильтрация по программе" />
+        <input applicant-name class="form-control" type="text" value="@Model.StudentAdmissionsRequest.ApplicantName" placeholder="фильтрация по абитуриенту" />
+        <div class="input-group gap-2">
+            <select class="form-select" admisson-status>
+                @foreach (var item in Enum.GetValues(typeof(AdmissionStatus)).Cast<AdmissionStatus>())
+                {
+                    <option selected="@(Model.StudentAdmissionsRequest.AdmissionStatus == null)" value="">
+                        -
+                    </option>
+                    <option selected="@(Model.StudentAdmissionsRequest.AdmissionStatus == item)" value="@item">
+                        @item.GetDisplayName()
+                    </option>
+                }
+            </select>
+            <select class="form-select" sorting-options>
+                @foreach (var item in Enum.GetValues(typeof(SortingOptions)).Cast<SortingOptions>())
+                {
+                    <option selected="@(Model.StudentAdmissionsRequest.SortingOptions == item)" value="@item">
+                        @item.GetDisplayName()
+                    </option>
+                }
+            </select>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" id="search-button">
+            Искать
+        </button>
+    </div>
+    
+    @foreach (var item in Model.Admissions)
+    {
+        @await Html.PartialAsync("StudentAdmission", item)
+    }
+    
+    <ul class="d-flex pagination flex-row justify-content-center">
+        <li class="page-item @(Model.PageInfoModel.Current <= 1 ? "disabled" : null)">
+            <button to-page="@(1)" class="page-link">
+                &lt;&lt;
+            </button>
+        </li>
+        <li class="page-item @(Model.PageInfoModel.Current <= 1 ? "disabled" : null)">
+            <button to-page="@(Model.PageInfoModel.Current - 1)" class="page-link">
+                &lt;
+            </button>
+        </li>
+        @for (int i = Model.PageInfoModel.Current  - 2; i <= Model.PageInfoModel.Current  + 2; i++)
+        {
+            @if (i > 0 && i <= Model.PageInfoModel.Count)
+            {
+                <li class="page-item @(Model.PageInfoModel.Current == i ? "active" : null)">
+                    <button to-page="@i" class="page-link">
+                        @i
+                    </button>
+                </li>
+            }
+        }
+        <li class="page-item @(Model.PageInfoModel.Current >= Model.PageInfoModel.Count ? "disabled" : null)">
+            <button to-page="@(Model.PageInfoModel.Current + 1)" class="page-link">
+                >
+            </button>
+        </li>
+        <li class="page-item @(Model.PageInfoModel.Current >= Model.PageInfoModel.Count ? "disabled" : null)">
+            <button to-page="@Model.PageInfoModel.Count" class="page-link">
+                >>
+            </button>
+        </li>
+    </ul>
+</div>
+
+@section Scripts {
+    <script src="~/js/admissions.js"></script>
+}

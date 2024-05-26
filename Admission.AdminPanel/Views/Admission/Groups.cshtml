@@ -1,0 +1,20 @@
+﻿@using Admission.AdminPanel.Constants
+@model AdmissionGroupsViewModel
+
+@{
+    ViewData["Title"] = "Поступления";
+}
+
+<div class="d-flex flex-column flex-fill gap-4">
+    <h3 class="mr-1">Поступления</h3>
+    @if (User.IsInRole(ValidRoles.AdminRole))
+    {
+        <a asp-controller="Admission" asp-action="Group" class="btn btn-primary">
+            Создать новое поступление
+        </a>      
+    }
+    @foreach (var item in Model.Groups)
+    {
+        @await Html.PartialAsync("Group", item)
+    }
+</div>

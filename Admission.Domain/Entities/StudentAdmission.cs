@@ -41,6 +41,7 @@ public sealed class StudentAdmission: AggregateRoot
     {
         if (ManagerId == manager?.Id) return;
         Manager = manager;
+        ManagerId = manager?.Id;
 
         if (manager != null && Status == AdmissionStatus.Created)
         {

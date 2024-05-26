@@ -10,10 +10,10 @@ public sealed class GetStudentAdmissionsRequest: AuthorizedRequest, IRpcRequest<
     public string? EducationProgramName { get; init; }
     public string? ApplicantName { get; init; }
     public AdmissionStatus? AdmissionStatus { get; init; }
-    public SortingOptions SortingOptions { get; init; }
     public bool? WithoutManager { get; init; }
     public bool OnlyMine { get; init; } = false;
+    public SortingOptions SortingOptions { get; init; }
     public List<Guid> Faculties { get; init; } = new List<Guid>();
-    public required int Page { get; init; }
-    public required int Size { get; init; }
+    public int Page { get; init; } = 1;
+    public int Size { get; init; } = 5;
 }

@@ -1,5 +1,6 @@
 ﻿using Admission.Application.Common.Extensions;
 using Admission.Application.Context;
+using Admission.Application.Services;
 using Admission.Domain.Entities;
 using Admission.DTOs.RpcModels;
 using Admission.DTOs.RpcModels.AdmissionService.GetStudentAdmissions;
@@ -13,10 +14,12 @@ namespace Admission.Application.RpcHandlers;
 public sealed class GetStudentAdmissionsRequestHandler: IRequestHandler<GetStudentAdmissionsRequest, IRpcResponse>
 {
     private readonly IAdmissionDbContext _context;
+    private readonly IManagerAccessService _managerAccessService;
 
-    public GetStudentAdmissionsRequestHandler(IAdmissionDbContext context)
+    public GetStudentAdmissionsRequestHandler(IAdmissionDbContext context, IManagerAccessService managerAccessService)
     {
         _context = context;
+        _managerAccessService = managerAccessService;
     }
 
     public async Task<IRpcResponse> Handle(GetStudentAdmissionsRequest request, CancellationToken cancellationToken)
@@ -49,13 +52,22 @@ public sealed class GetStudentAdmissionsRequestHandler: IRequestHandler<GetStude
             .Take(request.Size)
             .Select(sa => new StudentAdmissionResponse
             {
-                Id = sa.Id,
+                AdmissionId = sa.Id,
                 ExistManager = sa.ManagerId.HasValue,
                 IsMyApplicant = sa.ManagerId == request.Id,
                 ManagerName = sa.Manager == null ? null : sa.Manager.FullName,
-                Status = sa.Status
+                Status = sa.Status,
+                ApplicantId = sa.ApplicantId,
+                ApplicantEmail = sa.Applicant.Email,
+                ManagerId = sa.ManagerId
             })
             .ToListAsync(cancellationToken: cancellationToken);
+
+        foreach (var admissionResponse in result)
+        {
+            admissionResponse.IsEditable =
+                await _managerAccessService.HasEditPermissions(request.Id, request.Role, admissionResponse.ApplicantId);
+        }
         
         if (result.Count == 0 && request.Page != 1)
         {
@@ -81,7 +93,7 @@ public sealed class GetStudentAdmissionsRequestHandler: IRequestHandler<GetStude
     {
         var sortedQueryable = sorting switch
         {
-            SortingOptions.LastModifiedDateDesc => queryable.OrderByDescending(p => p.CreateTime),
+            SortingOptions.LastModifiedDateDesc => queryable.OrderByDescending(p => p.ModifiedTime),
             SortingOptions.LastModifiedAsc => queryable.OrderBy(p => p.ModifiedTime),
             _ => throw new ArgumentOutOfRangeException(nameof(sorting), sorting, null)
         };
