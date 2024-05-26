@@ -5,8 +5,8 @@ function init() {
     $.ajaxSetup({
         contentType: 'application/json'
     });
-    query = new Query($("[page-number]").val(), $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(), $("[sorting-options]").val());
-    newQuery = new Query(1, $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(), $("[sorting-options]").val());
+    query = new Query($("[page-number]").val(), $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(),null, $("[sorting-options]").val(), $("[only-mine]").val());
+    newQuery = new Query(1, $("[program-name]").val(), $("[applicant-name]").val(), $("[admission-status]").val(),null, $("[sorting-options]").val(), $("[only-mine]").val());
     setListeners();
 }
 function setListeners() {
@@ -22,6 +22,9 @@ function setListeners() {
     });
     $("[sorting-options]").on("input", (e) => {
         newQuery.SortingOptions = $(e.target).val()
+    });
+    $("[only-mine]").on("input", (e) => {
+        newQuery.OnlyMine = $(e.target).val()
     });
     $("[to-page]").on("click", (e) => {
         query.Page = $(e.target).attr("to-page");
@@ -44,8 +47,8 @@ class Query {
         applicantName = null,
         admissionStats = null,
         withoutManager = null,
-        onlyMine = null,
-        sortingOptions = null) {
+        sortingOptions = null,
+        onlyMine = null) {
         this.Page = page;
         this.EducationProgramName = educationProgramName;
         this.ApplicantName = applicantName;
@@ -54,7 +57,6 @@ class Query {
         this.OnlyMine = onlyMine;
         this.SortingOptions = sortingOptions;
     }
-
     queryString() {
         let result = "?"
         for (let attr in this) {
