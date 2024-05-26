@@ -1,8 +1,57 @@
-﻿@model EducationDocumentViewModel
+﻿@using Admission.DTOs.RpcModels.DictionaryService.GetDocumentTypes
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model EducationDocumentViewModel
 
 @{
 
 }
 <div class="card">
+    <div class="card-body d-flex flex-column flex-wrap gap-2">
+        <form asp-action="EducationDocument" method="post" class="">
+            <div class="d-flex flex-column flex-wrap gap-1">
+                <input class="form-control" type="text" asp-for="DocumentId" hidden/>
+                <input class="form-control" type="text" asp-for="IsEditable" hidden/>
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input class="form-control" type="text" asp-for="Name" disabled="@(!Model.IsEditable)"/>
+                    <span class="text-danger" asp-validation-for="Name"/>
+                </div>
+                <div class="form-group">
+                    <label>Тип документа</label>
+                    <select class="form-select" asp-for="EducationDocumentTypeId" disabled="@(!Model.IsEditable)">
+                        @foreach (var item in (ViewData["DocumentTypes"] as IEnumerable<DocumentTypeShortResponse>)!)
+                        {
+                            <option selected="@(Model.EducationDocumentTypeId == item.DocumentTypeId)" value="@item.DocumentTypeId">
+                                @item.DocumentTypeName
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="text-danger" asp-validation-summary="All"></div>
+                <button type="submit" class="btn mt-1 btn-primary btn-block">Изменить</button>
+            </div>
+        </form>
+        
+        <div class="d-flex flex-column flex-wrap gap-3 mt-5">
+            <h2>Сканы</h2>
+            @foreach (var item in Model.Scans)
+            {
+                @await Html.PartialAsync("Scan", item)
+            }
+        </div>
 
+        @if (Model.IsEditable)
+        {
+            <form enctype="multipart/form-data" asp-action="AddScan" method="post" class="mt-5">
+                <div class="d-flex flex-column flex-wrap gap-1">
+                    <input class="form-control" type="text" asp-for="DocumentId" hidden/>
+                    <div class="form-group">
+                        <input class="form-control" type="file" asp-for="File"/>
+                        <span class="text-danger" asp-validation-for="File"/>
+                    </div>
+                    <button type="submit" class="btn mt-1 btn-primary w-100">Загрузить</button>
+                </div>
+            </form>   
+        }
+    </div>
 </div>

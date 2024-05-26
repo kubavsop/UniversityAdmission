@@ -5,6 +5,7 @@ namespace Admission.AdminPanel.Models.Applicant;
 
 public sealed class EducationDocumentsViewModel: IMapFrom<EducationDocumentsResponse>
 {
-    public required IEnumerable<EducationDocumentViewModel> DocumentResponses { get; init; }
-    public required bool IsEditable { get; init; }
+    public IEnumerable<EducationDocumentViewModel> DocumentResponses { get; init; } =
+        new List<EducationDocumentViewModel>();
+    public bool IsEditable { get; init; }
 }

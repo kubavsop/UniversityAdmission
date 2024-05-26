@@ -13,10 +13,10 @@ namespace Admission.Application.RpcHandlers;
 public sealed class ChangeProgramPrioritiesRequestHandler: IRequestHandler<ChangeProgramsPrioritiesRequest, IRpcResponse>
 {
     private readonly IAdmissionDbContext _context;
-    private readonly ProgramService _programService;
+    private readonly IProgramService _programService;
     private readonly IManagerAccessService _managerAccessService;
 
-    public ChangeProgramPrioritiesRequestHandler(ProgramService programService, IManagerAccessService managerAccessService, IAdmissionDbContext context)
+    public ChangeProgramPrioritiesRequestHandler(IProgramService programService, IManagerAccessService managerAccessService, IAdmissionDbContext context)
     {
         _programService = programService;
         _managerAccessService = managerAccessService;

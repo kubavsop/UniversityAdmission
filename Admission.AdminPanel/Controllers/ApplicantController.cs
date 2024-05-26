@@ -4,11 +4,14 @@ using Admission.AdminPanel.Models.Applicant;
 using Admission.AdminPanel.Services;
 using Admission.Application.Common.Constants;
 using Admission.Domain.Common.Enums;
+using Admission.DTOs.RpcModels.DictionaryService.GetDocumentTypes;
 using Admission.DTOs.RpcModels.DocumentService;
 using Admission.DTOs.RpcModels.DocumentService.AddScan;
+using Admission.DTOs.RpcModels.DocumentService.ChangeEducationDocument;
 using Admission.DTOs.RpcModels.DocumentService.ChangePassport;
 using Admission.DTOs.RpcModels.DocumentService.DeleteScan;
 using Admission.DTOs.RpcModels.DocumentService.DownloadScan;
+using Admission.DTOs.RpcModels.DocumentService.GetApplicantEducationDocuments;
 using Admission.DTOs.RpcModels.DocumentService.GetApplicantPassport;
 using Admission.DTOs.RpcModels.UserService.ChangeApplicantData;
 using Admission.DTOs.RpcModels.UserService.ChangeUserRole;
@@ -23,13 +26,15 @@ public sealed class ApplicantController: Controller
 {
     private readonly IRpcUserClient _userClient;
     private readonly IRpcDocumentClient _documentClient;
+    private readonly IRpcDictionaryMvcClient _dictionaryMvcClient;
     private readonly IMapper _mapper;
 
-    public ApplicantController(IRpcUserClient userClient, IMapper mapper, IRpcDocumentClient documentClient)
+    public ApplicantController(IRpcUserClient userClient, IMapper mapper, IRpcDocumentClient documentClient, IRpcDictionaryMvcClient dictionaryMvcClient)
     {
         _userClient = userClient;
         _mapper = mapper;
         _documentClient = documentClient;
+        _dictionaryMvcClient = dictionaryMvcClient;
     }
 
     [HttpGet]
@@ -146,18 +151,41 @@ public sealed class ApplicantController: Controller
         {
             ModelState.AddModelError("UpdatingError", changePassportResult.Exception.Message);
         }
-        
         if (!string.IsNullOrEmpty(refererUrl)) return Redirect(refererUrl);
-
         
         return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
     [AuthorizeRole([RoleType.Admin, RoleType.Manager, RoleType.SeniorManager])]
-    public Task<IActionResult> EducationDocuments([FromRoute] Guid id)
+    public async Task<IActionResult> EducationDocuments([FromRoute] Guid id)
     {
-        throw new NotImplementedException();
+        ViewData["DocumentTypes"] = (await _dictionaryMvcClient.GetDocumentTypesAsync(User.SetAuthRequest(new GetDocumentTypesRequest()))).Value.DocumentTypes;
+        var educationDocuments =
+            await _documentClient.GetEducationDocumentsAsync(User.SetAuthRequest(new GetEducationDocumentsRequest
+                { ApplicantId = id }));
+
+        return View(educationDocuments.IsFailure ? new EducationDocumentsViewModel() : _mapper.Map<EducationDocumentsViewModel>(educationDocuments.Value));
+    }
+
+    [HttpPost]
+    [AuthorizeRole([RoleType.Admin, RoleType.Manager, RoleType.SeniorManager])]
+    public async Task<IActionResult> EducationDocument(EducationDocumentViewModel educationDocumentViewModel)
+    {
+        var refererUrl = Request.Headers["Referer"].ToString();
+        var result = await _documentClient.ChangeEducationDocumentAsync(User.SetAuthRequest(new ChangeEducationDocumentRequest
+        {
+            DocumentId = educationDocumentViewModel.DocumentId,
+            EducationDocumentTypeId = educationDocumentViewModel.EducationDocumentTypeId,
+            Name = educationDocumentViewModel.Name
+        }));
+        if (result.IsFailure)
+        {
+            ModelState.AddModelError("UpdatingError", result.Exception.Message);
+        }
+
+        if (!string.IsNullOrEmpty(refererUrl)) return Redirect(refererUrl);
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpPost]

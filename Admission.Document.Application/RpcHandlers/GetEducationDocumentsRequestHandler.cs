@@ -61,6 +61,7 @@ public sealed class GetEducationDocumentsRequestHandler: IRequestHandler<GetEduc
                 DocumentId = document.Id,
                 Name = document.Name,
                 EducationDocumentTypeId = document.EducationDocumentType.Id,
+                IsEditable = isEditable
             });
         }
         

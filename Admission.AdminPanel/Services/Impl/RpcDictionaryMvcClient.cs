@@ -1,5 +1,6 @@
 ﻿using Admission.Application.Common.Exceptions;
 using Admission.Application.Common.Result;
+using Admission.DTOs.RpcModels.DictionaryService.GetDocumentTypes;
 using Admission.DTOs.RpcModels.DictionaryService.GetFaculties;
 using Admission.DTOs.RpcModels.DictionaryService.GetUpdateStatus;
 using Admission.RabbitMQ.Services.Base;
@@ -37,5 +38,16 @@ public sealed class RpcDictionaryMvcClient: BaseRpcClient, IRpcDictionaryMvcClie
         if (errorResult.IsFailure) return errorResult.Exception;  
         
         return (result as UpdateStatusResponse)!;
+    }
+
+    public async Task<Result<DocumentTypesResponse>> GetDocumentTypesAsync(GetDocumentTypesRequest documentTypesRequest)
+    {
+        var result = await CallAsync(documentTypesRequest);
+        if (result == null) return new RpcException("null response");
+        
+        var errorResult = CheckError(result);
+        if (errorResult.IsFailure) return errorResult.Exception;  
+        
+        return (result as DocumentTypesResponse)!;
     }
 }
