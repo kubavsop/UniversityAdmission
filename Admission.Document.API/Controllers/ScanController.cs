@@ -1,6 +1,7 @@
 using System.Net;
 using Admission.API.Common;
 using Admission.API.Common.Extensions;
+using Admission.Application.Common.Constants;
 using Admission.Document.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,8 @@ public sealed class ScanController : BaseController
     public async Task<IActionResult> GetScan(Guid id)
     {
         var result = await _scanService.GetScanAsync(UserId, id);
-        return result.Match<IActionResult>(response => File(result.Value.Bytes, result.Value.Extension, result.Value.Name),
+        var fileNameWithExtension = $"{result.Value.Name}{ContentTypeMappings.ReverseTypeMappings[result.Value.Extension]}";
+        return result.Match<IActionResult>(response => File(result.Value.Bytes, result.Value.Extension, fileNameWithExtension),
             ResultExtension.FailureResult);
     }
 

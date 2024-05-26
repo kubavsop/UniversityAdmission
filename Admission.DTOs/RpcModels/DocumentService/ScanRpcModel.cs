@@ -2,8 +2,7 @@
 
 public sealed class ScanRpcModel
 {
-    public required Guid Id { get; init; }
+    public required Guid ScanId { get; init; }
     public required string Name { get; init; }
-    public required string ContentType { get; init; }
-    public required byte[] Bytes { get; init; }
+    public required bool IsEditable { get; init; }
 }

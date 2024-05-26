@@ -1,8 +1,8 @@
+using Admission.Application.Common.Constants;
 using Admission.Application.Common.Exceptions;
 using Admission.Application.Common.Extensions;
 using Admission.Application.Common.Result;
 using Admission.Application.Common.Services;
-using Admission.Document.Application.Constants;
 using Admission.Document.Application.Context;
 using Admission.Document.Application.DTOs.Requests;
 using Admission.Document.Application.DTOs.Responses;

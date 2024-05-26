@@ -1,4 +1,5 @@
-﻿using Admission.Application.Common.Extensions;
+﻿using Admission.Application.Common.Constants;
+using Admission.Application.Common.Extensions;
 using Admission.Document.Application.Context;
 using Admission.Document.Application.Services;
 using Admission.DTOs.RpcModels;
@@ -29,12 +30,14 @@ public sealed class GetEducationDocumentsRequestHandler: IRequestHandler<GetEduc
     {
         var documents = await _documentService.GetEducationDocumentAsync(request.ApplicantId);
         if (documents.IsFailure) return new RpcErrorResponse(documents.Exception.Message);
-        
+
         var manager = await _context.Managers.GetByIdAsync(request.Id);
         var studentAdmission = await _context.StudentAdmissions
             .Where(sa => sa.ApplicantId == request.ApplicantId)
             .OrderByDescending(sa => sa.CreateTime)
             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        
+        var isEditable = _managerAccessService.HasEditPermissions(manager, request.Role, studentAdmission);
 
         var documentResponses = new LinkedList<EducationDocumentResponse>();
 
@@ -46,17 +49,16 @@ public sealed class GetEducationDocumentsRequestHandler: IRequestHandler<GetEduc
                 var fileDto = await _scanService.GetScanAsync(request.ApplicantId, file.Id);
                 scans.AddLast(new ScanRpcModel
                 {
-                    Id = file.Id,
-                    Bytes = fileDto.Value.Bytes,
-                    ContentType = fileDto.Value.Extension,
-                    Name = fileDto.Value.Name
+                    ScanId = file.Id,
+                    Name = fileDto.Value.Name + ContentTypeMappings.ReverseTypeMappings[fileDto.Value.Extension],
+                    IsEditable = isEditable
                 });
             }
 
             documentResponses.AddLast(new EducationDocumentResponse
             {
                 Scans = scans,
-                EducationDocumentId = document.Id,
+                DocumentId = document.Id,
                 Name = document.Name,
                 EducationDocumentTypeId = document.EducationDocumentType.Id,
             });
@@ -65,7 +67,7 @@ public sealed class GetEducationDocumentsRequestHandler: IRequestHandler<GetEduc
         return new EducationDocumentsResponse
         {
             DocumentResponses = documentResponses,
-            IsEditable = _managerAccessService.HasEditPermissions(manager, request.Role, studentAdmission)
+            IsEditable = isEditable
         };
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Net.Mime;
+using Admission.Application.Common.Constants;
 using Admission.Application.Common.Extensions;
 using Admission.Document.Application.Context;
 using Admission.Document.Application.DTOs.Requests;
@@ -31,11 +32,11 @@ public sealed class AddScanRequestHandler: IRequestHandler<AddScanRequest, IRpcR
 
         if (!await _managerAccessService.HasEditPermissions(request.Id, request.Role, documentType.ApplicantId)) return new RpcErrorResponse("You have no rights");
         
-        var stream = new MemoryStream(request.ScanModel.Bytes);
-        var file =  new FormFile(stream, 0, request.ScanModel.Bytes.Length, request.ScanModel.Name, request.ScanModel.Name)
+        var stream = new MemoryStream(request.ScanModelResponse.Bytes);
+        var file =  new FormFile(stream, 0, request.ScanModelResponse.Bytes.Length, request.ScanModelResponse.Name, request.ScanModelResponse.Name + ContentTypeMappings.ReverseTypeMappings[request.ScanModelResponse.ContentType])
         {
             Headers = new HeaderDictionary(),
-            ContentType = request.ScanModel.ContentType
+            ContentType = request.ScanModelResponse.ContentType
         };
 
         var result = await _documentService.AddScan(documentType.ApplicantId, documentType.Id, new CreateScanDto { File = file }, true);

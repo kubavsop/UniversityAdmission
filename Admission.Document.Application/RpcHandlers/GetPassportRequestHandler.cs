@@ -1,4 +1,6 @@
-﻿using Admission.Application.Common.Exceptions;
+﻿using System.Net.Mime;
+using Admission.Application.Common.Constants;
+using Admission.Application.Common.Exceptions;
 using Admission.Document.Application.Services;
 using Admission.DTOs.RpcModels;
 using Admission.DTOs.RpcModels.Base;
@@ -27,7 +29,7 @@ public sealed class GetPassportRequestHandler: IRequestHandler<GetPassportReques
         if (passportResult.IsFailure) return new RpcErrorResponse(passportResult.Exception.Message);
 
         var passport = passportResult.Value;
-        
+        var isEditable = await _managerAccessService.HasEditPermissions(request.Id, request.Role, request.ApplicantId);
         
         var scans = new LinkedList<ScanRpcModel>();
         foreach (var file in passport.Files)
@@ -35,22 +37,21 @@ public sealed class GetPassportRequestHandler: IRequestHandler<GetPassportReques
             var fileDto = await _scanService.GetScanAsync(request.ApplicantId, file.Id);
             scans.AddLast(new ScanRpcModel
             {
-                Id = file.Id,
-                Bytes = fileDto.Value.Bytes,
-                ContentType = fileDto.Value.Extension,
-                Name = fileDto.Value.Name
+                ScanId = file.Id,
+                Name = fileDto.Value.Name + ContentTypeMappings.ReverseTypeMappings[fileDto.Value.Extension],
+                IsEditable = isEditable
             });
         }
         
         return new PassportResponse
         {
-            PassportId = passport.Id,
+            DocumentId = passport.Id,
             Series = passport.Series,
             Number = passport.Number,
             PlaceOfBirth = passport.PlaceOfBirth,
             IssuedBy = passport.IssuedBy,
             DateIssued = passport.DateIssued,
-            IsEditable = await _managerAccessService.HasEditPermissions(request.Id, request.Role, request.ApplicantId),
+            IsEditable = isEditable,
             Scans = scans
         };
     }

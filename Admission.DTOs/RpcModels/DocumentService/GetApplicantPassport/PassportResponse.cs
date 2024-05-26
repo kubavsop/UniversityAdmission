@@ -2,7 +2,7 @@
 
 public sealed class PassportResponse: IRpcResponse
 {
-    public Guid PassportId { get; init; }
+    public Guid DocumentId { get; init; }
     public required int Series { get; init; }
     public required int Number { get; init; }
     public required string PlaceOfBirth { get; init; }
