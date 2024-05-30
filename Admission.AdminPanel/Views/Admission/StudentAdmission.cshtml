@@ -1,0 +1,93 @@
+﻿@using Admission.AdminPanel.Constants
+@using Admission.DTOs.RpcModels.UserService.GetManagers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Security.Claims
+@using Admission.Domain.Common.Enums
+@using Microsoft.OpenApi.Extensions
+@model Admission.DTOs.RpcModels.AdmissionService.GetStudentAdmissions.StudentAdmissionResponse
+
+@{
+
+}
+<div class="card">
+    <div class="card-body d-flex flex-column gap-2">
+        <div class="d-flex justify-content-between">
+            <a asp-controller="Applicant" asp-action="Applicant" asp-route-id="@Model.ApplicantId" class="mr-1">
+                @Model.ApplicantEmail
+            </a>
+            <a asp-controller="Admission" asp-action="Programs" asp-route-id="@Model.AdmissionId" class="btn btn-primary">
+                Программы
+            </a>
+        </div>
+        <div class="mr-1">
+            <form asp-controller="Admission" asp-action="Status" method="post">
+                <div class="d-flex flex-row flex-wrap gap-2">
+                    <input asp-for="AdmissionId" type="text" class="form-control" hidden>
+                    <select class="form-select" asp-for="Status" disabled="@(!Model.IsEditable)">
+                        @foreach (var item in Enum.GetValues(typeof(AdmissionStatus)).Cast<AdmissionStatus>())
+                        {
+                            @if (item != AdmissionStatus.Created)
+                            {
+                                <option selected="@(Model.Status == item)" value="@item">
+                                    @item.GetDisplayName()
+                                </option>   
+                            }
+                        }
+                    </select>
+                    @if (Model.IsEditable)
+                    {
+                        <button type="submit" class="btn mt-1 btn-warning btn-block w-100">Изменить</button>
+                    }
+                </div>
+            </form>
+        </div>
+        <div class="mr-1">
+            Менеджер - @(Model.ManagerName ?? "отсутствует")
+        </div>
+ 
+        @if(Model.ManagerId == null && User.IsInRole(ValidRoles.AdminRole) || User.IsInRole(ValidRoles.SeniorManagerRole))
+        {
+            <div class="mr-1">
+                <form asp-controller="Admission" asp-action="TakeAdmission" method="post">
+                    <div class="d-flex flex-row flex-wrap gap-2">
+                        <input asp-for="AdmissionId" type="text" class="form-control" hidden>
+                        <select class="form-select" asp-for="ManagerId">
+                            @foreach (var item in (ViewData["Managers"] as IEnumerable<ShortManagerDataResponse>)!)
+                            {
+                                <option selected="@(Model.ManagerId == item.ManagerId)" value="@item.ManagerId">
+                                    @item.Email
+                                </option>
+                            }
+                        </select>
+                        <button type="submit" class="btn mt-1 btn-primary btn-block w-100">Назначить</button>
+                    </div>
+                </form>
+            </div>
+        }
+        @if (Model.ManagerId == null)
+        {
+            <div class="mr-1">
+                <form asp-controller="Admission" asp-action="TakeAdmission" method="post">
+                    <div class="d-flex flex-row flex-wrap gap-2">
+                        <input asp-for="AdmissionId" type="text" class="form-control" hidden>
+                        <input asp-for="ManagerId" type="text" class="form-control" value="@(Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value))" hidden>
+                        <button type="submit" class="btn mt-1 btn-warning btn-block w-100">Взять</button>
+                    </div>
+                </form>            
+            </div>   
+        }
+        @if (Model.IsMyApplicant)
+        {
+            <div class="mr-1">
+                <form asp-controller="Admission" asp-action="RefuseAdmission" method="post">
+                    <div class="d-flex flex-row flex-wrap gap-2">
+                        <input asp-for="AdmissionId" type="text" class="form-control" hidden>
+                        <input asp-for="ManagerId" type="text" class="form-control" value="@(Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value))" hidden>
+                        <button type="submit" class="btn mt-1 btn-danger btn-block w-100">Отказаться</button>
+                    </div>
+                </form>            
+            </div>  
+        }
+        
+    </div>
+</div>

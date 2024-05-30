@@ -1,4 +1,5 @@
-﻿using Admission.Domain.Common.Enums;
+﻿using Admission.Application.Common.Extensions;
+using Admission.Domain.Common.Enums;
 using Admission.DTOs.RpcModels;
 using Admission.DTOs.RpcModels.Base;
 using Admission.DTOs.RpcModels.DictionaryService.GetFaculty;
@@ -28,7 +29,7 @@ public sealed class GetManagerDataRequestHandler: IRequestHandler<GetManagerData
         var manager = await _context.Managers
             .Include(m => m.User)
             .Include(m => m.Faculty)
-            .FirstOrDefaultAsync(m => m.Id == request.UserId, cancellationToken: cancellationToken);
+            .GetByIdAsync(request.UserId);
 
         if (manager == null)
         {

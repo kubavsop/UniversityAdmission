@@ -7,9 +7,9 @@
 <div class="card">
     <div class="card-body d-flex flex-row flex-wrap">
         <div class="d-flex flex-column">
-            <div class="mr-1">
+            <a asp-controller="Applicant" asp-action="Applicant" asp-route-id="@Model.ApplicantId" class="mr-1 ">
                 @Model.Email
-            </div>
+            </a>
             <div class="mr-1">
                 @Model.FullName
             </div>

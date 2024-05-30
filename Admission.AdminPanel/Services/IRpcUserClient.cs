@@ -21,9 +21,9 @@ public interface IRpcUserClient
     Task<Result<ManagerDataResponse>> GetManagerAsync(GetManagerDataRequest getManagerDataRequest);
     Task<Result<ApplicantsResponse>> GetApplicantsAsync(GetApplicantsRequest applicantsRequest);
     Task<Result<ApplicantDataResponse>> GetApplicantAsync(GetApplicantDataRequest getApplicantDataRequest);
-    Task<Result> DeleteUserRoleAsync(DeleteUserRoleRequest deleteUserRoleRequest);
+    Task<Result> DeleteManagerRoleAsync(DeleteManagerRequest deleteManagerRequest);
     Task<Result> ChangePasswordAsync(ChangePasswordRequest changePasswordRequest);
     Task<Result> ChangeManagerDataAsync(ChangeManagerDataRequest changeManagerDataRequest);
     Task<Result> ChangeApplicantDataAsync(ChangeApplicantDataRequest changeApplicantDataRequest);
-    Task<Result> AddUserRoleAsync(AddUserRoleRequest addUserRoleRequest);
+    Task<Result> CreateManagerAsync(CreateManagerRequest createManagerRequest);
 }

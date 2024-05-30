@@ -1,4 +1,5 @@
-﻿@model ShortManagerViewModel
+﻿@using Admission.AdminPanel.Constants
+@model ShortManagerViewModel
 
 @{
 
@@ -16,13 +17,16 @@
                 @Model.ManagerRole
             </div>
         </div>
-        <div class="flex-column card-covert-content gap-1 ms-auto align-content-center">
+        <div class="card-covert-content gap-1 ms-auto align-content-center">
             <a asp-controller="Manager" asp-action="Manager" asp-route-id="@Model.ManagerId" class="btn btn-warning">
-                Изменить
+                Профиль
             </a>
-            <a class="btn btn-danger">
-                Удалить
-            </a>
+            @if (User.IsInRole(ValidRoles.AdminRole))
+            {
+                <a asp-controller="Manager" asp-action="DeleteManager" asp-route-id="@Model.ManagerId" class="btn btn-danger">
+                    Удалить
+                </a>   
+            }
         </div>
     </div>
 </div>

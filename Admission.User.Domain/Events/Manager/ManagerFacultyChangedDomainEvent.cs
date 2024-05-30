@@ -11,10 +11,10 @@ public sealed class ManagerFacultyChangedDomainEvent: IDomainEvent
     internal ManagerFacultyChangedDomainEvent(Entities.Manager manager)
     {
         Id = manager.Id;
-        Faculty = manager.Faculty!;
+        Faculty = manager.Faculty;
     }
     
     public Guid Id { get; init; }
     
-    public Faculty Faculty { get; init; }
+    public Faculty? Faculty { get; init; }
 }

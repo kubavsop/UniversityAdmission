@@ -1,0 +1,77 @@
+﻿@using Admission.Domain.Common.Enums
+@using Microsoft.OpenApi.Extensions
+@model ApplicantViewModel
+
+@{
+    ViewData["Title"] = "Абитуриент";
+}
+
+<div class="d-flex flex-column flex-wrap justify-content-center">
+    <h2>Абитуриент</h2>
+
+    <form asp-action="Applicant" method="post" class="">
+        <div class="d-flex flex-column flex-wrap gap-2">
+            <input class="form-control" type="text" asp-for="ApplicantId" hidden/>
+            <input class="form-control" type="text" asp-for="IsEditable" hidden/>
+            <div class="form-group">
+                <label asp-for="FullName"></label>
+                <input class="form-control" type="text" asp-for="FullName" disabled="@(!Model.IsEditable)"/>
+                <span class="text-danger" asp-validation-for="FullName"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input class="form-control" type="text" asp-for="Email" disabled="@(!Model.IsEditable)"/>
+                <span class="text-danger" asp-validation-for="Email"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gender"></label>
+                <select class="form-select" asp-for="Gender" isabled="@(!Model.IsEditable)">
+                    <option selected="@(Model.Gender == null)" value="">
+                        -
+                    </option>
+                    <option selected="@(Model.Gender == Gender.Male)" value="@Gender.Male">
+                        @(Gender.Male.GetDisplayName())
+                    </option>
+                    <option selected="@(Model.Gender == Gender.Female)" value="@Gender.Female">
+                        @(Gender.Female.GetDisplayName())
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Birthday"></label>
+                <input class="form-control" type="date" asp-for="Birthday" disabled="@(!Model.IsEditable)"/>
+                <span class="text-danger" asp-validation-for="Birthday"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber"></label>
+                <input class="form-control" type="text" asp-for="PhoneNumber" disabled="@(!Model.IsEditable)"/>
+                <span class="text-danger" asp-validation-for="PhoneNumber"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Citizenship"></label>
+                <input class="form-control" type="text" asp-for="Citizenship" disabled="@(!Model.IsEditable)"/>
+                <span class="text-danger" asp-validation-for="Citizenship"/>
+            </div>
+            <div class="text-danger" asp-validation-summary="All"></div>
+            @if (@Model.IsEditable)
+            {
+                <button type="submit" class="btn mt-1 btn-primary btn-block">Сохранить</button>
+            }
+        </div>
+    </form>
+    <div class="d-flex flex-column flex-wrap gap-3 mt-5">
+        <h2>Документы</h2>
+        <a asp-controller="Applicant" asp-action="Passport" asp-route-id="@Model.ApplicantId" class="btn btn-warning flex-fill">
+            Паспорт
+        </a>
+        <a asp-controller="Applicant" asp-action="EducationDocuments" asp-route-id="@Model.ApplicantId" class="btn btn-warning flex-fill">
+            Документ об образовании
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

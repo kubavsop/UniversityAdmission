@@ -20,11 +20,11 @@ public sealed class ManagerFacultyChangedIntegrationEventHandler: IIntegrationEv
 
         if (manager == null) return;
         
-        if (!await _context.Faculties.AnyAsync(f => f.Id == notification.FacultyId, cancellationToken: cancellationToken))
+        if (notification.FacultyId != null && !await _context.Faculties.AnyAsync(f => f.Id == notification.FacultyId, cancellationToken: cancellationToken))
         {
             await _context.Faculties.AddAsync(new Domain.Entities.Faculty
             {
-                Id = notification.FacultyId,
+                Id = notification.FacultyId.Value,
                 Name = notification.FacultyName
             }, cancellationToken);
         }

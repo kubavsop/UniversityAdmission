@@ -1,4 +1,4 @@
-using Admission.Domain.Enums;
+using Admission.Domain.Common.Enums;
 
 namespace Admission.Application.DTOs.Responses;
 

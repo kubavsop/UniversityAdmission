@@ -27,8 +27,13 @@ public class ProgramService: IProgramService
         _maximumNumberOfApplicantPrograms = maximumNumberOfApplicantPrograms.Value;
     }
 
-    public async Task<Result> CreateProgramAsync(CreateProgramDto createProgramDto, Guid userId)
+    public async Task<Result> CreateProgramAsync(CreateProgramDto createProgramDto, Guid userId, bool isManager = false)
     {
+        if (!isManager && await IsStudentAdmissionClosed(userId))
+        {
+            return new BadRequestException("Admission is closed");
+        }
+        
         var admissionResult = await GetCurrentStudentAdmissionAsync(userId);
 
         if (admissionResult.IsFailure) return admissionResult;
@@ -68,8 +73,13 @@ public class ProgramService: IProgramService
         return Result.Success();
     }
 
-    public async Task<Result> DeleteProgramAsync(Guid programId, Guid userId)
+    public async Task<Result> DeleteProgramAsync(Guid programId, Guid userId, bool isManager = false)
     {
+        if (!isManager && await IsStudentAdmissionClosed(userId))
+        {
+            return new BadRequestException("Admission is closed");
+        }
+        
         var programResult = await GetProgramById(programId, userId);
         if (programResult.IsFailure) return programResult;
 
@@ -81,8 +91,13 @@ public class ProgramService: IProgramService
         return Result.Success();
     }
     
-    public async Task<Result> EditProgramsAsync(EditProgramsDto editProgramDto, Guid userId)
+    public async Task<Result> EditProgramsAsync(EditProgramsDto editProgramDto, Guid userId, bool isManager = false)
     {
+        if (!isManager && await IsStudentAdmissionClosed(userId))
+        {
+            return new BadRequestException("Admission is closed");
+        }
+        
         var editProgramsDto = editProgramDto.EditPrograms.ToList();
         var admission = await _context.StudentAdmissions.FirstOrDefaultAsync(sa =>
             sa.ApplicantId == userId && sa.Status != AdmissionStatus.Closed);
@@ -216,8 +231,13 @@ public class ProgramService: IProgramService
         };
         
         await _context.EducationPrograms.AddAsync(educationProgram);
-
-        return educationProgram;
+        await _context.SaveChangesAsync();
+        
+        var educationProgramResult = await _context.EducationPrograms
+            .Include(p => p.Faculty)
+            .GetByIdAsync(educationProgram.Id);
+        
+        return educationProgramResult!;
     }
 
     private async Task<Result<StudentAdmission>> GetCurrentStudentAdmissionAsync(Guid userId)
@@ -290,5 +310,16 @@ public class ProgramService: IProgramService
         }
         
         return Result.Success();
+    }
+    
+    private async Task<bool> IsStudentAdmissionClosed(Guid userId)
+    {
+        var admissions = await _context.StudentAdmissions
+            .GetUndeleted()
+            .Where(sa => sa.ApplicantId == userId)
+            .ToListAsync();
+
+        return admissions.Count != 0 && !admissions.Any(
+            sa => sa.ApplicantId == userId && sa.Status != AdmissionStatus.Closed);
     }
 }

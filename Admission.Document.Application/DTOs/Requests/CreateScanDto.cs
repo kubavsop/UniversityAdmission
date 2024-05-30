@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Admission.Application.Common.ValidationAttributes;
 using Admission.Document.Application.ValidationAttributes;
 using Microsoft.AspNetCore.Http;
 

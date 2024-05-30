@@ -1,0 +1,73 @@
+﻿@model PassportViewModel
+
+@{
+    ViewData["Title"] = "Паспорт";
+}
+
+<div class="d-flex flex-column flex-wrap justify-content-center">
+    <form asp-action="Passport" method="post" class="">
+        <h2>Паспорт</h2>
+        <div class="d-flex flex-column flex-wrap gap-2">
+            <input class="form-control" type="text" asp-for="DocumentId" hidden/>
+            <input class="form-control" type="text" asp-for="IsEditable" hidden/>
+            <div class="form-group">
+                <label asp-for="Series"></label>
+                <input class="form-control" type="number" asp-for="Series" disabled="@(!Model.IsEditable)"/>
+                <span class="text-danger" asp-validation-for="Series"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Number"></label>
+                <input class="form-control" type="number" asp-for="Number" disabled="@(!Model.IsEditable)"/>
+                <span class="text-danger" asp-validation-for="Number"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="PlaceOfBirth"></label>
+                <input class="form-control" type="text" asp-for="PlaceOfBirth" disabled="@(!Model.IsEditable)"/>
+                <span class="text-danger" asp-validation-for="PlaceOfBirth"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="IssuedBy"></label>
+                <input class="form-control" type="text" asp-for="IssuedBy" disabled="@(!Model.IsEditable)"/>
+                <span class="text-danger" asp-validation-for="IssuedBy"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateIssued"></label>
+                <input class="form-control" type="date" asp-for="DateIssued" disabled="@(!Model.IsEditable)"/>
+                <span class="text-danger" asp-validation-for="DateIssued"/>
+            </div>
+            <div class="text-danger" asp-validation-summary="All"></div>
+            @if (Model.IsEditable)
+            {
+                <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+            }
+        </div>
+    </form>
+    
+    <div class="d-flex flex-column flex-wrap gap-3 mt-5">
+        <h2>Сканы</h2>
+        @foreach (var item in Model.Scans)
+        {
+            @await Html.PartialAsync("Scan", item)
+        }
+    </div>
+    
+    @if (Model.IsEditable)
+    {
+        <form enctype="multipart/form-data" asp-action="AddScan" method="post" class="mt-5">
+            <div class="d-flex flex-column flex-wrap gap-1">
+                <input class="form-control" type="text" asp-for="DocumentId" hidden/>
+                <div class="form-group">
+                    <input class="form-control" type="file" asp-for="File"/>
+                    <span class="text-danger" asp-validation-for="File"/>
+                </div>
+                <button type="submit" class="btn mt-1 btn-primary w-100">Загрузить</button>
+            </div>
+        </form>   
+    }
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

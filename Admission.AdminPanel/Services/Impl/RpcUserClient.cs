@@ -95,9 +95,9 @@ public sealed class RpcUserClient: BaseRpcClient, IRpcUserClient
         return (result as ApplicantDataResponse)!;
     }
 
-    public async Task<Result> DeleteUserRoleAsync(DeleteUserRoleRequest deleteUserRoleRequest)
+    public async Task<Result> DeleteManagerRoleAsync(DeleteManagerRequest deleteManagerRequest)
     {
-        var result = await CallAsync(deleteUserRoleRequest);
+        var result = await CallAsync(deleteManagerRequest);
         if (result == null) return new RpcException("null response");
         
         var errorResult = CheckError(result);
@@ -131,9 +131,9 @@ public sealed class RpcUserClient: BaseRpcClient, IRpcUserClient
         return errorResult;
     }
 
-    public async Task<Result> AddUserRoleAsync(AddUserRoleRequest addUserRoleRequest)
+    public async Task<Result> CreateManagerAsync(CreateManagerRequest createManagerRequest)
     {
-        var result = await CallAsync(addUserRoleRequest);
+        var result = await CallAsync(createManagerRequest);
         if (result == null) return new RpcException("null response");
         
         var errorResult = CheckError(result);

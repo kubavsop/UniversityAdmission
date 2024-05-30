@@ -1,0 +1,15 @@
+﻿@model EducationDocumentsViewModel
+
+@{
+    ViewData["Title"] = "Документы об образовании";
+}
+
+<div class="d-flex flex-column flex-fill gap-5">
+    <h3 class="mr-1">Документы об образовании</h3>
+    
+
+    @foreach (var item in Model.DocumentResponses)
+    {
+        @await Html.PartialAsync("EducationDocument", item)
+    }
+</div>

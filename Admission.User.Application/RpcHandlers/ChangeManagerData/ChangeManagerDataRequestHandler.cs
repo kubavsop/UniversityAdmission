@@ -1,4 +1,5 @@
 ﻿using Admission.Application.Common.Extensions;
+using Admission.Application.Common.Services;
 using Admission.Domain.Common.Enums;
 using Admission.DTOs.RpcModels;
 using Admission.DTOs.RpcModels.Base;
@@ -13,10 +14,12 @@ namespace Admission.User.Application.RpcHandlers.ChangeManagerData;
 public sealed class ChangeManagerDataRequestHandler: IRequestHandler<ChangeManagerDataRequest, IRpcResponse>
 {
     private readonly IUserDbContext _context;
+    private readonly IRpcDictionaryClient _dictionaryClient;
 
-    public ChangeManagerDataRequestHandler(IUserDbContext context)
+    public ChangeManagerDataRequestHandler(IUserDbContext context, IRpcDictionaryClient dictionaryClient)
     {
         _context = context;
+        _dictionaryClient = dictionaryClient;
     }
     
     public async Task<IRpcResponse> Handle(ChangeManagerDataRequest request, CancellationToken cancellationToken)
@@ -43,10 +46,11 @@ public sealed class ChangeManagerDataRequestHandler: IRequestHandler<ChangeManag
             var faculty = await _context.Faculties.GetByIdAsync(request.FacultyId.Value);
             if (faculty == null)
             {
+                var facultyResponse = await _dictionaryClient.GetFacultyByIdAsync(request.FacultyId.Value);
                 faculty = new Faculty
                 {
-                    Id = request.FacultyId.Value,
-                    Name = request.FacultyName!
+                    Id = facultyResponse!.Id,
+                    Name = facultyResponse.Name
                 };
                 await _context.Faculties.AddAsync(faculty, cancellationToken);
             }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Admission.Application.Common.ValidationAttributes;
 using Admission.Domain.Common.Enums;
-using Admission.User.Application.ValidationAttributes;
 
 namespace Admission.User.Application.DTOs.Requests;
 
@@ -25,6 +25,6 @@ public class EditApplicantDto
     [MaxLength(1000)]
     public string? Citizenship { get; set; }
 
-    [ValidationAttributes.PhoneNumber]
+    [PhoneNumber]
     public string? PhoneNumber { get; set; }
 }

@@ -1,6 +1,5 @@
 using Admission.API.Common;
 using Admission.API.Common.Extensions;
-using Admission.Application.Common.Exceptions;
 using Admission.Application.DTOs.Requests;
 using Admission.Application.Services;
 using Microsoft.AspNetCore.Authorization;
